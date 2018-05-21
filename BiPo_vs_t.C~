@@ -1,0 +1,97 @@
+{
+#include <vector>
+  bool fiducialize = 1, new_release = 1;
+  gStyle->SetOptFit(1111);
+  gStyle->SetTitleW(0.9);
+  //  gStyle->SetPadLeftMargin(0.12);
+  //  gStyle->SetPadRightMargin(0.04);
+  TFile file("Don.root", "RECREATE");
+  const double kTimeOn = 83.65*3600, kTimeOff = 75*3600, kRelWindowSize = 119.0/10000.0;
+  gStyle->SetOptStat(0);
+  TString release("Phys_20180316");
+  if(new_release) release = TString("Phys_20180409");
+  TString rxon = TString("WetCommissioning");
+  TString rxoff = TString("180316_Background");
+  TString pass= TString("pass_BiPo");
+  int length = 1000, width=1900;
+
+
+  TCanvas *c1 = new TCanvas("c1","c1",0,0,width,length);
+  c1->Divide(3,2);
+  TChain *ch;
+  const double tauBiPo = 0.1643/log(2); 
+  double f2n = 12;//ratio of lengths of far to near windows
+  double tmin = 0.002;//start coincidence window tmin ms away from electron
+  gSystem->cd(Form("../Outdir/%s/%s/%s",release.Data(),rxon.Data(), pass.Data()));
+  //cout<<Form("../Outdir/%s/%s/%s\n",release.Data(),rxon.Data(), pass.Data());
+  ch= new TChain("BiPoTreePlugin/BiPo");
+  cout<<ch->Add(Form("s*.root"))<<" Rx on files\n";
+  gSystem->cd(Form("../Outdir/%s/%s/%s",release.Data(),rxoff.Data(), pass.Data()));
+  cout<<ch->Add(Form("s*.root"))<<" Rx off files\n";
+  ch->SetAlias(Form("(ft-%f)/%f",10*tauBiPo,f2n),"tacc");
+
+  // std::vector<double> *pz;
+  // std::vector<int> *pseg;
+  // int mult_prompt, n=0;
+  // ch->SetBranchAddress("pseg", &pseg);
+  // ch->SetBranchAddress("mult_prompt",&mult_prompt);
+  // ch->SetBranchAddress("pz", &pz);
+  // TH1D *h = new TH1D("h","h",220,-1100,1100);
+  // for(int i=0;i<ch->GetEntries();++i){
+  //   ch->GetEntry(i);
+  //   if(mult_prompt==0)continue;
+  //   for(UInt_t j=0;j<pseg->size();++j){
+  //     h->Fill(pz->at(j));
+  //     //      cout<<i<<" "<<mult_prompt<<" "<<pseg->size()<<endl;
+  //   }
+  // }
+  // cout<<n<<endl;
+  // h->SetLineColor(kRed);
+  // h->Draw();
+  // ch->Draw("pz","mult_prompt>0","sames");
+
+  double hAE = 0.99, lAE = 0.8, hApsd = 0.31, lApsd = 0.2;
+  if(release.Contains("0409")){
+    hAE -= 0.03;
+    lAE -= 0.03;
+    lApsd = 0.22;
+  }
+
+
+  ///////////////////////////////////////////
+  //Define cuts
+  double lpE = 0.8, hppsd = 0.26, lppsd = 0;
+  TCut cutaz("abs(az)<1000");//("abs(az)<460");
+  TCut cutafid("aseg>13 && aseg<140 && aseg%14 != 0&&aseg%14 != 13");
+  TCut cutpPSD(Form("pPSD>%f&&pPSD<%f", lppsd, hppsd));
+  TCut cutpz("abs(pz)<1000");
+  TCut cutfPSD(Form("fPSD>%f&&fPSD<%f", lppsd, hppsd));
+  TCut cutfz("abs(fz)<1000");
+  TCut cuta(Form("aPSD>%f&&aPSD<%f&&aE>%f&&aE<%f", lApsd, hApsd, lAE, hAE));
+  cuta += cutaz;
+  if(fiducialize)
+    cuta+=cutafid;
+  TCut cutp(Form("pseg>=0&&at-pt>%f", tmin));
+  cutp += cutpPSD;
+  cutp += cutpz;
+  TCut cutf(Form("fseg>=0&&(ft-at-%f)/%f>%f", 10*tauBiPo, f2n, tmin));
+  cutf += cutfPSD;
+  cutf += cutfz;
+  ///////////////////////////////////////////
+
+
+  TIter next(fFiles);
+  TChainElement *element;
+  TChain *cht[100];
+  double ts[100];
+  int n=0, dt = 0;
+  while((element = (TChainElement*)next())){
+    TFile *file = TFile::Open(element->GetTitle());
+    TVectorD* tm = (TVectorD*)file->Get("runtime");
+    cout<<tm<<endl;
+    if(!file->IsZombie()){
+      cout<<"ZOMBIE!\n"
+    }
+  }
+
+}

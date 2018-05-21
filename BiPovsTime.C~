@@ -1,4 +1,3 @@
-#include <time.h>
 #include <vector>
 #include <map>
 #include <iostream>
@@ -24,7 +23,7 @@ using namespace std;
 using namespace std;
 const int N = 3, ncol = 14, nrow = 11;
 const double tauBiPo = 0.1643/log(2);
-const double HrPerPnt = 23.5;//hours of data per point
+const double HrPerPnt = 24;//hours of data per point
 const double n2f = 1.0/12.0;//ratio of lengths of near to far windows
 const double f2n = 12.0;//ratio of lengths of far to near windows
 const double tmin = 0.002;//start coincidence window tmin ms away from electron
@@ -38,22 +37,11 @@ bool isET(int seg){
 double GetLiveTime(TChain *ch){
   TIter next(ch->GetListOfFiles());
   TChainElement *element;
-  TString st;
-  double tlive = 0, tl = 0;
-  bool first = 1;
+  double tlive = 0;
   while((element = (TChainElement*)next())){
     TFile *file = TFile::Open(element->GetTitle());
-    tl = ((TVectorD*)file->Get("runtime"))->Norm1();
-    tlive += tl;
-    st = TString(element->GetTitle());
-    if(first){
-      first = 0;
-      time_t ts = time_t(TString(st(st.First(".")-10,10)).Atoi());
-      printf("Date of first file: %s", asctime(localtime(&ts)));
-    }
+    tlive += ((TVectorD*)file->Get("runtime"))->Norm1();
   }
-  time_t ts = time_t(TString(st(st.First(".")-10,10)).Atoi() + tl);
-  printf("Date of last file: %s", asctime(localtime(&ts)));
   return tlive/3600.0;
 }
 
@@ -82,20 +70,18 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   double hAE = 1.01, lAE = 0.75, hApsd = 0.32, lApsd = 0.2;//alpha
   double highBE = 5.0, lowBE = 0, hPpsd = 0.26, lPpsd = 0;//beta
   double t_start = 0.01, t_end = 3 * tauBiPo;//prompt window
-  double ft_offset = 10 * tauBiPo;//far window time offset
-  double ft_start = ft_offset + (t_start * f2n);//start time of far window 
+  double ft_start = 10 * tauBiPo + (t_start * f2n);//far window
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
-  double  fidZ = fiducialize ? 1000.0 : 448.0;
+  double ft_offset = 10 * tauBiPo;//far window
+  double fidZ = fiducialize ? 1000.0 : 448.0;
   if(alpha_type == 1){
     t_start = 2e-4;
     t_end = 6e-3;
     hAE = 1.26;
     lAE = 1.01;
-    ft_end = ft_start + f2n * (t_end - t_start); 
   }else if(alpha_type == 2){
     t_start = 2e-4;
     hAE = 1.26;
-    ft_end = ft_start + f2n * (t_end - t_start); 
   }
   //-------------------------------------------------------
 

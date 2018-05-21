@@ -1,0 +1,228 @@
+{
+#include <vector>
+  gStyle->SetOptFit(1111);
+  gStyle->SetTitleW(0.9);
+  //  gStyle->SetPadLeftMargin(0.12);
+  //  gStyle->SetPadRightMargin(0.04);
+  TFile file("Don.root", "RECREATE");
+  const double kTimeOn = 83.65*3600, kTimeOff = 75*3600, kRelWindowSize = 119.0/10000.0;
+  //  gStyle->SetOptStat(0);
+  TString rxon = TString("WetCommissioning");
+  TString rxoff = TString("180316_Background");
+  TString pass= TString("pass_BiPo");
+  int length = 1000, width=1500;
+
+
+  //  TCanvas *c1 = new TCanvas("c1","c1",0,0,1900,length);
+  //  c1->Divide(3,2);
+  TChain *ch;
+  const double tauBiPo = 0.1643/log(2); 
+  double f2n = 12;//ratio of lengths of far to near windows
+  double tmin = 0.002;//start coincidence window tmin ms away from electron
+  gSystem->cd(Form("../Outdir/Phys_20180316/%s/%s",rxon.Data(), pass.Data()));
+  cout<<Form("../Outdir/Phys_20180316/%s/%s\n",rxon.Data(), pass.Data());
+  ch= new TChain("BiPoTreePlugin/BiPo");
+  cout<<ch->Add(Form("s*.root"))<<" Rx on files\n";
+  gSystem->cd(Form("../Outdir/Phys_20180316/%s/%s",rxoff.Data(), pass.Data()));
+  cout<<ch->Add(Form("s*.root"))<<" Rx off files\n";
+
+  std::vector<double> *pz;
+  std::vector<int> *pseg;
+  int mult_prompt;
+  TBranch *brz=0, *brs=0;
+  ch->SetBranchAddress("pseg", &pseg, &brs);
+  ch->SetBranchAddress("mult_prompt",&mult_prompt);
+  ch->SetBranchAddress("pz", &pz, &brz);
+  TH1D *h = new TH1D("h","h",220,-1100,1100);
+  for(int i=0;i<ch->GetEntries();++i){
+    Long64_t tentry = ch->LoadTree(i);
+    brs->GetEntry(tentry);
+    //    if(mult_prompt==0)continue;
+    for(UInt_t j=0;j<pseg.size();++j){
+      cout<<i<<" "<<mult_prompt<<" "<<pseg.size()<<endl;
+    }
+  }
+
+
+//   double hAE = 0.96, lAE = 0.8, hApsd = 0.31, lApsd = 0.2;
+//   double lpE = 0.8, hppsd = 0.26, lppsd = 0;
+//   TCut cutaz("");//("abs(az)<460");
+//   TCut cutpPSD(Form("pPSD>%f&&pPSD<%f", lppsd, hppsd));
+//   TCut cutfPSD(Form("fPSD>%f&&fPSD<%f", lppsd, hppsd));
+//   TCut cuta(Form("aPSD>%f&&aPSD<%f&&aE>%f&&aE<%f", lApsd, hApsd, lAE, hAE));
+//   cuta += cutaz;
+//   TCut cutp(Form("pseg>=0&&at-pt>%f", tmin));
+//   cutp += cutpPSD;
+//   TCut cutf("fseg>=0");
+//   cutf += cutfPSD;
+
+
+//   c1->cd(1);
+//   ch->Draw("pPSD:pE>>hppsdE(100,0,4,100)","pseg>=0&&pPSD>-25&&pPSD<25","colz");
+//   TH2D *hppsdE = (TH2D*)gDirectory->Get("hppsdE");
+//   hppsdE->GetXaxis()->SetTitle("Prompt E (MeV)");
+//   hppsdE->GetYaxis()->SetTitle("Prompt PSD");
+//   hppsdE->SetTitle("Prompt PSD versus Energy");
+//   c1->cd(2);
+//   ch->Draw("pPSD:pE>>hppsdEz(100,0,4,100,-0.1,1)","pseg>=0&&pPSD>-0.1&&pPSD<1","colz");
+//   TH2D *hppsdEz = (TH2D*)gDirectory->Get("hppsdEz");
+//   hppsdEz->GetXaxis()->SetTitle("Prompt E (MeV)");
+//   hppsdEz->GetYaxis()->SetTitle("Prompt PSD");
+//   hppsdEz->SetTitle("Prompt PSD versus Energy");
+//   TLine *linpPSD[2];
+//   linpPSD[0] = new TLine(0,lppsd,4,lppsd);
+//   linpPSD[0]->SetLineColor(kRed);
+//   linpPSD[0]->Draw();
+//   linpPSD[1] = new TLine(0,hppsd,4,hppsd);
+//   linpPSD[1]->SetLineColor(kRed);
+//   linpPSD[1]->Draw();
+
+//   c1->cd(3);
+//   ch->Draw("aPSD:aE>>hE(100,0.65,1.1,100,0.15,0.45)", cutp,"colz");
+//   TH2D *hE = (TH2D*)gDirectory->Get("hE");
+//   hE->SetTitle("PSD vs Energy for Alpha Candidate");
+//   hE->GetYaxis()->SetTitle("#alpha PSD");
+//   hE->GetXaxis()->SetTitle("Energy (MeV)");
+//   TLine *lpsd[4], *lE[2];
+//   lpsd[0] = new TLine(lAE,lApsd,hAE,lApsd);
+//   lpsd[0]->SetLineColor(kRed);
+//   lpsd[0]->Draw();
+//   lpsd[1] = new TLine(lAE,hApsd,hAE,hApsd);
+//   lpsd[1]->SetLineColor(kRed);
+//   lpsd[1]->Draw();
+//   lE[0] = new TLine(lAE,lApsd,lAE,hApsd);
+//   lE[0]->SetLineColor(kRed);
+//   lE[0]->Draw();
+//   lE[1] = new TLine(hAE,lApsd,hAE,hApsd);
+//   lE[1]->SetLineColor(kRed);
+//   lE[1]->Draw();
+//   gPad->Update();
+
+
+//   c1->cd(4);
+//   ch->Draw("aPSD:az>>hp(100,-1100,1100,100,0.15,0.42)",cutp,"colz");
+//   TH2D *hp = (TH2D*)gDirectory->Get("hp");
+//   hp->SetTitle("PSD vs Position for Alpha Candidate");
+//   hp->GetYaxis()->SetTitle("#alpha PSD");
+//   hp->GetXaxis()->SetTitle("Position (mm)");
+//   lpsd[2] = new TLine(-1100,lApsd,1100,lApsd);
+//   lpsd[2]->SetLineColor(kRed);
+//   lpsd[2]->Draw();
+//   lpsd[3] = new TLine(-1100,hApsd,1100,hApsd);
+//   lpsd[3]->SetLineColor(kRed);
+//   lpsd[3]->Draw();
+//   gPad->Update();
+
+
+//   c1->cd(5);
+//   ch->Draw("az-pz*0>>ha(220,-1100,1100)", "pseg>=0");
+//   TH1D *ha = (TH1D*)gDirectory->Get("ha");
+//   ha->SetTitle("Position of Alpha Candidate in Cell");
+//   ha->GetXaxis()->SetTitle("Z-Position (mm)");
+//   ha->SetLineColor(kBlack);
+//   ch->Draw("az-pz*0>>haz(220,-1100,1100)", cuta && cutp, "goff");
+//   TH1D *haz = (TH1D*)gDirectory->Get("haz");
+//   haz->SetMarkerColor(kBlue);
+//   haz->Draw("sames");
+//   ch->Draw("fz>>hfa(220,-1100,1100)", cuta && cutf, "goff");
+//   TH1D *hfa = (TH1D*)gDirectory->Get("hfa");
+//   hfa->SetLineColor(kMagenta);
+//   hfa->Scale(1/f2n);
+//   hfa->Draw("sames");
+//   TH1D *hazd = (TH1D*)haz->Clone("hazd");
+//   hazd->Add(hfa,-1);
+//   hazd->SetLineColor(kRed);
+//   hazd->Draw("sames");
+//   gPad->Update();
+
+//   c1->cd(6);
+//   ch->Draw("az-pz>>hdz", "pseg>0");
+//   TH1D* hdz = (TH1D*)gDirectory->Get("hdz");
+//   hdz->SetLineColor(kBlack);
+//   hdz->SetTitle("Distance #DeltaZ Between #alpha && #beta BiPo Candidates");
+//   hdz->Draw();
+//   hdz->GetYaxis()->SetTitle("Counts");
+//   hdz->GetXaxis()->SetTitle("(#alpha_{Z}-#beta_{Z})(mm)");
+//   ch->Draw("az-pz>>hpdz", cuta && cutp, "goff");
+//   TH1D* hpdz = (TH1D*)gDirectory->Get("hpdz");
+//   hpdz->SetLineColor(kBlue);
+//   hpdz->Draw("sames");
+//   ch->Draw("az-fz>>hfdz", cuta && cutf, "goff");
+//   TH1D *hfdz = (TH1D*)gDirectory->Get("hfdz");
+//   hfdz->SetLineColor(kMagenta);
+//   hfdz->Scale(1/f2n);
+//   hfdz->Draw("sames");
+//   TH1D *hdzf = (TH1D*)hpdz->Clone("hdzf");
+//   hdzf->Add(hfdz,-1);
+//   hdzf->SetLineColor(kRed);
+//   hdzf->Draw("sames");
+//   TF1 *fg = new TF1("fg","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))",-600,600);
+//   fg->SetParNames("A","Mean","#sigma");
+//   fg->SetParameters(1000,0,15);
+//   hdzf->Fit(fg);
+//   gPad->Update();
+
+ 
+//   TCanvas *c2 = new TCanvas("c2","c2",0,0,width, length);
+//   c2->Divide(2,2);
+
+//   c2->cd(1);
+//   ch->Draw("at-pt>>h(288,0,0.72)", "pseg>=0","goff");
+//   TH1D* h = (TH1D*)gDirectory->Get("h");
+//   h->SetLineColor(kBlack);
+//   h->SetBinContent(1,0);
+//   h->SetTitle("Time Between #beta and #alpha BiPo Candidates");
+//   h->Draw();
+//   h->GetYaxis()->SetTitle("Counts per ms separation");
+//   h->GetYaxis()->SetTitleSize(0.04);
+//   h->GetXaxis()->SetTitle("(t_{#alpha}-t_{#beta}) (ms)");
+//   h->GetXaxis()->SetTitleSize(0.04);
+//   ch->Draw("at-pt>>hdt(288,0,0.72)", cuta && cutp,"goff");
+//   TH1D* hdt = (TH1D*)gDirectory->Get("hdt");
+//   hdt->SetLineColor(kBlue);
+//   hdt->SetBinContent(1,0);
+//   hdt->Draw("sames");
+//   ch->Draw(Form("(ft-at-%f)/%f>>hf(288,0,0.72)",10*tauBiPo,f2n), cuta && cutf,"goff");
+//   TH1D* hf = (TH1D*)gDirectory->Get("hf");
+//   hf->Scale(1/(f2n));
+//   hf->SetLineColor(kMagenta);
+//   hf->SetBinContent(1,0);
+//   hf->Draw("sames");
+//   TH1D *hBiPo = (TH1D*)hdt->Clone("hBiPo");
+//   hBiPo->Add(hf,-1);
+//   hBiPo->SetLineColor(kRed);
+//   // for(int i=0;i<hBiPo->GetNbinsX();++i){
+//   //   double var = pow(h->GetBinError(i),2);
+//   //   var += pow(hf->GetBinError(i),2);
+//   //   hBiPo->SetBinError(i, sqrt(var));
+//   // }
+//   TF1 *f = new TF1("f","[0]*exp(-x/([1])*log(2))",tmin,0.71);
+//   f->SetParNames("A","t_{1/2}");
+//   hBiPo->Draw("sames");
+//   f->SetParameters(hBiPo->GetBinContent(2),0.2);
+//   hBiPo->Fit(f,"r");
+//   c2->cd(2);
+//   ch->Draw("aE-pE*0>>hAlphaE(100,0.6,1.2)",cuta && cutp,"goff");
+//   TH1D *hAlphaE = (TH1D*)gDirectory->Get("hAlphaE");
+//   hAlphaE->SetLineColor(kBlue);
+//   hAlphaE->Draw();
+//   hAlphaE->GetYaxis()->SetTitle("Counts");
+//   hAlphaE->GetYaxis()->SetTitleSize(0.04);
+//   hAlphaE->GetXaxis()->SetTitle("#alpha Energy (MeV)");
+//   hAlphaE->GetXaxis()->SetTitleSize(0.04);
+//   ch->Draw("aE-fE*0>>hAlphafE(100,0.6,1.2)",cuta && cutf,"goff");
+//   TH1D *hAlphafE = (TH1D*)gDirectory->Get("hAlphafE");
+//   hAlphafE->Scale(1/f2n);
+//   hAlphafE->SetLineColor(kMagenta);
+//   hAlphafE->Draw("sames");
+//   TH1D *hFinAE = (TH1D*)hAlphaE->Clone("hFinAE");
+//   hFinAE->Add(hAlphafE,-1);
+//   hFinAE->SetLineColor(kRed);
+//   hFinAE->Draw("sames");
+//   hFinAE->Fit(fg);
+//   TF1 *fg2 = new TF1("fg2","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))",lAE,hAE);
+//   fg2->SetParNames("A","#bar{E}","#sigma");
+//   fg2->SetParameters(1000,0.88,0.03);
+//   hFinAE->Fit(fg2);
+
+}

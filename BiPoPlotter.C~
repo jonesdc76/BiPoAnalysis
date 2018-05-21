@@ -31,26 +31,6 @@ bool isET(int seg){
   return (seg%14 == 13 || seg%14 == 0 || seg >= 140);
 }
 
-double FWHM(TH1D *h){
-  // h->SetBinContent(0,0);
-  // h->SetBinContent(h->GetNbinsX()+1,0);
-  // double height = h->GetMaximum()/2.0;//GetBinContent(h->GetNbinsX()/2)/2.0;
-  // double fwhm = 0;
-  // for(int i=h->GetNbinsX();i>0;--i){
-  //   if(h->GetBinContent(i)>=height){
-  //     fwhm = h->GetBinLowEdge(i+1);
-  //     break;
-  //   }
-  // }
-  // for(int i=1;i<h->GetNbinsX();++i){
-  //   if(h->GetBinContent(i)>=height){
-  //     fwhm -= h->GetBinLowEdge(i);
-  //     break;
-  //   }
-  // }
-  double fwhm = h->GetRMS();
-  return fwhm;
-}
 double GetLiveTime(TChain *ch){
   TIter next(ch->GetListOfFiles());
   TChainElement *element;
@@ -77,11 +57,11 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
   int which_plots = 0;
   map<const char*, int>plots;
   //set values to 1 if want plotted
-  plots.insert(pair<const char*, int>("psd",0));
-  plots.insert(pair<const char*, int>("z",0));
+  plots.insert(pair<const char*, int>("psd",1));
+  plots.insert(pair<const char*, int>("z",1));
   plots.insert(pair<const char*, int>("dt",1));
-  plots.insert(pair<const char*, int>("E",0));
-  plots.insert(pair<const char*, int>("by_cell",0));
+  plots.insert(pair<const char*, int>("E",1));
+  plots.insert(pair<const char*, int>("by_cell",1));
   
   int n = 0;
   vector<TString>name;
@@ -108,20 +88,18 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
   double hAE = 1.01, lAE = 0.75, hApsd = 0.32, lApsd = 0.2;//alpha
   double highBE = 5.0, lowBE = 0, hPpsd = 0.26, lPpsd = 0;//beta
   double t_start = 0.01, t_end = 3 * tauBiPo;//prompt window
-  double ft_offset = 10 * tauBiPo;//far window time offset
-  double ft_start = ft_offset + (t_start * f2n);//start time of far window 
+  double ft_start = 10 * tauBiPo + (t_start * f2n);//far window
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
+  double ft_offset = 10 * tauBiPo;//far window
   double  ldZ = -200, hdZ = 200, fidZ = fiducialize ? 1000.0 : 448.0;
   if(alpha_type == 1){
     t_start = 2e-4;
     t_end = 6e-3;
     hAE = 1.26;
     lAE = 1.01;
-    ft_end = ft_start + f2n * (t_end - t_start);
   }else if(alpha_type == 2){
     t_start = 2e-4;
     hAE = 1.26;
-    ft_end = ft_start + f2n * (t_end - t_start); 
   }
   //-------------------------------------------------------
   
@@ -389,8 +367,6 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     gPad->Update();
     hBPSDvZ[0]->GetXaxis()->SetTitle("#betaZ-position (mm)");
     hBPSDvZ[0]->GetYaxis()->SetTitle("#beta PSD");
-    cPSD->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoPSD%i%s.png", alpha_type, fid.Data()));
-    
     //cPSDBkSub =  new TCanvas("cPSDBkSub", "cPSDBkSub",0,0,1200,900);
   }
  //---------------------------------------------
@@ -451,12 +427,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     hABdt[2]->SetMarkerColor(col[2]);;
     hABdt[2]->SetLineColor(col[2]);;
     hABdt[2]->Draw("sames");
-    fdt->SetParameters(hABdt[2]->GetMaximum(), alpha_type == 1 ? 0.0003: 0.164 );
+    fdt->SetParameters(hABdt[2]->GetMaximum(), 0.164);
     hABdt[2]->Fit(fdt, "rM");
-    TF1* fdt2 = (TF1*)fdt->Clone("fdt2");
-    fdt2->SetRange(t_start, t_end);
-    fdt2->SetLineStyle(4);
-    fdt2->Draw("same");
     gPad->Update();
     cdT->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoDeltaTSpectrum%i%s.png", alpha_type, fid.Data()));
   }
@@ -475,7 +447,6 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     h_AE[1]->Draw("same");
     gPad->Update();
     h_AE[0]->GetYaxis()->SetTitle("Counts/MeV");
-    h_AE[0]->GetYaxis()->SetRangeUser(0,h_AE[0]->GetMaximum()*1.1);
     h_AE[0]->GetXaxis()->SetTitle("Energy (MeV)");
     h_AE[2] = (TH1D*)h_AE[0]->Clone("h_AE[2]");
     h_AE[2]->Add(h_AE[1],-1);
@@ -547,9 +518,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
 
     //Alpha Z distribution mean and width 
     TGraphErrors *gAZ = new TGraphErrors();
-    TGraph *gAZW = new TGraph();
+    TGraphErrors *gAZW = new TGraphErrors();
     TGraphErrors *gAZ_ET = new TGraphErrors();
-    TGraph *gAZW_ET = new TGraph();
+    TGraphErrors *gAZW_ET = new TGraphErrors();
 
     //dZ mean and width vs cell
     TGraphErrors *gdZ = new TGraphErrors();
@@ -753,12 +724,14 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
       	gPad->Update();
       	gAZ->SetPoint(nZ, i, hCellZ[i][2]->GetMean());
       	gAZ->SetPointError(nZ, 0, hCellZ[i][2]->GetMeanError());
-      	gAZW->SetPoint(nZ, i, FWHM(hCellZ[i][2]));
+      	gAZW->SetPoint(nZ, i, hCellZ[i][2]->GetRMS());
+      	gAZW->SetPointError(nZ, 0, hCellZ[i][2]->GetRMSError());
      	++nZ;
       	if(isET(i)){
       	  gAZ_ET->SetPoint(nZ_ET, i, hCellZ[i][2]->GetMean());
       	  gAZ_ET->SetPointError(nZ_ET, 0, hCellZ[i][2]->GetMeanError());
-      	  gAZW_ET->SetPoint(nZ_ET, i, FWHM(hCellZ[i][2]));
+      	  gAZW_ET->SetPoint(nZ_ET, i, hCellZ[i][2]->GetRMS());
+      	  gAZW_ET->SetPointError(nZ_ET, 0,  hCellZ[i][2]->GetRMSError());
       	  ++nZ_ET;
       	}
       	gAZ->Fit("pol0");
@@ -1134,7 +1107,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     ps->SetY1NDC(0.899);
     ps->SetY2NDC(0.78);
     gAZ->GetXaxis()->SetTitle("Cell Number");
-    gAZ->GetYaxis()->SetTitle("Alpha Z (mm)");
+    gAZ->GetYaxis()->SetTitle("Z (mm)");
     gAZ_ET->SetMarkerColor(kRed);
     gAZ_ET->SetLineColor(kRed);
     gAZ_ET->SetMarkerStyle(8);
@@ -1144,7 +1117,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     gPad->Update();
 
     cCellZ->cd(2);
-    gAZW->SetTitle(Form("%s Alpha Z-distribution Width vs Cell",title[alpha_type].Data()));
+    gAZW->SetTitle("Alpha-Beta Z Width vs Cell");
     gAZW->SetMarkerColor(kBlue);
     gAZW->SetLineColor(kBlue);
     gAZW->SetMarkerStyle(8);
@@ -1159,7 +1132,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     ps1->SetY2NDC(0.78);
   
     gAZW->GetXaxis()->SetTitle("Cell Number");
-    gAZW->GetYaxis()->SetTitle("Alpha Z RMS (mm)");
+    gAZW->GetYaxis()->SetTitle("Alpha-Beta Z Width vs Cell");
     gAZW_ET->SetMarkerColor(kRed);
     gAZW_ET->SetLineColor(kRed);
     gAZW_ET->SetMarkerStyle(8);
