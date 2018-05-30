@@ -25,8 +25,8 @@ const double n2f = 1.0/12.0;//ratio of lengths of near to far windows
 const double f2n = 12.0;//ratio of lengths of far to near windows
 const double tmin = 0.002;//start coincidence window tmin ms away from electron
 const int kNcell = ncol * nrow;
-const int ExcludeCellArr[28] = {0,1,2,3,4,5,6,9,11,12,13,18,21,23,24,27,32,40,
-				44,68,73,79,102,107,122,127,130,139};
+const int ExcludeCellArr[31] = {0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 18, 21, 23, 24, 27, 32, 34, 40, 44, 52, 68, 79, 86, 102, 115, 122, 127, 130, 139};
+
 bool isET(int seg){
   return (seg%14 == 13 || seg%14 == 0 || seg >= 140);
 }
@@ -79,8 +79,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
   //set values to 1 if want plotted
   plots.insert(pair<const char*, int>("psd",0));
   plots.insert(pair<const char*, int>("z",0));
-  plots.insert(pair<const char*, int>("dt",1));
-  plots.insert(pair<const char*, int>("E",0));
+  plots.insert(pair<const char*, int>("dt",0));
+  plots.insert(pair<const char*, int>("E",1));
   plots.insert(pair<const char*, int>("by_cell",0));
   
   int n = 0;
@@ -105,7 +105,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
   
   //Set boundary cut values on energy, psd, z-pos and time
   //-------------------------------------------------------
-  double hAE = 1.01, lAE = 0.75, hApsd = 0.32, lApsd = 0.2;//alpha
+  double hAE = 1.0, lAE = 0.75, hApsd = 0.32, lApsd = 0.2;//alpha
   double highBE = 5.0, lowBE = 0, hPpsd = 0.26, lPpsd = 0;//beta
   double t_start = 0.01, t_end = 3 * tauBiPo;//prompt window
   double ft_offset = 10 * tauBiPo;//far window time offset
@@ -116,7 +116,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     t_start = 2e-4;
     t_end = 6e-3;
     hAE = 1.26;
-    lAE = 1.01;
+    lAE = 0.97;
     ft_end = ft_start + f2n * (t_end - t_start);
   }else if(alpha_type == 2){
     t_start = 2e-4;
@@ -132,7 +132,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
   
   //Miscellany useful for making plots
   //-------------------------------------------
-  TString title[N] = {"(^{214}Bi-->^{214}Po-->^{208}Pb) ","(^{212}Bi-->^{212}Po-->^{210}Pb) ","(Bi-->Po-->Pb) "};
+  TString title[N] = {"(^{214}Bi-->^{214}Po-->^{210}Pb) ","(^{212}Bi-->^{212}Po-->^{208}Pb) ","(Bi-->Po-->Pb) "};
   int col[N] = {kBlue, kMagenta, kRed};
  
   //Define plots to make
@@ -183,7 +183,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
   double lt = alpha_type == 1 ? 0.00066 : t_start;//avoid empty bins that are artifact of analyzer holdoff 
   TF1 *fdt = new TF1("fdt","[0]*pow(2,-x/[1])",lt, t_end);
   fdt->SetParName(0, "N");
-  fdt->SetParName(1, "t_{1/2}");
+  fdt->SetParName(1, "T_{1/2}");
   if(bool(plots["dt"] & which_plots)){
     cout<<"Including dt plots"<<endl;
     for(int i=0;i<N;++i){
@@ -371,12 +371,17 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     gPad->Update();
     hAPSDvE[0]->GetXaxis()->SetTitle("#alpha Energy (MeV)");
     hAPSDvE[0]->GetYaxis()->SetTitle("#alpha PSD");
+    hAPSDvE[2] = (TH2D*)hAPSDvE[0]->Clone("hAPSDvE2");
+    hAPSDvE[2]->Add(hAPSDvE[1],-1);
+    gPad->Update();
 
     cPSD->cd(2);
     hBPSDvE[0]->Draw("colz");
     gPad->Update();
     hBPSDvE[0]->GetXaxis()->SetTitle("#beta Energy (MeV)");
     hBPSDvE[0]->GetYaxis()->SetTitle("#beta PSD");
+    hBPSDvE[2] = (TH2D*)hBPSDvE[0]->Clone("hBPSDvE2");
+    hBPSDvE[2]->Add(hBPSDvE[1],-1);
 
     cPSD->cd(3);
     hAPSDvZ[0]->Draw("colz");
@@ -458,6 +463,16 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     fdt2->SetLineStyle(4);
     fdt2->Draw("same");
     gPad->Update();
+    TPaveText *ptt = new TPaveText(0.3,0.8,0.6,0.89,"NDC");
+    ptt->SetShadowColor(0);
+    ptt->SetFillColor(0);
+    ptt->SetTextColor(kBlue);
+    ptt->AddText("Coincidence");  
+    TText *tt = ptt->AddText("Accidental");
+    tt->SetTextColor(kMagenta);
+    tt = ptt->AddText("Acc-Subtracted");
+    tt->SetTextColor(kRed);
+    ptt->Draw();
     cdT->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoDeltaTSpectrum%i%s.png", alpha_type, fid.Data()));
   }
   //---------------------------------------------
@@ -466,6 +481,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
   //4. Alpha Beta energy spectrum plots
   //---------------------------------------------
   if(bool(plots["E"] & which_plots)){
+    gStyle->SetOptStat(0);
+    gStyle->SetOptFit(1111);
     cE = new TCanvas("cE","cE",0,0,1400,600);
     cE->Divide(2,1);
     cE->cd(1);
@@ -481,7 +498,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     h_AE[2]->Add(h_AE[1],-1);
     h_AE[2]->SetMarkerColor(col[2]);;
     h_AE[2]->SetLineColor(col[2]);;
-    h_AE[2]->Draw("same");
+    h_AE[2]->Fit("gaus");
+    h_AE[2]->Draw("sames");
+    gPad->Update();
     cE->cd(2);
     hBE[0]->Scale(1/hBE[0]->GetBinWidth(1));
     hBE[1]->Scale(1/hBE[1]->GetBinWidth(1));
@@ -909,6 +928,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     gAdEW_ET->Draw("samep");
     pt->Draw();
     gPad->Update();
+    cCellAdE->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoAlphadEvsCell%i%s.png", alpha_type, fid.Data()));
     //-------------------
     
 
@@ -1279,6 +1299,35 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     gPad->Update();
     cCellRate->SaveAs(Form("/home/jonesdc/prospect/plots/BiPRatevsCell%i%s.png", alpha_type, fid.Data()));
   }
+  if(0){
+    TCanvas *c0 = new TCanvas("c0","c0",0,0,700,500);
+    gStyle->SetPadRightMargin(0.1);
+    gStyle->SetOptStat(0);
+    hAPSDvE[2]->SetTitle("BiPo #alpha PSD vs. Energy");
+    hAPSDvE[2]->GetXaxis()->SetTitleSize(0.04);
+    hAPSDvE[2]->GetYaxis()->SetTitleSize(0.04);
+    hAPSDvE[2]->Draw("colz");
+
+    TCanvas *c2 = new TCanvas("c2","c2",0,0,700,500);
+    hBPSDvE[2]->SetTitle("BiPo #beta PSD vs. Energy");
+    hBPSDvE[2]->GetXaxis()->SetTitleSize(0.04);
+    hBPSDvE[2]->GetYaxis()->SetTitleSize(0.04);
+    hBPSDvE[2]->Draw("colz");
+
+    TCanvas *c3 = new TCanvas("c3","c3",0,0,700,500);
+    hAdZ[2]->SetTitle("BiPo #alpha - #beta dZ Distribution");
+    hAdZ[2]->GetXaxis()->SetTitle("dZ (mm)");
+    hAdZ[2]->GetXaxis()->SetTitleSize(0.04);
+    hAdZ[2]->GetYaxis()->SetTitleSize(0.04);
+    hAdZ[2]->Draw();
   
+
+    gStyle->SetOptStat(0);
+    TCanvas *c4 = new TCanvas("c4","c4",0,0,700,500);
+    hABdt[2]->Draw();
+    hABdt[2]->GetXaxis()->SetTitle("dt (ms)");
+    hABdt[2]->GetXaxis()->SetTitleSize(0.04);
+    hABdt[2]->GetYaxis()->SetTitleSize(0.04);
+  }
   return 0;
 }

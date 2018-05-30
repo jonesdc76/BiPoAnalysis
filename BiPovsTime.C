@@ -79,18 +79,18 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   
   //Set boundary cut values on energy, psd, z-pos and time
   //-------------------------------------------------------
-  double hAE = 1.01, lAE = 0.75, hApsd = 0.32, lApsd = 0.2;//alpha
+  double hAE = 1.0, lAE = 0.75, hApsd = 0.32, lApsd = 0.2;//alpha
   double highBE = 5.0, lowBE = 0, hPpsd = 0.26, lPpsd = 0;//beta
   double t_start = 0.01, t_end = 3 * tauBiPo;//prompt window
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset + (t_start * f2n);//start time of far window 
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
-  double  fidZ = fiducialize ? 1000.0 : 448.0;
+  double  fidZ = fiducialize ? 1000.0 : 1000;//448.0;
   if(alpha_type == 1){
     t_start = 2e-4;
     t_end = 6e-3;
     hAE = 1.26;
-    lAE = 1.01;
+    lAE = 0.97;
     ft_end = ft_start + f2n * (t_end - t_start); 
   }else if(alpha_type == 2){
     t_start = 2e-4;
@@ -328,14 +328,14 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grE->Draw("ap");
   gPad->Update();
   grE->GetYaxis()->SetTitle("E_{#alpha} (MeV)");
-  grE->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 8:36");
+  grE->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
   grE->Fit("pol0");
   gPad->Update();
   cE->cd(2);
   grEW->Draw("ap");
   gPad->Update();
   grEW->GetYaxis()->SetTitle("E_{#alpha} Width (MeV)");
-  grEW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 8:36");
+  grEW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
   grEW->Fit("pol0");
   gPad->Update();
   cE->SaveAs(Form("../plots/BiPoAlpha%iEvsT%s.png", alpha_type, fid.Data()));
@@ -378,14 +378,14 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grAPSD->Draw("ap");
   gPad->Update();
   grAPSD->GetYaxis()->SetTitle("#alpha PSD");
-  grAPSD->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 8:36");
+  grAPSD->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
   grAPSD->Fit("pol1");
   gPad->Update();
   cAPSD->cd(2);
   grAPSDW->Draw("ap");
   gPad->Update();
   grAPSDW->GetYaxis()->SetTitle("#alpha PSD Width (MeV)");
-  grAPSDW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 8:36");
+  grAPSDW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
   //  grAPSDW->GetYaxis()->SetTitleOffset(0.9);
   grAPSDW->Fit("pol0");
   gPad->Update();
@@ -428,14 +428,14 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grBPSD->Draw("ap");
   gPad->Update();
   grBPSD->GetYaxis()->SetTitle("#beta PSD");
-  grBPSD->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 8:36");
+  grBPSD->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
   grBPSD->Fit("pol1");
   gPad->Update();
   cBPSD->cd(2);
   grBPSDW->Draw("ap");
   gPad->Update();
   grBPSDW->GetYaxis()->SetTitle("#beta PSD Width (MeV)");
-  grBPSDW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 8:36");
+  grBPSDW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
   //  grBPSDW->GetYaxis()->SetTitleOffset(0.9);
   grBPSDW->Fit("pol0");
   gPad->Update();
@@ -470,14 +470,14 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grZ->Draw("ap");
   gPad->Update();
   grZ->GetYaxis()->SetTitle("Z (mm)");
-  grZ->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 8:36");
+  grZ->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
   grZ->Fit("pol0");
   gPad->Update();
   cZ->cd(2);
   grZW->Draw("ap");
   gPad->Update();
   grZW->GetYaxis()->SetTitle("Z RMS (mm)");
-  grZW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 8:36");
+  grZW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
   grZW->Fit("pol0");
   gPad->Update();
   cZ->SaveAs(Form("../plots/BiPoZ%ivsT%s.png", alpha_type, fid.Data()));
@@ -521,14 +521,14 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grdZ->Draw("ap");
   gPad->Update();
   grdZ->GetYaxis()->SetTitle("dZ (mm)");
-  grdZ->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 8:36");
+  grdZ->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
   grdZ->Fit("pol0");
   gPad->Update();
   cdZ->cd(2);
   grdZW->Draw("ap");
   gPad->Update();
   grdZW->GetYaxis()->SetTitle("dZ Width (MeV)");
-  grdZW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 8:36");
+  grdZW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
   grdZW->Fit("pol0");
   gPad->Update();
   cdZ->SaveAs(Form("../plots/BiPodZ%ivsT%s.png", alpha_type, fid.Data()));
@@ -541,7 +541,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grR->Draw("ap");
   gPad->Update();
   grR->GetYaxis()->SetTitle("BiPo Rate (Counts/h)");
-  grR->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 8:36");
+  grR->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
   //  grR->Fit("pol0");
   gPad->Update();
   TLine *line = new TLine(RxOffT,gPad->GetUymin(),RxOffT,gPad->GetUymax());
@@ -557,7 +557,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   mg->Add(grEff);
   gPad->Update();
   mg->GetYaxis()->SetTitle("Cut Efficiency");
-  mg->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 8:36");
+  mg->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
   mg->GetYaxis()->SetTitleOffset(2.25);
   pt->Draw();
   gPad->Update();

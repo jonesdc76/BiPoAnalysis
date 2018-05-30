@@ -4,7 +4,7 @@
 #include "TROOT.h"
 #include <iostream>
 
-int makeBiPoClass(TString pass = "BiPo5", TString release = "Phys_20180510"){
+int makeBiPoClass(TString pass = "BiPo0518", TString release = "Phys_20180518"){
   TChain *ch = new TChain("BiPoTreePlugin/BiPo");
   cout<<ch->Add(Form("%s/%s/WetCommissioning/pass_%s/*.root",gSystem->Getenv("BIPO_OUTDIR"),release.Data(),pass.Data()))<<" files added from WetCommissioining\n";
   cout<<ch->Add(Form("%s/%s/180316_Background/pass_%s/*.root",gSystem->Getenv("BIPO_OUTDIR"),release.Data(),pass.Data()))<<" files added from 180316_Background\n";

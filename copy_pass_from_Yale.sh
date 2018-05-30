@@ -1,6 +1,6 @@
 #!/bin/bash
 pass=pass$1
-release=Phys_20180518
+release=Phys_Neutrino
 dir=prospect/data/Analyzed
 if [ $# -ne 1 ]
 then 
