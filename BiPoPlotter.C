@@ -1,6 +1,7 @@
 #include <vector>
 #include <map>
 #include "BP.C"
+#include "PROSPECT_Style.cc"
 #include <iostream>
 #include "TH1D.h"
 #include "TVectorD.h"
@@ -72,6 +73,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
   gStyle->SetTitleX(0.5);
   gStyle->SetPadRightMargin(0.03);
   gStyle->SetPadLeftMargin(0.14);
+  setup_PROSPECT_style();
   bool exclude_cells = 1;
   TString fid = TString((fiducialize ? "fid":""));
   int which_plots = 0;
@@ -81,7 +83,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
   plots.insert(pair<const char*, int>("z",0));
   plots.insert(pair<const char*, int>("dt",0));
   plots.insert(pair<const char*, int>("E",1));
-  plots.insert(pair<const char*, int>("by_cell",0));
+  plots.insert(pair<const char*, int>("by_cell",1));
   
   int n = 0;
   vector<TString>name;
@@ -1298,6 +1300,42 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     hHeat->GetZaxis()->SetRangeUser(hHeat->GetMaximum()*0.6,hHeat->GetMaximum());
     gPad->Update();
     cCellRate->SaveAs(Form("/home/jonesdc/prospect/plots/BiPRatevsCell%i%s.png", alpha_type, fid.Data()));
+    if(1){
+      gStyle->SetPadRightMargin(0.1);
+      gStyle->SetOptStat(0);
+      gStyle->SetOptFit(0);
+      TCanvas *c5 = new TCanvas("c5","c5",0,0,800,600);
+      TGraphErrors *grEsc = new TGraphErrors();
+      TF1 *f5 = new TF1("f5","pol0",0,1);
+      gAE->Fit(f5);
+      double norm = f5->GetParameter(0);
+      double x, y;
+      for(int i=0;i<gAE->GetN();++i){
+	gAE->GetPoint(i, x, y);
+	grEsc->SetPoint(i, x, y/norm);
+	grEsc->SetPointError(i, gAE->GetErrorX(i), gAE->GetErrorY(i)/norm);
+      }
+      grEsc->Fit("pol0");
+      grEsc->SetTitle(gAE->GetTitle());
+      grEsc->SetMarkerColor(kBlue);
+      grEsc->SetMarkerStyle(8);
+      grEsc->SetMarkerSize(0.8);
+      grEsc->SetLineColor(kBlue);
+      grEsc->Draw("ap");
+      grEsc->GetXaxis()->SetTitle(gAE->GetXaxis()->GetTitle());
+      grEsc->GetYaxis()->SetTitle(gAE->GetYaxis()->GetTitle());
+      grEsc->GetYaxis()->SetTitleOffset(0.6);
+      gPad->Update();      
+      c5->SaveAs(Form("/home/jonesdc/prospect/plots/EscBiPoEvsCell%i%s.png", alpha_type, fid.Data()));
+      gStyle->SetPadRightMargin(0.04);
+      gStyle->SetPadLeftMargin(0.06);
+      TCanvas *c6 = new TCanvas("c6","c6",0,0,1200,300);
+      grEsc->SetMarkerStyle(kCircle);
+      grEsc->Draw("ap");
+      TFile f("BiPoNeutrino.root","update","bipo");
+      grEsc->Write(Form("Po%iEvsCell%s",(alpha_type == 1 ? 212: 214), fid.Data()));
+      f.Close();
+    }
   }
   if(0){
     TCanvas *c0 = new TCanvas("c0","c0",0,0,700,500);
@@ -1329,5 +1367,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     hABdt[2]->GetXaxis()->SetTitleSize(0.04);
     hABdt[2]->GetYaxis()->SetTitleSize(0.04);
   }
+
+
+  delete bp;
   return 0;
 }

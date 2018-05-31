@@ -286,6 +286,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   tt->SetTextColor(col[4]);
 
   //Alpha energy and rate plots
+  gStyle->SetOptFit(0);
   TCanvas *cE = new TCanvas("cE","cE",0,0,1200,600);
   cE->Divide(2,1);
   cE->cd(1);
@@ -572,6 +573,20 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grZWpub->SetMarkerSize(0.8);
   grZWpub->SetMarkerColor(kBlue);
   grZWpub->Draw("ap");
+  gStyle->SetPadLeftMargin(0.12);
+  gStyle->SetPadRightMargin(0.05);
+  TCanvas *c2 = new TCanvas("c2","c2",0,0,800,600);
+  TGraphErrors *grEsc = (TGraphErrors*)grE->Clone("grEsc");
+  double x, y, norm;
+  grEsc->GetPoint(0, x, norm);
+  for(int i=0;i<grEsc->GetN();++i){
+    grEsc->GetPoint(i, x, y);
+    grEsc->SetPoint(i, x, y/norm);
+    grEsc->SetPointError(i, grEsc->GetErrorX(i), grEsc->GetErrorY(i)/norm);
+  }
+  grEsc->Draw("ap");
+  c2->SaveAs(Form("../plots/EscapeBiPoE%ivsT%s.png", alpha_type, fid.Data()));
+
   delete bp;
   return 0;
 }

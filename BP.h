@@ -658,9 +658,6 @@ BP::BP(TTree *tree) : fChain(0)
       chain->Add("/home/jonesdc/prospect/bipo_data//Phys_Neutrino/180316_Background/pass_BiPoNeutrino/s001_f00260_ts1522250629.root/BiPoTreePlugin/BiPo");
       chain->Add("/home/jonesdc/prospect/bipo_data//Phys_Neutrino/180316_Background/pass_BiPoNeutrino/s001_f00261_ts1522254251.root/BiPoTreePlugin/BiPo");
       chain->Add("/home/jonesdc/prospect/bipo_data//Phys_Neutrino/180316_Background/pass_BiPoNeutrino/s001_f00262_ts1522257997.root/BiPoTreePlugin/BiPo");
-      chain->Add("/home/jonesdc/prospect/bipo_data//Phys_Neutrino/180316_Background/pass_BiPoNeutrino/s002_f00001_ts1521910199.root/BiPoTreePlugin/BiPo");
-      chain->Add("/home/jonesdc/prospect/bipo_data//Phys_Neutrino/180316_Background/pass_BiPoNeutrino/s002_f00002_ts1521917597.root/BiPoTreePlugin/BiPo");
-      chain->Add("/home/jonesdc/prospect/bipo_data//Phys_Neutrino/180316_Background/pass_BiPoNeutrino/s002_f00003_ts1521921213.root/BiPoTreePlugin/BiPo");
       chain->Add("/home/jonesdc/prospect/bipo_data//Phys_Neutrino/180417_Background/pass_BiPoNeutrino/s000_f00003_ts1524021346.root/BiPoTreePlugin/BiPo");
       chain->Add("/home/jonesdc/prospect/bipo_data//Phys_Neutrino/180417_Background/pass_BiPoNeutrino/s000_f00004_ts1524021591.root/BiPoTreePlugin/BiPo");
       chain->Add("/home/jonesdc/prospect/bipo_data//Phys_Neutrino/180417_Background/pass_BiPoNeutrino/s000_f00005_ts1524025242.root/BiPoTreePlugin/BiPo");

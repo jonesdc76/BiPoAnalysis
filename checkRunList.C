@@ -4,7 +4,7 @@
   FILE *fmiss = fopen("MissingRuns.txt","w");
   if(fmiss == NULL)cout<<"Error opening file\n";
   gSystem->cd(gSystem->Getenv("BIPO_OUTDIR"));
-  gSystem->cd("Phys_20180518");
+  gSystem->cd("Phys_Neutrino");
   char dir[255],ser[255], name[255];
   int n = 0;
   while(file.good()&&!file.eof()){
@@ -12,7 +12,7 @@
     file.getline(ser, 255, '/');
     file.getline(name, 255);
     file.peek();
-    ifstream f(Form("%s/pass_BiPo0518/%s.root",dir,name));
+    ifstream f(Form("%s/pass_BiPoNeutrino/%s.root",dir,name));
     if(!f.is_open()){
       cout<<Form("%s/pass_BiPo0518/%s.root",dir,name)<<" NOT found"<<endl;
       fprintf(fmiss, "%s/%s/%s\n",dir,ser,name);
