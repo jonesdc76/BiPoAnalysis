@@ -63,7 +63,7 @@ double GetLiveTime(TChain *ch){
   return tlive/3600.0;
 }
 
-int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
+int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
   //alpha_type = 0, strictly Bi214-->Po214-->Pb210
   //alpha_type = 1, strictly Bi212-->Po212-->Pb208
   //alpha_type = 2, include both
@@ -73,17 +73,17 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
   gStyle->SetTitleX(0.5);
   gStyle->SetPadRightMargin(0.03);
   gStyle->SetPadLeftMargin(0.14);
-  setup_PROSPECT_style();
+  if(P2_style) setup_PROSPECT_style();
   bool exclude_cells = 1;
   TString fid = TString((fiducialize ? "fid":""));
   int which_plots = 0;
   map<const char*, int>plots;
   //set values to 1 if want plotted
   plots.insert(pair<const char*, int>("psd",0));
-  plots.insert(pair<const char*, int>("z",0));
+  plots.insert(pair<const char*, int>("z",1));
   plots.insert(pair<const char*, int>("dt",0));
-  plots.insert(pair<const char*, int>("E",1));
-  plots.insert(pair<const char*, int>("by_cell",1));
+  plots.insert(pair<const char*, int>("E",0));
+  plots.insert(pair<const char*, int>("by_cell",0));
   
   int n = 0;
   vector<TString>name;
@@ -439,6 +439,31 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
     hAdZ[2]->Fit(fdz,"r");
     gPad->Update();
     cZ->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoZposition%i%s.png", alpha_type,fid.Data()));
+    gStyle->SetOptFit(0);
+    gStyle->SetPadLeftMargin(0.1);
+    gStyle->SetPadRightMargin(0.07);
+    gStyle->SetPadTopMargin(0.06);
+    
+    TCanvas *cNeutrino1 = new TCanvas("cN1","cN1",0,0,800,700);
+    hAZ[2]->SetMarkerColor(kBlue);
+    hAZ[2]->SetLineColor(kBlue);
+    hAZ[2]->Draw();
+    hAZ[2]->GetXaxis()->SetTitle("#alpha z-position (mm)");
+    hAZ[2]->GetYaxis()->SetTitle("Counts/mm");
+    hAZ[2]->GetXaxis()->SetRangeUser(-900,900);
+    hAZ[2]->GetYaxis()->SetTitleOffset(1);
+    gPad->Update();
+    cNeutrino1->SaveAs(Form("/home/jonesdc/prospect/plots/NeutrinoBiPoZposition%i%s.png", alpha_type,fid.Data()));
+   TCanvas *cNeutrino2 = new TCanvas("cN2","cN2",0,0,800,700);
+    hAdZ[2]->SetMarkerColor(kBlue);
+    hAdZ[2]->SetLineColor(kBlue);
+    hAdZ[2]->Draw();
+    hAdZ[2]->GetXaxis()->SetTitle("z_{#alpha}-z_{#beta} (mm)");
+    hAdZ[2]->GetYaxis()->SetTitle("Counts/mm");
+    hAdZ[2]->GetYaxis()->SetTitleOffset(1);
+    gPad->Update();
+    cNeutrino2->SaveAs(Form("/home/jonesdc/prospect/plots/NeutrinoBiPodZ%i%s.png", alpha_type,fid.Data()));
+
   }
   //---------------------------------------------
 
@@ -1324,13 +1349,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0){
       grEsc->Draw("ap");
       grEsc->GetXaxis()->SetTitle(gAE->GetXaxis()->GetTitle());
       grEsc->GetYaxis()->SetTitle(gAE->GetYaxis()->GetTitle());
-      grEsc->GetYaxis()->SetTitleOffset(0.6);
       gPad->Update();      
-      c5->SaveAs(Form("/home/jonesdc/prospect/plots/EscBiPoEvsCell%i%s.png", alpha_type, fid.Data()));
+      c5->SaveAs(Form("/home/jonesdc/prospect/plots/EscBiPoEvsCell%i%s.pdf", alpha_type, fid.Data()));
       gStyle->SetPadRightMargin(0.04);
       gStyle->SetPadLeftMargin(0.06);
       TCanvas *c6 = new TCanvas("c6","c6",0,0,1200,300);
       grEsc->SetMarkerStyle(kCircle);
+      grEsc->GetYaxis()->SetTitleOffset(0.6);
       grEsc->Draw("ap");
       TFile f("BiPoNeutrino.root","update","bipo");
       grEsc->Write(Form("Po%iEvsCell%s",(alpha_type == 1 ? 212: 214), fid.Data()));
