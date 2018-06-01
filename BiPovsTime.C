@@ -3,6 +3,7 @@
 #include <map>
 #include <iostream>
 #include "TH1D.h"
+#include "TDatime.h"
 #include "TVectorD.h"
 #include "TChain.h"
 #include "TChainElement.h"
@@ -19,6 +20,7 @@
 #include "TPaveText.h"
 #include "TPaveStats.h"
 #include "BP.C"
+#include "PROSPECT_Style.cc"
 using namespace std;
 
 using namespace std;
@@ -35,6 +37,8 @@ bool isET(int seg){
   return (seg%14 == 13 || seg%14 == 0 || seg >= 140);
 }
 
+//Return live time in hours
+//--------------------------------
 double GetLiveTime(TChain *ch){
   TIter next(ch->GetListOfFiles());
   TChainElement *element;
@@ -57,7 +61,7 @@ double GetLiveTime(TChain *ch){
   return tlive/3600.0;
 }
 
-int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
+int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
   //alpha_type = 0, strictly Bi214-->Po214-->Pb210
   //alpha_type = 1, strictly Bi212-->Po212-->Pb208
   //alpha_type = 2, include both
@@ -68,13 +72,14 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   gStyle->SetTitleX(0.5);
   gStyle->SetPadRightMargin(0.03);
   gStyle->SetPadLeftMargin(0.15);
+  if(P2_style) setup_PROSPECT_style();
   bool exclude_cells = 1;
   TString fid = TString((fiducialize ? "fid":""));
   //Get the TChain
   //----------------
   BP *bp = new BP(); 
   double live = GetLiveTime(bp->chain);
-  double RxOffT = 263.2;//Time when reactor turned off Mar 16 2018, 07:47
+  //  double RxOffT = 263.2;//Time when reactor turned off Mar 16 2018, 07:47
   cout<<"Live time: "<<live<<" hours\n";
   
   //Set boundary cut values on energy, psd, z-pos and time
@@ -146,17 +151,17 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
     bp->GetEntry(i);
     file = bp->fCurrent;
     if(file != prev_file){
-      double rt = ((TVectorD*)bp->chain->GetFile()->Get("runtime"))->Norm1()/3600.0;
+      double rt = ((TVectorD*)bp->chain->GetFile()->Get("runtime"))->Norm1();
       TString st(bp->chain->GetFile()->GetName());
-      double ts = TString(st(st.First(".")-10,10)).Atof()/3600.0;
+      double ts = TString(st(st.First(".")-10,10)).Atof();
 
       if(isFirst){
 	t0 = ts;
 	isFirst = false;
       }
-      if(tlive[p]>HrPerPnt){
+      if(tlive[p]>HrPerPnt*3600){
 	t[p] /=  tlive[p];
-	cout<<"Time"<<p<<": "<<t[p]<<" Live: "<<tlive[p]<<endl;
+	cout<<"Time"<<p<<": "<<t[p]/3600.<<" Live: "<<tlive[p]/3600.0<<endl;
 	++p;
       }
       t[p] += (ts-t0+rt/2.0)*rt;
@@ -228,6 +233,10 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   cout<<""<<endl;
   cout<<"Total live time "<<tot_live<<endl;
   TString title[3] = {"(^{214}Bi-->^{214}Po-->^{208}Pb) ","(^{212}Bi-->^{212}Po-->^{210}Pb) ","(Bi-->Po-->Pb) "};
+
+  //Set time offset to beginning of data taking Mar 5, 2018 18:36
+  TDatime da(2018,03,05,18,36,00);
+  gStyle->SetTimeOffset(da.Convert());
 
   //BiPo rate and efficiency plots
   TGraphErrors *grR = new TGraphErrors();
@@ -329,14 +338,18 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grE->Draw("ap");
   gPad->Update();
   grE->GetYaxis()->SetTitle("E_{#alpha} (MeV)");
-  grE->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
+  grE->GetXaxis()->SetTimeDisplay(1);
+  grE->GetXaxis()->SetTimeFormat("%m/%d");
+  grE->GetXaxis()->SetTitle("Date in 2018");
   grE->Fit("pol0");
   gPad->Update();
   cE->cd(2);
   grEW->Draw("ap");
   gPad->Update();
   grEW->GetYaxis()->SetTitle("E_{#alpha} Width (MeV)");
-  grEW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
+  grEW->GetXaxis()->SetTimeDisplay(1);
+  grEW->GetXaxis()->SetTimeFormat("%m/%d");
+  grEW->GetXaxis()->SetTitle("Date in 2018");
   grEW->Fit("pol0");
   gPad->Update();
   cE->SaveAs(Form("../plots/BiPoAlpha%iEvsT%s.png", alpha_type, fid.Data()));
@@ -386,7 +399,10 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grAPSDW->Draw("ap");
   gPad->Update();
   grAPSDW->GetYaxis()->SetTitle("#alpha PSD Width (MeV)");
-  grAPSDW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
+  grAPSDW->GetXaxis()->SetTimeDisplay(1);
+  grAPSDW->GetXaxis()->SetTimeFormat("%m/%d");
+  grAPSDW->GetXaxis()->SetTitle("Date in 2018");
+
   //  grAPSDW->GetYaxis()->SetTitleOffset(0.9);
   grAPSDW->Fit("pol0");
   gPad->Update();
@@ -436,7 +452,9 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grBPSDW->Draw("ap");
   gPad->Update();
   grBPSDW->GetYaxis()->SetTitle("#beta PSD Width (MeV)");
-  grBPSDW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
+  grBPSDW->GetXaxis()->SetTimeDisplay(1);
+  grBPSDW->GetXaxis()->SetTimeFormat("%m/%d");
+  grBPSDW->GetXaxis()->SetTitle("Date in 2018");
   //  grBPSDW->GetYaxis()->SetTitleOffset(0.9);
   grBPSDW->Fit("pol0");
   gPad->Update();
@@ -471,14 +489,18 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grZ->Draw("ap");
   gPad->Update();
   grZ->GetYaxis()->SetTitle("Z (mm)");
-  grZ->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
+  grZ->GetXaxis()->SetTimeDisplay(1);
+  grZ->GetXaxis()->SetTimeFormat("%m/%d");
+  grZ->GetXaxis()->SetTitle("Date in 2018");
   grZ->Fit("pol0");
   gPad->Update();
   cZ->cd(2);
   grZW->Draw("ap");
   gPad->Update();
   grZW->GetYaxis()->SetTitle("Z RMS (mm)");
-  grZW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
+  grZW->GetXaxis()->SetTimeDisplay(1);
+  grZW->GetXaxis()->SetTimeFormat("%m/%d");
+  grZW->GetXaxis()->SetTitle("Date in 2018");
   grZW->Fit("pol0");
   gPad->Update();
   cZ->SaveAs(Form("../plots/BiPoZ%ivsT%s.png", alpha_type, fid.Data()));
@@ -522,14 +544,18 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grdZ->Draw("ap");
   gPad->Update();
   grdZ->GetYaxis()->SetTitle("dZ (mm)");
-  grdZ->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
+  grdZ->GetXaxis()->SetTimeDisplay(1);
+  grdZ->GetXaxis()->SetTimeFormat("%m/%d");
+  grdZ->GetXaxis()->SetTitle("Date in 2018");
   grdZ->Fit("pol0");
   gPad->Update();
   cdZ->cd(2);
   grdZW->Draw("ap");
   gPad->Update();
   grdZW->GetYaxis()->SetTitle("dZ Width (MeV)");
-  grdZW->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
+  grdZW->GetXaxis()->SetTimeDisplay(1);
+  grdZW->GetXaxis()->SetTimeFormat("%m/%d");
+  grdZW->GetXaxis()->SetTitle("Date in 2018");
   grdZW->Fit("pol0");
   gPad->Update();
   cdZ->SaveAs(Form("../plots/BiPodZ%ivsT%s.png", alpha_type, fid.Data()));
@@ -542,14 +568,15 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grR->Draw("ap");
   gPad->Update();
   grR->GetYaxis()->SetTitle("BiPo Rate (Counts/h)");
-  grR->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
-  //  grR->Fit("pol0");
+  grR->GetXaxis()->SetTimeDisplay(1);
+  grR->GetXaxis()->SetTimeFormat("%m/%d");
+  grR->GetXaxis()->SetTitle("Date in 2018");
+  grR->Fit("pol0");
   gPad->Update();
-  TLine *line = new TLine(RxOffT,gPad->GetUymin(),RxOffT,gPad->GetUymax());
-  line->SetLineColor(kBlack);
-  line->SetLineStyle(2);
-  line->Draw();
-  gPad->Update();
+  // TLine *line = new TLine(RxOffT,gPad->GetUymin(),RxOffT,gPad->GetUymax());
+  // line->SetLineColor(kBlack);
+  // line->SetLineStyle(2);
+  // line->Draw();
   cR->cd(2);
   for(int i=0;i<=p; i++){
     grEff->SetPoint(i,t[i],effAE[i]*effAPSD[i]*effBPSD[i]*effdZ[i]);
@@ -558,7 +585,9 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   mg->Add(grEff);
   gPad->Update();
   mg->GetYaxis()->SetTitle("Cut Efficiency");
-  mg->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
+  mg->GetXaxis()->SetTimeDisplay(1);
+  mg->GetXaxis()->SetTimeFormat("%m/%d");
+  mg->GetXaxis()->SetTitle("Date in 2018");
   mg->GetYaxis()->SetTitleOffset(2.25);
   pt->Draw();
   gPad->Update();
@@ -573,19 +602,28 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0){
   grZWpub->SetMarkerSize(0.8);
   grZWpub->SetMarkerColor(kBlue);
   grZWpub->Draw("ap");
-  gStyle->SetPadLeftMargin(0.12);
+  gStyle->SetPadLeftMargin(0.16);
   gStyle->SetPadRightMargin(0.05);
-  TCanvas *c2 = new TCanvas("c2","c2",0,0,800,600);
+  TCanvas *c2 = new TCanvas("c2","c2",0,0,800,700);
   TGraphErrors *grEsc = (TGraphErrors*)grE->Clone("grEsc");
-  double x, y, norm;
-  grEsc->GetPoint(0, x, norm);
+  TF1 fesc("fesc","pol0",0,1);
+  grEsc->Fit("fesc");
+  double x, y, norm = fesc.GetParameter(0);
+  //norm = 1.0;
   for(int i=0;i<grEsc->GetN();++i){
     grEsc->GetPoint(i, x, y);
     grEsc->SetPoint(i, x, y/norm);
     grEsc->SetPointError(i, grEsc->GetErrorX(i), grEsc->GetErrorY(i)/norm);
   }
+  grEsc->Fit("pol0");
   grEsc->Draw("ap");
-  c2->SaveAs(Form("../plots/EscapeBiPoE%ivsT%s.png", alpha_type, fid.Data()));
+  grEsc->GetYaxis()->SetTitle("E_{#alpha}/#LTE_{#alpha}#GT");
+  grEsc->GetXaxis()->SetTimeDisplay(1);
+  grEsc->GetXaxis()->SetTimeFormat("%b %d");
+  grEsc->GetXaxis()->SetTitle("Date in 2018");
+  grEsc->GetYaxis()->SetTitleOffset(1.5);
+  gPad->Update();
+  c2->SaveAs(Form("../plots/EscapeBiPoE%ivsT%s.pdf", alpha_type, fid.Data()));
 
   delete bp;
   return 0;
