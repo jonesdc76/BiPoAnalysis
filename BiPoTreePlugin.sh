@@ -13,7 +13,7 @@ datadir=/projects/prospect/converted_data/Phys/${date}/${description}/series${se
 
 outdir=/home/jonesdc/prospect/Chilly/Outdir/${date}/$description/
 rundir=/home/jonesdc/prospect/PROSPECT2x_Analysis/Analysis
-cfg=${rundir}/AnalyzerConfig/AD1_Wet_Phys_BiPo5.cfg
+cfg=${rundir}/AnalyzerConfig/AD1_Wet_Phys_BiPoNeutrino.cfg
 
 
 cd ${rundir}

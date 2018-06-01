@@ -15,13 +15,13 @@ then
     echo "pass string required as command line argument"
 else
     cd ${P2X_ANALYSIS_CODE}/ControlScripts
-    RELEASE=Phys_20180518
+    RELEASE=Phys_Neutrino_v2
     if [ ! -d ${P2X_ANALYZED}/${RELEASE} ];then
 	mkdir $P2X_ANALYZED/${RELEASE}
     fi
     export P2X_ANALYZED=${P2X_ANALYZED}/${RELEASE}
     ANALYZER=$name
-    export P2X_PHYSDAT=/projects/prospect/converted_data/Phys/${RELEASE}
+    export P2X_PHYSDAT=${P2X_PHYSDAT}/${RELEASE}
     echo "Copying sql databases from ${P2X_PHYSDAT} to ${APP_DIR}"
     cp $P2X_PHYSDAT/*.sql $APP_DIR/
     n=0
@@ -36,6 +36,7 @@ else
     series[${n}]=WetCommissioning/series023; echo "Adding  ${series[$n]}"; ((n++))
     series[${n}]=180316_Background/series000; echo "Adding  ${series[$n]}"; ((n++))
     series[${n}]=180316_Background/series001; echo "Adding  ${series[$n]}"; ((n++))
+    series[${n}]=180316_Background/series002; echo "Adding  ${series[$n]}"; ((n++))
     series[${n}]=180417_Background/series000; echo "Adding  ${series[$n]}"; ((n++))
     series[${n}]=180420_Background/series000; echo "Adding  ${series[$n]}"; ((n++))
     series[${n}]=180501_ReactorOn/series000; echo "Adding  ${series[$n]}";  ((n++))
@@ -43,7 +44,7 @@ else
     series[${n}]=180501_ReactorOn/series002; echo "Adding  ${series[$n]}";  ((n++))
     series[${n}]=180501_ReactorOn/series003; echo "Adding  ${series[$n]}";  ((n++))
     series[${n}]=180501_ReactorOn/series004; echo "Adding  ${series[$n]}";  ((n++))
-
+    
 
     
 #Launch analysis batches
@@ -51,12 +52,16 @@ else
     do
 	export SERIES=$i
 	echo " ${P2X_ANALYZED}/${i}"
+	if [ ! -d ${P2X_ANALYZED}$i ];then
+	    mkdir  -p ${P2X_ANALYZED}/$i
+	fi
 	if [ $LAUNCH -eq 1 ];then
-	    ./LaunchBatch.py --anacal=$SERIES --mode=$ANALYZER --new --jmax=3
+	    ./LaunchBatch.py --anacal=$SERIES --mode=$ANALYZER --new --jmax=15
 	fi
     done
     
 #Copy BiPo tree root files to common directory
+    if [ $LAUNCH -eq 33 ]; then
     for i in "${series[@]}"
     do
 	cd ${P2X_ANALYZED}/$i
@@ -75,6 +80,7 @@ else
 	    fi
 	done
     done
+    fi
 fi
 
 #export SERIES=WetCommissioning/series015
