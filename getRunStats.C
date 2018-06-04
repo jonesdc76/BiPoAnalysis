@@ -16,12 +16,11 @@
   while((element = (TChainElement*)next())){
     st = TString(element->GetTitle());
     if(st.Contains(data[n]) && first_of_dataset){
-      cout<<"HIIIIII\n\n";
       first_of_dataset = 0;
       ts1 = time_t(TString(st(st.First(".")-10,10)).Atoi());
     }
     if(!st.Contains(data[n])){
-      cout<<st.Data()<<"\n"<<prev_st.Data()<<endl<<endl;
+      //ut<<st.Data()<<"\n"<<prev_st.Data()<<endl<<endl;
       ts2 = prev_ts;
       cout<<"\\item{"<<data[n].Data()<<": "<<Form("%0.3f",difftime(ts2, ts1)/3600.0)<<" hours of data from ";
       printf("%s", asctime(localtime(&ts1)));

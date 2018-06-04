@@ -1,16 +1,16 @@
 #!/bin/bash
 pass=pass$1
-release=Phys_Neutrino
+release=Phys_Neutrino_v2
 dir=prospect/data/Analyzed
 if [ $# -ne 1 ]
 then 
     echo "pass string required as command line argument"
 else
     n=0
-    series[${n}]=WetCommissioning; echo "Adding  ${series[$n]}"; ((n++))
-    series[${n}]=180316_Background; echo "Adding  ${series[$n]}"; ((n++))
-    series[${n}]=180417_Background; echo "Adding  ${series[$n]}"; ((n++))
-    series[${n}]=180420_Background; echo "Adding  ${series[$n]}"; ((n++))
+    #series[${n}]=WetCommissioning; echo "Adding  ${series[$n]}"; ((n++))
+    #series[${n}]=180316_Background; echo "Adding  ${series[$n]}"; ((n++))
+    #series[${n}]=180417_Background; echo "Adding  ${series[$n]}"; ((n++))
+    #series[${n}]=180420_Background; echo "Adding  ${series[$n]}"; ((n++))
     series[${n}]=180501_ReactorOn; echo "Adding  ${series[$n]}";  ((n++))
     series[${n}]=180525_Background; echo "Adding  ${series[$n]}";  ((n++))
 
