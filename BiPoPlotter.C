@@ -32,26 +32,6 @@ bool isET(int seg){
   return (seg%14 == 13 || seg%14 == 0 || seg >= 140);
 }
 
-double FWHM(TH1D *h){
-  // h->SetBinContent(0,0);
-  // h->SetBinContent(h->GetNbinsX()+1,0);
-  // double height = h->GetMaximum()/2.0;//GetBinContent(h->GetNbinsX()/2)/2.0;
-  // double fwhm = 0;
-  // for(int i=h->GetNbinsX();i>0;--i){
-  //   if(h->GetBinContent(i)>=height){
-  //     fwhm = h->GetBinLowEdge(i+1);
-  //     break;
-  //   }
-  // }
-  // for(int i=1;i<h->GetNbinsX();++i){
-  //   if(h->GetBinContent(i)>=height){
-  //     fwhm -= h->GetBinLowEdge(i);
-  //     break;
-  //   }
-  // }
-  double fwhm = h->GetRMS();
-  return fwhm;
-}
 double GetLiveTime(TChain *ch){
   TIter next(ch->GetListOfFiles());
   TChainElement *element;
@@ -79,10 +59,10 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   int which_plots = 0;
   map<const char*, int>plots;
   //set values to 1 if want plotted
-  plots.insert(pair<const char*, int>("psd",0));
-  plots.insert(pair<const char*, int>("z",0));
-  plots.insert(pair<const char*, int>("dt",0));
-  plots.insert(pair<const char*, int>("E",0));
+  plots.insert(pair<const char*, int>("psd",1));
+  plots.insert(pair<const char*, int>("z",1));
+  plots.insert(pair<const char*, int>("dt",1));
+  plots.insert(pair<const char*, int>("E",1));
   plots.insert(pair<const char*, int>("by_cell",1));
   
   int n = 0;
@@ -443,26 +423,6 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gStyle->SetPadLeftMargin(0.1);
     gStyle->SetPadRightMargin(0.07);
     gStyle->SetPadTopMargin(0.06);
-    
-    TCanvas *cNeutrino1 = new TCanvas("cN1","cN1",0,0,800,700);
-    hAZ[2]->SetMarkerColor(kBlue);
-    hAZ[2]->SetLineColor(kBlue);
-    hAZ[2]->Draw();
-    hAZ[2]->GetXaxis()->SetTitle("#alpha z-position (mm)");
-    hAZ[2]->GetYaxis()->SetTitle("Counts/mm");
-    hAZ[2]->GetXaxis()->SetRangeUser(-900,900);
-    hAZ[2]->GetYaxis()->SetTitleOffset(1);
-    gPad->Update();
-    cNeutrino1->SaveAs(Form("/home/jonesdc/prospect/plots/NeutrinoBiPoZposition%i%s.pdf", alpha_type,fid.Data()));
-   TCanvas *cNeutrino2 = new TCanvas("cN2","cN2",0,0,800,700);
-    hAdZ[2]->SetMarkerColor(kBlue);
-    hAdZ[2]->SetLineColor(kBlue);
-    hAdZ[2]->Draw();
-    hAdZ[2]->GetXaxis()->SetTitle("z_{#alpha}-z_{#beta} (mm)");
-    hAdZ[2]->GetYaxis()->SetTitle("Counts/mm");
-    hAdZ[2]->GetYaxis()->SetTitleOffset(1);
-    gPad->Update();
-    cNeutrino2->SaveAs(Form("/home/jonesdc/prospect/plots/NeutrinoBiPodZ%i%s.pdf", alpha_type,fid.Data()));
 
   }
   //---------------------------------------------
@@ -593,9 +553,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 
     //Alpha Z distribution mean and width 
     TGraphErrors *gAZ = new TGraphErrors();
-    TGraph *gAZW = new TGraph();
+    TGraphErrors *gAZW = new TGraphErrors();
     TGraphErrors *gAZ_ET = new TGraphErrors();
-    TGraph *gAZW_ET = new TGraph();
+    TGraphErrors *gAZW_ET = new TGraphErrors();
 
     //dZ mean and width vs cell
     TGraphErrors *gdZ = new TGraphErrors();
@@ -799,12 +759,14 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	gPad->Update();
       	gAZ->SetPoint(nZ, i, hCellZ[i][2]->GetMean());
       	gAZ->SetPointError(nZ, 0, hCellZ[i][2]->GetMeanError());
-      	gAZW->SetPoint(nZ, i, FWHM(hCellZ[i][2]));
+      	gAZW->SetPoint(nZ, i, hCellZ[i][2]->GetRMS());
+      	gAZW->SetPointError(nZ, 0, hCellZ[i][2]->GetRMSError());
      	++nZ;
       	if(isET(i)){
       	  gAZ_ET->SetPoint(nZ_ET, i, hCellZ[i][2]->GetMean());
       	  gAZ_ET->SetPointError(nZ_ET, 0, hCellZ[i][2]->GetMeanError());
-      	  gAZW_ET->SetPoint(nZ_ET, i, FWHM(hCellZ[i][2]));
+      	  gAZW_ET->SetPoint(nZ_ET, i, hCellZ[i][2]->GetRMS());
+      	  gAZ_ET->SetPointError(nZ_ET, 0, hCellZ[i][2]->GetRMSError());
       	  ++nZ_ET;
       	}
       	gAZ->Fit("pol0");
@@ -1356,6 +1318,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       gStyle->SetPadRightMargin(0.05);
       gStyle->SetPadLeftMargin(0.08);
       gStyle->SetOptStat(0);
+      bool normalize = 1;//create plots normalized to average value
+      //plot 1 from technote
       TCanvas *c0 = new TCanvas("c0","c0",0,0,1200,300);
       TGraphErrors *gAE1 = new TGraphErrors();
       gAE1->SetName(Form("grEvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
@@ -1363,6 +1327,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       TF1 fE("fE","pol0",0,1);
       gAE->Fit("fE");
       double x, y, norm = fE.GetParameter(0);
+      if(!normalize)norm = 1.0;
       for(int i=0;i<gAE->GetN();++i){
 	gAE->GetPoint(i, x, y);
 	gAE1->SetPoint(i, x, y/norm);
@@ -1375,11 +1340,16 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       gAE1->Draw("ap");
       gAE1->GetXaxis()->SetTitle("Segment Number");
       gAE1->GetYaxis()->SetTitle("E_{#alpha}/#LTE_{#alpha}#GT");
-      gAE1->GetYaxis()->SetTitleOffset(0.8);
+      if(!normalize)gAE1->GetYaxis()->SetTitle("E_{#alpha} (MeV)");
+      gAE1->GetYaxis()->SetTitleOffset(0.4);
+      gAE1->GetXaxis()->SetTitleOffset(0.7);
+      gAE1->GetYaxis()->SetTitleSize(0.07);
+      gAE1->GetXaxis()->SetTitleSize(0.07);
       gPad->Update();
       gAE1->Write();
-      c0->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iEvsCell%s.png", (alpha_type == 1 ? 212 : 214), fid.Data()));
+      c0->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iEvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
       
+      //plot 2 from technote
       bool sigma_at_1MeV = 0;
       TCanvas *c1 = new TCanvas("c1","c1",0,0,1200,300);
       TGraphErrors *gAEW1 = new TGraphErrors();
@@ -1391,6 +1361,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        }else{
 	gAEW->Fit("fE");
 	norm = fE.GetParameter(0);
+	if(!normalize)norm = 1.0;
        }
        for(int i=0;i<gAEW->GetN();++i){
 	 gAEW->GetPoint(i, x, y);
@@ -1404,21 +1375,28 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        gAEW1->Draw("ap");
        gAEW1->GetXaxis()->SetMaxDigits(4);
        gAEW1->GetXaxis()->SetTitle("Segment Number");
-       gAEW1->GetYaxis()->SetTitleOffset(0.8);
+       gAEW1->GetYaxis()->SetTitleOffset(0.4);
+       gAEW1->GetXaxis()->SetTitleOffset(0.7);
+       gAEW1->GetYaxis()->SetTitleSize(0.07);
+       gAEW1->GetXaxis()->SetTitleSize(0.07);
        if(sigma_at_1MeV)
 	 gAEW1->GetYaxis()->SetTitle("#sigma_{E}/#sqrt{#LTE_{#alpha}#GT}");
-       else
+       else{
 	 gAEW1->GetYaxis()->SetTitle("#sigma_{E}/#LT#sigma_{E}#GT");
+	 if(!normalize)gAEW1->GetYaxis()->SetTitle("#sigma_{E} (MeV)");
+       }
        gPad->Update();
        gAEW1->Write();
-       c1->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iEresvsCell%s.png", (alpha_type == 1 ? 212 : 214), fid.Data()));
+       c1->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iEresvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
        
-       TCanvas *c3 = new TCanvas("c3","c3",0,0,1200,300);
+      //plot 3 from technote
+       TCanvas *c2 = new TCanvas("c2","c2",0,0,1200,300);
        TGraphErrors *gdZW1 = new TGraphErrors();
        gdZW1->SetName(Form("grsigmadZvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
        gdZW1->SetTitle(Form("Po-%i #DeltaZ 1-#sigma Width vs. Cell", (alpha_type == 1 ? 212 : 214)));
        gdZW->Fit("fE");
        norm = fE.GetParameter(0);
+       if(!normalize)norm = 1.0;
        for(int i=0;i<gdZW->GetN();++i){
 	 gdZW->GetPoint(i, x, y);
 	 gdZW1->SetPoint(i, x, y/norm);
@@ -1429,16 +1407,118 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        gdZW1->SetMarkerStyle(kCircle);
        gdZW1->SetMarkerSize(0.8);
        gdZW1->Draw("ap");
-       gdZW1->GetYaxis()->SetTitleOffset(0.8);
+       gdZW1->GetYaxis()->SetTitleOffset(0.4);
+       gdZW1->GetXaxis()->SetTitleOffset(0.7);
+       gdZW1->GetYaxis()->SetTitleSize(0.07);
+       gdZW1->GetXaxis()->SetTitleSize(0.07);
        gdZW1->GetXaxis()->SetTitle("Segment Number");
        gdZW1->GetYaxis()->SetTitle("#sigma_{Z}/#LT#sigma_{Z}#GT");
-       gdZW1->GetYaxis()->SetTitleOffset(0.8);
+       if(!normalize) gdZW1->GetYaxis()->SetTitle("#sigma_{Z} (mm)");
        gPad->Update();
        gdZW1->Write();
-       c3->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%idZWidthvsCell%s.png", (alpha_type == 1 ? 212 : 214), fid.Data()));
+       c2->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%idZWidthvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+
+       //plot 4 from technote
+       TCanvas *c3 = new TCanvas("c3","c3",0,0,1200,300);
+       TGraphErrors *gAZW1 = new TGraphErrors();
+       gAZW1->SetName(Form("grZRMSvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
+       gAZW1->SetTitle(Form("Po-%i Z-distribution RMS Width vs. Cell", (alpha_type == 1 ? 212 : 214)));
+       gAZW->Fit("fE");
+       norm = fE.GetParameter(0);
+       if(!normalize)norm = 1.0;
+       for(int i=0;i<gAZW->GetN();++i){
+	 gAZW->GetPoint(i, x, y);
+	 gAZW1->SetPoint(i, x, y/norm);
+	 gAZW1->SetPointError(i, 0, gAZW->GetErrorY(i)/norm);
+       }
+       gAZW1->SetMarkerColor(kBlue);
+       gAZW1->SetLineColor(kBlue);
+       gAZW1->SetMarkerStyle(kCircle);
+       gAZW1->SetMarkerSize(0.8);
+       gAZW1->Draw("ap");
+       gAZW1->GetYaxis()->SetTitleOffset(0.4);
+       gAZW1->GetXaxis()->SetTitleOffset(0.7);
+       gAZW1->GetYaxis()->SetTitleSize(0.07);
+       gAZW1->GetXaxis()->SetTitleSize(0.07);
+       gAZW1->GetXaxis()->SetTitle("Segment Number");
+       gAZW1->GetYaxis()->SetTitle("Z_{RMS}/#LT Z_{RMS}#GT");
+       if(!normalize) gAZW1->GetYaxis()->SetTitle("Z_{RMS} (mm)");
+       gPad->Update();
+       gAZW1->Write();
+       c3->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iZRMSvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+
+       //plot 9 from technote
+       TCanvas *c4 = new TCanvas("c4","c4",0,0,1200,300);
+       TGraphErrors *gAZ1 = new TGraphErrors();
+       gAZ1->SetName(Form("grZvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
+       gAZ1->SetTitle(Form("Po-%i Mean of Z-distribution vs. Cell", (alpha_type == 1 ? 212 : 214)));
+       gAZ->Fit("fE");
+       norm = fE.GetParameter(0);
+       if(!normalize)norm = 1.0;
+       for(int i=0;i<gAZ->GetN();++i){
+	 gAZ->GetPoint(i, x, y);
+	 gAZ1->SetPoint(i, x, y/norm);
+	 gAZ1->SetPointError(i, 0, gAZ->GetErrorY(i)/norm);
+       }
+       gAZ1->SetMarkerColor(kBlue);
+       gAZ1->SetLineColor(kBlue);
+       gAZ1->SetMarkerStyle(kCircle);
+       gAZ1->SetMarkerSize(0.8);
+       gAZ1->Draw("ap");
+       gAZ1->GetYaxis()->SetTitleOffset(0.4);
+       gAZ1->GetXaxis()->SetTitleOffset(0.7);
+       gAZ1->GetYaxis()->SetTitleSize(0.07);
+       gAZ1->GetXaxis()->SetTitleSize(0.07);
+       gAZ1->GetXaxis()->SetTitle("Segment Number");
+       gAZ1->GetYaxis()->SetTitle("Mean Z/#LT Mean Z}#GT");
+       if(!normalize) gAZ1->GetYaxis()->SetTitle("Mean Z (mm)");
+       gPad->Update();
+       gAZ1->Write();
+       c4->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%imeanZvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+
+       //plot 10 from technote
+       TCanvas *c5 = new TCanvas("c5","c5",0,0,800,600);
+       h_AE[2]->SetLineColor(kBlue);
+       h_AE[2]->SetTitle(Form("Po-%i Alpha Energy Distribution", (alpha_type==1 ? 212 : 214)));
+       h_AE[2]->Draw();
+       gPad->Update();
+       h_AE[2]->GetXaxis()->SetTitle("E_{#alpha} (MeV)");
+       gPad->Update();
+       c5->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iAlphaEvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+       
+       //plot 11 from technote
+       TCanvas *c6 = new TCanvas("c6","c6",0,0,800,600);
+       hBE[2]->SetLineColor(kBlue);
+       hBE[2]->SetTitle(Form("Bi-%i Beta Energy Distribution", (alpha_type==1 ? 212 : 214)));
+       hBE[2]->Draw();
+       gPad->Update();
+       hBE[2]->GetXaxis()->SetTitle("E_{#beta} (MeV)");
+       gPad->Update();
+       c6->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iAlphaEvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+    
+       //plot 12 from technote
+       TCanvas *c7 = new TCanvas("c7","c7",0,0,800,700);
+       hAZ[2]->SetMarkerColor(kBlue);
+       hAZ[2]->SetLineColor(kBlue);
+       hAZ[2]->Draw();
+       hAZ[2]->GetXaxis()->SetTitle("#alpha Z-position (mm)");
+       hAZ[2]->GetYaxis()->SetTitle("Counts/mm");
+       hAZ[2]->GetXaxis()->SetRangeUser(-900,900);
+       hAZ[2]->GetYaxis()->SetTitleOffset(1);
+       gPad->Update();
+       c7->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPoZposition%i%s.pdf", alpha_type,fid.Data()));
+       //plot 13 from technote
+       TCanvas *c8 = new TCanvas("c8","c8",0,0,800,700);
+       hAdZ[2]->SetMarkerColor(kBlue);
+       hAdZ[2]->SetLineColor(kBlue);
+       hAdZ[2]->Draw();
+       hAdZ[2]->GetXaxis()->SetTitle("Z_{#alpha}-Z_{#beta} (mm)");
+       hAdZ[2]->GetYaxis()->SetTitle("Counts/mm");
+       hAdZ[2]->GetYaxis()->SetTitleOffset(1);
+       gPad->Update();
+       c8->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPodZ%i%s.pdf", alpha_type,fid.Data()));
        f.Close();
-       gStyle->SetOptFit(1);
-       gStyle->SetOptStat(1111);
+
     }
   }
 
@@ -1446,3 +1526,4 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   delete bp;
   return 0;
 }
+
