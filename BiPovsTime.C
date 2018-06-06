@@ -14,6 +14,7 @@
 #include "TGraphErrors.h"
 #include "TCanvas.h"
 #include "TF1.h"
+#include "TFile.h"
 #include "TTree.h"
 #include "TH1D.h"
 #include "TH2D.h"
@@ -61,11 +62,11 @@ double GetLiveTime(TChain *ch){
   return tlive/3600.0;
 }
 
-int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
+int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool recreate = 0){
   //alpha_type = 0, strictly Bi214-->Po214-->Pb210
   //alpha_type = 1, strictly Bi212-->Po212-->Pb208
   //alpha_type = 2, include both
-  bool slow = 0;
+  bool slow = 0, time_in_epoch_sec = 1;
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(1111);
   gStyle->SetTitleW(0.8);
@@ -90,7 +91,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset + (t_start * f2n);//start time of far window 
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
-  double  fidZ = fiducialize ? 1000.0 : 1000;//448.0;
+  double fidZ = fiducialize ? 1000.0 : 1000;//448.0;
   if(alpha_type == 1){
     t_start = 2e-4;
     t_end = 6e-3;
@@ -156,7 +157,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
       double ts = TString(st(st.First(".")-10,10)).Atof();
 
       if(isFirst){
-	t0 = ts;
+	t0 = time_in_epoch_sec ? 0.0 : ts;
 	isFirst = false;
       }
       if(tlive[p]>HrPerPnt*3600){
@@ -326,8 +327,8 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gPad->Update();
     if(slow) sleep(1);;
     double err;
-    double rate = double(hE[i][2]->IntegralAndError(0,hE[i][2]->GetNbinsX(), err))/tlive[i];
-    err /= tlive[i];
+    double rate = double(hE[i][2]->IntegralAndError(0,hE[i][2]->GetNbinsX(), err))/tlive[i]*1000.0;
+    err /= tlive[i]/1000.0;
     grR->SetPoint(i, t[i], rate);
     grR->SetPointError(i, 0, err);
     grE->SetPoint(i, t[i], f.GetParameter(1));
@@ -349,7 +350,8 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
   grEW->GetYaxis()->SetTitle("E_{#alpha} Width (MeV)");
   grEW->GetXaxis()->SetTimeDisplay(1);
   grEW->GetXaxis()->SetTimeFormat("%m/%d");
-  grEW->GetXaxis()->SetTitle("Date in 2018");
+  grEW->GetXaxis()->SetTitle("Epoch seconds");
+  
   grEW->Fit("pol0");
   gPad->Update();
   cE->SaveAs(Form("../plots/BiPoAlpha%iEvsT%s.png", alpha_type, fid.Data()));
@@ -465,13 +467,13 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
   TCanvas *cZ = new TCanvas("cZ","cZ",0,0,1200,600);
   cZ->Divide(2,1);
   cZ->cd(1);
-  TGraph *grZ = new TGraph();
+  TGraphErrors *grZ = new TGraphErrors();
   grZ->SetMarkerColor(kBlue);
   grZ->SetMarkerStyle(8);
   grZ->SetMarkerSize(0.8);
   grZ->SetLineColor(kBlue);
   grZ->SetTitle(Form("%s #alpha Z-distribution Mean vs Time",title[alpha_type].Data()));
-  TGraph *grZW = new TGraph();
+  TGraphErrors *grZW = new TGraphErrors();
   grZW->SetMarkerColor(kBlue);
   grZW->SetMarkerStyle(8);
   grZW->SetMarkerSize(0.8);
@@ -484,7 +486,9 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
      gPad->Update();
     if(slow) sleep(1);;
     grZ->SetPoint(i, t[i], hZ[i][2]->GetMean());
+    grZ->SetPointError(i, 0, hZ[i][2]->GetMeanError());
     grZW->SetPoint(i, t[i], hZ[i][2]->GetRMS());
+    grZW->SetPointError(i, 0, hZ[i][2]->GetRMSError());
   }
   grZ->Draw("ap");
   gPad->Update();
@@ -567,7 +571,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
   cR->cd(1);
   grR->Draw("ap");
   gPad->Update();
-  grR->GetYaxis()->SetTitle("BiPo Rate (Counts/h)");
+  grR->GetYaxis()->SetTitle("BiPo Rate (mHz)");
   grR->GetXaxis()->SetTimeDisplay(1);
   grR->GetXaxis()->SetTimeFormat("%m/%d");
   grR->GetXaxis()->SetTitle("Date in 2018");
@@ -593,38 +597,130 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
   gPad->Update();
   cR->SaveAs(Form("../plots/BiPoRate%ivsT%s.png", alpha_type, fid.Data()));
 
-  gStyle->SetPadLeftMargin(0.05);
-  gStyle->SetPadRightMargin(0.05);
-  gStyle->SetOptFit(0);
-  TCanvas *c1 = new TCanvas("c1","c1",0,0,1000,250);
-  TGraph *grZWpub = (TGraph*)grZW->Clone("grZWpub");
-  grZWpub->SetMarkerStyle(kCircle);
-  grZWpub->SetMarkerSize(0.8);
-  grZWpub->SetMarkerColor(kBlue);
-  grZWpub->Draw("ap");
-  gStyle->SetPadLeftMargin(0.16);
-  gStyle->SetPadRightMargin(0.05);
-  TCanvas *c2 = new TCanvas("c2","c2",0,0,800,700);
-  TGraphErrors *grEsc = (TGraphErrors*)grE->Clone("grEsc");
-  TF1 fesc("fesc","pol0",0,1);
-  grEsc->Fit("fesc");
-  double x, y, norm = fesc.GetParameter(0);
-  //norm = 1.0;
-  for(int i=0;i<grEsc->GetN();++i){
-    grEsc->GetPoint(i, x, y);
-    grEsc->SetPoint(i, x, y/norm);
-    grEsc->SetPointError(i, grEsc->GetErrorX(i), grEsc->GetErrorY(i)/norm);
-  }
-  grEsc->Fit("pol0");
-  grEsc->Draw("ap");
-  grEsc->GetYaxis()->SetTitle("E_{#alpha}/#LTE_{#alpha}#GT");
-  grEsc->GetXaxis()->SetTimeDisplay(1);
-  grEsc->GetXaxis()->SetTimeFormat("%b %d");
-  grEsc->GetXaxis()->SetTitle("Date in 2018");
-  grEsc->GetYaxis()->SetTitleOffset(1.5);
-  gPad->Update();
-  c2->SaveAs(Form("../plots/EscapeBiPoE%ivsT%s.pdf", alpha_type, fid.Data()));
+  
+  if(1){
+    TFile f("BiPoPublicationPlots.root",(recreate == 1 ? "RECREATE" : "UPDATE"),"BiPoPlots");
+    gStyle->SetPadRightMargin(0.05);
+    gStyle->SetPadLeftMargin(0.08);
+    gStyle->SetOptStat(0);
+    TCanvas *c1 = new TCanvas("c1","c1",0,0,1200,300);
+    TGraphErrors *grEpub = new TGraphErrors();
+    grEpub->SetName(Form("grEvsTPo%i", (alpha_type == 1 ? 212 : 214)));
+    grEpub->SetTitle(Form("Po%i #alpha Energy vs Time", (alpha_type == 1 ? 212 : 214)));
+    grEpub->SetMarkerStyle(kCircle);
+    grEpub->SetMarkerSize(0.8);
+    grEpub->SetMarkerColor(kBlue);
+    grEpub->SetLineColor(kBlue);
+    TF1 fp0("fp0","pol0",0,1);
+    grE->Fit("fp0");
+    double x, y, norm = fp0.GetParameter(0);
+    for(int i=0;i<grE->GetN();++i){
+      grE->GetPoint(i, x, y);
+      grEpub->SetPoint(i, x, y/norm);
+      grEpub->SetPointError(i, 0, grE->GetErrorY(i)/norm);
+    }
+    grEpub->Draw("ap");
+    grEpub->GetYaxis()->SetTitle("E_{#alpha}/#LTE_{#alpha}#GT");
+    grEpub->GetXaxis()->SetTitle("Epoch Seconds");
+    if(!time_in_epoch_sec){
+      grEpub->GetXaxis()->SetTimeDisplay(1);
+      grEpub->GetXaxis()->SetTimeFormat("%b %d");
+      grEpub->GetXaxis()->SetTitle("Date in 2018");
+    }
+    grEpub->GetYaxis()->SetTitleOffset(0.8);
+    gPad->Update();
+    grEpub->Write();
+    c1->SaveAs(Form("../plots/PubBiPoE%ivsT%s.pdf", alpha_type, fid.Data()));
+    
+    TCanvas *c2 = new TCanvas("c2","c2",0,0,1200,300);
+    TGraphErrors *grEWpub = new TGraphErrors();
+    grEWpub->SetName(Form("grsigmaEvsTPo%i", (alpha_type == 1 ? 212 : 214)));
+    grEWpub->SetTitle(Form("Po%i #alpha Energy 1#sigma Width vs Time", (alpha_type == 1 ? 212 : 214)));
+    grEWpub->SetMarkerStyle(kCircle);
+    grEWpub->SetMarkerSize(0.8);
+    grEWpub->SetMarkerColor(kBlue);
+    grEWpub->SetLineColor(kBlue);
+    grEW->Fit("fp0");
+    norm = fp0.GetParameter(0);
+    for(int i=0;i<grEW->GetN();++i){
+      grEW->GetPoint(i, x, y);
+      grEWpub->SetPoint(i, x, y/norm);
+      grEWpub->SetPointError(i, 0, grEW->GetErrorY(i)/norm);
+    }
+    grEWpub->Draw("ap");
+    grEWpub->GetYaxis()->SetTitle("#sigma_{E}/#LT#sigma_{E}#GT");
+    grEWpub->GetXaxis()->SetTitle("Epoch Seconds");
+    if(!time_in_epoch_sec){
+      grEWpub->GetXaxis()->SetTimeDisplay(1);
+      grEWpub->GetXaxis()->SetTimeFormat("%b %d");
+      grEWpub->GetXaxis()->SetTitle("Date in 2018");
+    }
+    grEWpub->GetYaxis()->SetTitleOffset(0.8);
+    gPad->Update();
+    grEWpub->Write();
+    c2->SaveAs(Form("../plots/PubBiPoEres%ivsT%s.pdf", alpha_type, fid.Data()));
+    
+    TCanvas *c3 = new TCanvas("c3","c3",0,0,1200,300);
+    TGraphErrors *grdZWpub = new TGraphErrors();
+    grdZWpub->SetName(Form("grsigmadZvsTPo%i", (alpha_type == 1 ? 212 : 214)));
+    grdZWpub->SetTitle(Form("Po%i #DeltaZ 1#sigma Width vs Time", (alpha_type == 1 ? 212 : 214)));
+    grdZWpub->SetMarkerStyle(kCircle);
+    grdZWpub->SetMarkerSize(0.8);
+    grdZWpub->SetMarkerColor(kBlue);
+    grdZWpub->SetLineColor(kBlue);
+    grdZW->Fit("fp0");
+    norm = fp0.GetParameter(0);
+    for(int i=0;i<grdZW->GetN();++i){
+      grdZW->GetPoint(i, x, y);
+      grdZWpub->SetPoint(i, x, y/norm);
+      grdZWpub->SetPointError(i, 0, grdZW->GetErrorY(i)/norm);
+    }
+    grdZWpub->Draw("ap");
+    grdZWpub->GetYaxis()->SetTitle("#sigma_{#DeltaZ}/#LT#sigma_{#DeltaZ}#GT");
+    grdZWpub->GetXaxis()->SetTitle("Epoch Seconds");
+    if(!time_in_epoch_sec){
+      grdZWpub->GetXaxis()->SetTimeDisplay(1);
+      grdZWpub->GetXaxis()->SetTimeFormat("%b %d");
+      grdZWpub->GetXaxis()->SetTitle("Date in 2018");
+    }
+    grdZWpub->GetYaxis()->SetTitleOffset(0.8);
+    gPad->Update();
+    grdZWpub->Write();
+    c3->SaveAs(Form("../plots/PubBiPoZres%ivsT%s.pdf", alpha_type, fid.Data()));
 
+    
+    TCanvas *c4 = new TCanvas("c4","c4",0,0,1200,300);
+    TGraphErrors *grZWpub = new TGraphErrors();
+    grZWpub->SetName(Form("grZrmsvsTPo%i", (alpha_type == 1 ? 212 : 214)));
+    grZWpub->SetTitle(Form("Po%i #alpha Z-distribution RMS Width vs Time", (alpha_type == 1 ? 212 : 214)));
+    grZWpub->SetMarkerStyle(kCircle);
+    grZWpub->SetMarkerSize(0.8);
+    grZWpub->SetMarkerColor(kBlue);
+    grZWpub->SetLineColor(kBlue);
+    grZW->Fit("fp0");
+    norm = fp0.GetParameter(0);
+    for(int i=0;i<grZW->GetN();++i){
+      grZW->GetPoint(i, x, y);
+      grZWpub->SetPoint(i, x, y/norm);
+      grZWpub->SetPointError(i, 0, grZW->GetErrorY(i)/norm);
+    }
+    grZWpub->Draw("ap");
+    grZWpub->GetYaxis()->SetTitle("Z_{RMS}}/#LTZ_{RMS}#GT");
+    grZWpub->GetXaxis()->SetTitle("Epoch Seconds");
+    if(!time_in_epoch_sec){
+      grZWpub->GetXaxis()->SetTimeDisplay(1);
+      grZWpub->GetXaxis()->SetTimeFormat("%b %d");
+      grZWpub->GetXaxis()->SetTitle("Date in 2018");
+    }
+    grZWpub->GetYaxis()->SetTitleOffset(0.8);
+    gPad->Update();
+    grZWpub->Write();
+    c4->SaveAs(Form("../plots/PubBiPoZrms%ivsT%s.pdf", alpha_type, fid.Data()));
+
+
+
+    f.Close();
+  }
   delete bp;
   return 0;
 }

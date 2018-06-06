@@ -63,7 +63,7 @@ double GetLiveTime(TChain *ch){
   return tlive/3600.0;
 }
 
-int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
+int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool recreate = 0){
   //alpha_type = 0, strictly Bi214-->Po214-->Pb210
   //alpha_type = 1, strictly Bi212-->Po212-->Pb208
   //alpha_type = 2, include both
@@ -80,10 +80,10 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
   map<const char*, int>plots;
   //set values to 1 if want plotted
   plots.insert(pair<const char*, int>("psd",0));
-  plots.insert(pair<const char*, int>("z",1));
+  plots.insert(pair<const char*, int>("z",0));
   plots.insert(pair<const char*, int>("dt",0));
   plots.insert(pair<const char*, int>("E",0));
-  plots.insert(pair<const char*, int>("by_cell",0));
+  plots.insert(pair<const char*, int>("by_cell",1));
   
   int n = 0;
   vector<TString>name;
@@ -453,7 +453,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     hAZ[2]->GetXaxis()->SetRangeUser(-900,900);
     hAZ[2]->GetYaxis()->SetTitleOffset(1);
     gPad->Update();
-    cNeutrino1->SaveAs(Form("/home/jonesdc/prospect/plots/NeutrinoBiPoZposition%i%s.png", alpha_type,fid.Data()));
+    cNeutrino1->SaveAs(Form("/home/jonesdc/prospect/plots/NeutrinoBiPoZposition%i%s.pdf", alpha_type,fid.Data()));
    TCanvas *cNeutrino2 = new TCanvas("cN2","cN2",0,0,800,700);
     hAdZ[2]->SetMarkerColor(kBlue);
     hAdZ[2]->SetLineColor(kBlue);
@@ -462,7 +462,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     hAdZ[2]->GetYaxis()->SetTitle("Counts/mm");
     hAdZ[2]->GetYaxis()->SetTitleOffset(1);
     gPad->Update();
-    cNeutrino2->SaveAs(Form("/home/jonesdc/prospect/plots/NeutrinoBiPodZ%i%s.png", alpha_type,fid.Data()));
+    cNeutrino2->SaveAs(Form("/home/jonesdc/prospect/plots/NeutrinoBiPodZ%i%s.pdf", alpha_type,fid.Data()));
 
   }
   //---------------------------------------------
@@ -827,11 +827,14 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gAE->SetMarkerSize(0.6);
     gAE->Draw("ap");
     gPad->Update();
-    TPaveStats *ps = (TPaveStats*)gAE->FindObject("stats");
-    ps->SetX1NDC(0.141);
-    ps->SetX2NDC(0.49);
-    ps->SetY1NDC(0.899);
-    ps->SetY2NDC(0.78);
+    TPaveStats *ps;
+    if(!P2_style){
+      ps = (TPaveStats*)gAE->FindObject("stats");
+      ps->SetX1NDC(0.141);
+      ps->SetX2NDC(0.49);
+      ps->SetY1NDC(0.899);
+      ps->SetY2NDC(0.78);
+    }
     gAE->GetXaxis()->SetTitle("Cell Number");
     gAE->GetYaxis()->SetTitle("Alpha Energy (MeV)");
     gAE_ET->SetMarkerColor(kRed);
@@ -857,12 +860,14 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gAEW->Draw("ap");
     gAEW->Fit("pol0");
     gPad->Update();
-    TPaveStats *ps1 = (TPaveStats*)gAEW->FindObject("stats");
-    ps1->SetX1NDC(0.141);
-    ps1->SetX2NDC(0.49);
-    ps1->SetY1NDC(0.899);
-    ps1->SetY2NDC(0.78);
-  
+    TPaveStats *ps1;
+    if(!P2_style){
+      ps1 = (TPaveStats*)gAEW->FindObject("stats");
+      ps1->SetX1NDC(0.141);
+      ps1->SetX2NDC(0.49);
+      ps1->SetY1NDC(0.899);
+      ps1->SetY2NDC(0.78);
+    }
     gAEW->GetXaxis()->SetTitle("Cell Number");
     gAEW->GetYaxis()->SetTitle("Alpha Energy Width (MeV)");
     gAEW_ET->SetMarkerColor(kRed);
@@ -916,11 +921,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gAdE->Draw("ap");
     gAdE->Fit("pol0");
     gPad->Update();
-    ps = (TPaveStats*)gAdE->FindObject("stats");
-    ps->SetX1NDC(0.141);
-    ps->SetX2NDC(0.49);
-    ps->SetY1NDC(0.899);
-    ps->SetY2NDC(0.78);
+    if(!P2_style){
+      ps = (TPaveStats*)gAdE->FindObject("stats");
+      ps->SetX1NDC(0.141);
+      ps->SetX2NDC(0.49);
+      ps->SetY1NDC(0.899);
+      ps->SetY2NDC(0.78);
+    }
     gAdE->GetXaxis()->SetTitle("Cell Number");
     gAdE->GetYaxis()->SetTitle("#DeltaE (keV)");
     gAdE_ET->SetMarkerColor(kRed);
@@ -940,11 +947,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gAdEW->Draw("ap");
     gAdEW->Fit("pol0");
     gPad->Update();
-    ps1 = (TPaveStats*)gAdEW->FindObject("stats");
-    ps1->SetX1NDC(0.141);
-    ps1->SetX2NDC(0.49);
-    ps1->SetY1NDC(0.899);
-    ps1->SetY2NDC(0.78);
+    if(!P2_style){ 
+      ps1 = (TPaveStats*)gAdEW->FindObject("stats");
+      ps1->SetX1NDC(0.141);
+      ps1->SetX2NDC(0.49);
+      ps1->SetY1NDC(0.899);
+      ps1->SetY2NDC(0.78);
+    }
   
     gAdEW->GetXaxis()->SetTitle("Cell Number");
     gAdEW->GetYaxis()->SetTitle("#Delta#sigma (keV)");
@@ -973,11 +982,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gApsd->SetMarkerSize(0.6);
     gApsd->Draw("ap");
     gPad->Update();
-    ps = (TPaveStats*)gApsd->FindObject("stats");
-    ps->SetX1NDC(0.141);
-    ps->SetX2NDC(0.49);
-    ps->SetY1NDC(0.899);
-    ps->SetY2NDC(0.78);
+    if(!P2_style){
+      ps = (TPaveStats*)gApsd->FindObject("stats");
+      ps->SetX1NDC(0.141);
+      ps->SetX2NDC(0.49);
+      ps->SetY1NDC(0.899);
+      ps->SetY2NDC(0.78);
+    }
     gApsd->GetXaxis()->SetTitle("Cell Number");
     gApsd->GetYaxis()->SetTitle("Alpha PSD");
     gApsd_ET->SetMarkerColor(kRed);
@@ -1003,12 +1014,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gApsdW->Draw("ap");
     gApsdW->Fit("pol0");
     gPad->Update();
-    ps1 = (TPaveStats*)gApsdW->FindObject("stats");
-    ps1->SetX1NDC(0.141);
-    ps1->SetX2NDC(0.49);
-    ps1->SetY1NDC(0.899);
-    ps1->SetY2NDC(0.78);
-  
+    if(!P2_style){
+      ps1 = (TPaveStats*)gApsdW->FindObject("stats");
+      ps1->SetX1NDC(0.141);
+      ps1->SetX2NDC(0.49);
+      ps1->SetY1NDC(0.899);
+      ps1->SetY2NDC(0.78);
+    }  
     gApsdW->GetXaxis()->SetTitle("Cell Number");
     gApsdW->GetYaxis()->SetTitle("Alpha PSD Width");
     gApsdW_ET->SetMarkerColor(kRed);
@@ -1042,11 +1054,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gBpsd->SetMarkerSize(0.6);
     gBpsd->Draw("ap");
     gPad->Update();
-    ps = (TPaveStats*)gBpsd->FindObject("stats");
-    ps->SetX1NDC(0.141);
-    ps->SetX2NDC(0.49);
-    ps->SetY1NDC(0.899);
-    ps->SetY2NDC(0.78);
+    if(!P2_style){
+      ps = (TPaveStats*)gBpsd->FindObject("stats");
+      ps->SetX1NDC(0.141);
+      ps->SetX2NDC(0.49);
+      ps->SetY1NDC(0.899);
+      ps->SetY2NDC(0.78);
+    }
     gBpsd->GetXaxis()->SetTitle("Cell Number");
     gBpsd->GetYaxis()->SetTitle("Beta PSD");
     gBpsd_ET->SetMarkerColor(kRed);
@@ -1072,12 +1086,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gBpsdW->Draw("ap");
     gBpsdW->Fit("pol0");
     gPad->Update();
-    ps1 = (TPaveStats*)gBpsdW->FindObject("stats");
-    ps1->SetX1NDC(0.141);
-    ps1->SetX2NDC(0.49);
-    ps1->SetY1NDC(0.899);
-    ps1->SetY2NDC(0.78);
-  
+    if(!P2_style){
+      ps1 = (TPaveStats*)gBpsdW->FindObject("stats");
+      ps1->SetX1NDC(0.141);
+      ps1->SetX2NDC(0.49);
+      ps1->SetY1NDC(0.899);
+      ps1->SetY2NDC(0.78);
+    }
     gBpsdW->GetXaxis()->SetTitle("Cell Number");
     gBpsdW->GetYaxis()->SetTitle("Beta PSD Width");
     gBpsdW_ET->SetMarkerColor(kRed);
@@ -1109,11 +1124,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gdZ->SetMarkerSize(0.6);
     gdZ->Draw("ap");
     gPad->Update();
-    ps = (TPaveStats*)gdZ->FindObject("stats");
-    ps->SetX1NDC(0.141);
-    ps->SetX2NDC(0.49);
-    ps->SetY1NDC(0.899);
-    ps->SetY2NDC(0.78);
+    if(!P2_style){
+      ps = (TPaveStats*)gdZ->FindObject("stats");
+      ps->SetX1NDC(0.141);
+      ps->SetX2NDC(0.49);
+      ps->SetY1NDC(0.899);
+      ps->SetY2NDC(0.78);
+    }
     gdZ->GetXaxis()->SetTitle("Cell Number");
     gdZ->GetYaxis()->SetTitle("dZ (mm)");
     gdZ_ET->SetMarkerColor(kRed);
@@ -1137,12 +1154,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gdZW->Draw("ap");
     gdZW->Fit("pol0");
     gPad->Update();
-    ps1 = (TPaveStats*)gdZW->FindObject("stats");
-    ps1->SetX1NDC(0.141);
-    ps1->SetX2NDC(0.49);
-    ps1->SetY1NDC(0.899);
-    ps1->SetY2NDC(0.78);
-  
+    if(!P2_style){
+      ps1 = (TPaveStats*)gdZW->FindObject("stats");
+      ps1->SetX1NDC(0.141);
+      ps1->SetX2NDC(0.49);
+      ps1->SetY1NDC(0.899);
+      ps1->SetY2NDC(0.78);
+    }
     gdZW->GetXaxis()->SetTitle("Cell Number");
     gdZW->GetYaxis()->SetTitle("Alpha-Beta dZ Width vs Cell");
     gdZW_ET->SetMarkerColor(kRed);
@@ -1175,11 +1193,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gAZ->SetMarkerSize(0.6);
     gAZ->Draw("ap");
     gPad->Update();
-    ps = (TPaveStats*)gAZ->FindObject("stats");
-    ps->SetX1NDC(0.141);
-    ps->SetX2NDC(0.49);
-    ps->SetY1NDC(0.899);
-    ps->SetY2NDC(0.78);
+    if(!P2_style){
+      ps = (TPaveStats*)gAZ->FindObject("stats");
+      ps->SetX1NDC(0.141);
+      ps->SetX2NDC(0.49);
+      ps->SetY1NDC(0.899);
+      ps->SetY2NDC(0.78);
+    }
     gAZ->GetXaxis()->SetTitle("Cell Number");
     gAZ->GetYaxis()->SetTitle("Alpha Z (mm)");
     gAZ_ET->SetMarkerColor(kRed);
@@ -1199,12 +1219,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     gAZW->Draw("ap");
     gAZW->Fit("pol0");
     gPad->Update();
-    ps1 = (TPaveStats*)gAZW->FindObject("stats");
-    ps1->SetX1NDC(0.141);
-    ps1->SetX2NDC(0.49);
-    ps1->SetY1NDC(0.899);
-    ps1->SetY2NDC(0.78);
-  
+    if(!P2_style){
+      ps1 = (TPaveStats*)gAZW->FindObject("stats");
+      ps1->SetX1NDC(0.141);
+      ps1->SetX2NDC(0.49);
+      ps1->SetY1NDC(0.899);
+      ps1->SetY2NDC(0.78);
+    }
     gAZW->GetXaxis()->SetTitle("Cell Number");
     gAZW->GetYaxis()->SetTitle("Alpha Z RMS (mm)");
     gAZW_ET->SetMarkerColor(kRed);
@@ -1277,9 +1298,11 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     grRate->GetXaxis()->SetTitle("Cell Number");
     grRate->Fit("pol1");
     gPad->Update();
-    ps = (TPaveStats*)grRate->FindObject("stats");
-    ps->SetX1NDC(0.18);
-    ps->SetX2NDC(0.6);
+    if(!P2_style){
+      ps = (TPaveStats*)grRate->FindObject("stats");
+      ps->SetX1NDC(0.18);
+      ps->SetX2NDC(0.6);
+    }
     gPad->Update();
     if(!fiducialize)
       pt->Draw();
@@ -1306,9 +1329,11 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     grRateEffC->GetXaxis()->SetTitle("Cell Number");
     grRateEffC->Fit("pol1");
     gPad->Update();
-    ps = (TPaveStats*)grRateEffC->FindObject("stats");
-    ps->SetX1NDC(0.18);
-    ps->SetX2NDC(0.6);
+    if(!P2_style){
+      ps = (TPaveStats*)grRateEffC->FindObject("stats");
+      ps->SetX1NDC(0.18);
+      ps->SetX2NDC(0.6);
+    }
     gPad->Update();
     if(!fiducialize)
       pt->Draw();
@@ -1325,72 +1350,96 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1){
     hHeat->GetZaxis()->SetRangeUser(hHeat->GetMaximum()*0.6,hHeat->GetMaximum());
     gPad->Update();
     cCellRate->SaveAs(Form("/home/jonesdc/prospect/plots/BiPRatevsCell%i%s.png", alpha_type, fid.Data()));
+  
     if(1){
-      gStyle->SetPadRightMargin(0.1);
+      TFile f("BiPoPublicationPlots.root",(recreate == 1 ? "RECREATE" : "UPDATE"),"BiPoPlots");
+      gStyle->SetPadRightMargin(0.05);
+      gStyle->SetPadLeftMargin(0.08);
       gStyle->SetOptStat(0);
-      gStyle->SetOptFit(0);
-      TCanvas *c5 = new TCanvas("c5","c5",0,0,800,600);
-      TGraphErrors *grEsc = new TGraphErrors();
-      TF1 *f5 = new TF1("f5","pol0",0,1);
-      gAE->Fit(f5);
-      double norm = f5->GetParameter(0);
-      double x, y;
+      TCanvas *c0 = new TCanvas("c0","c0",0,0,1200,300);
+      TGraphErrors *gAE1 = new TGraphErrors();
+      gAE1->SetName(Form("grEvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
+      gAE1->SetTitle(Form("Po-%i #alpha Energy vs. Cell", (alpha_type == 1 ? 212 : 214)));
+      TF1 fE("fE","pol0",0,1);
+      gAE->Fit("fE");
+      double x, y, norm = fE.GetParameter(0);
       for(int i=0;i<gAE->GetN();++i){
 	gAE->GetPoint(i, x, y);
-	grEsc->SetPoint(i, x, y/norm);
-	grEsc->SetPointError(i, gAE->GetErrorX(i), gAE->GetErrorY(i)/norm);
+	gAE1->SetPoint(i, x, y/norm);
+	gAE1->SetPointError(i, 0, gAE->GetErrorY(i)/norm);
       }
-      grEsc->Fit("pol0");
-      grEsc->SetTitle(gAE->GetTitle());
-      grEsc->SetMarkerColor(kBlue);
-      grEsc->SetMarkerStyle(8);
-      grEsc->SetMarkerSize(0.8);
-      grEsc->SetLineColor(kBlue);
-      grEsc->Draw("ap");
-      grEsc->GetXaxis()->SetTitle(gAE->GetXaxis()->GetTitle());
-      grEsc->GetYaxis()->SetTitle(gAE->GetYaxis()->GetTitle());
-      gPad->Update();      
-      c5->SaveAs(Form("/home/jonesdc/prospect/plots/EscBiPoEvsCell%i%s.pdf", alpha_type, fid.Data()));
-      gStyle->SetPadRightMargin(0.04);
-      gStyle->SetPadLeftMargin(0.06);
-      TCanvas *c6 = new TCanvas("c6","c6",0,0,1200,300);
-      grEsc->SetMarkerStyle(kCircle);
-      grEsc->GetYaxis()->SetTitleOffset(0.6);
-      grEsc->Draw("ap");
-      TFile f("BiPoNeutrino.root","update","bipo");
-      grEsc->Write(Form("Po%iEvsCell%s",(alpha_type == 1 ? 212: 214), fid.Data()));
-      f.Close();
+      gAE1->SetMarkerColor(kBlue);
+      gAE1->SetLineColor(kBlue);
+      gAE1->SetMarkerStyle(kCircle);
+      gAE1->SetMarkerSize(0.8);
+      gAE1->Draw("ap");
+      gAE1->GetXaxis()->SetTitle("Segment Number");
+      gAE1->GetYaxis()->SetTitle("E_{#alpha}/#LTE_{#alpha}#GT");
+      gAE1->GetYaxis()->SetTitleOffset(0.8);
+      gPad->Update();
+      gAE1->Write();
+      c0->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iEvsCell%s.png", (alpha_type == 1 ? 212 : 214), fid.Data()));
+      
+      bool sigma_at_1MeV = 0;
+      TCanvas *c1 = new TCanvas("c1","c1",0,0,1200,300);
+      TGraphErrors *gAEW1 = new TGraphErrors();
+      gAEW1->SetName(Form("grE_resvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
+      gAEW1->SetTitle(Form("Po-%i #alpha Energy Resolution vs. Cell", (alpha_type == 1 ? 212 : 214)));
+      
+       if(sigma_at_1MeV){
+	norm = sqrt(norm);
+       }else{
+	gAEW->Fit("fE");
+	norm = fE.GetParameter(0);
+       }
+       for(int i=0;i<gAEW->GetN();++i){
+	 gAEW->GetPoint(i, x, y);
+	 gAEW1->SetPoint(i, x, y/norm);
+	 gAEW1->SetPointError(i, 0, gAEW->GetErrorY(i)/norm);
+       }
+       gAEW1->SetMarkerColor(kBlue);
+       gAEW1->SetLineColor(kBlue);
+       gAEW1->SetMarkerStyle(kCircle);
+       gAEW1->SetMarkerSize(0.8);
+       gAEW1->Draw("ap");
+       gAEW1->GetXaxis()->SetMaxDigits(4);
+       gAEW1->GetXaxis()->SetTitle("Segment Number");
+       gAEW1->GetYaxis()->SetTitleOffset(0.8);
+       if(sigma_at_1MeV)
+	 gAEW1->GetYaxis()->SetTitle("#sigma_{E}/#sqrt{#LTE_{#alpha}#GT}");
+       else
+	 gAEW1->GetYaxis()->SetTitle("#sigma_{E}/#LT#sigma_{E}#GT");
+       gPad->Update();
+       gAEW1->Write();
+       c1->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iEresvsCell%s.png", (alpha_type == 1 ? 212 : 214), fid.Data()));
+       
+       TCanvas *c3 = new TCanvas("c3","c3",0,0,1200,300);
+       TGraphErrors *gdZW1 = new TGraphErrors();
+       gdZW1->SetName(Form("grsigmadZvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
+       gdZW1->SetTitle(Form("Po-%i #DeltaZ 1-#sigma Width vs. Cell", (alpha_type == 1 ? 212 : 214)));
+       gdZW->Fit("fE");
+       norm = fE.GetParameter(0);
+       for(int i=0;i<gdZW->GetN();++i){
+	 gdZW->GetPoint(i, x, y);
+	 gdZW1->SetPoint(i, x, y/norm);
+	 gdZW1->SetPointError(i, 0, gdZW->GetErrorY(i)/norm);
+       }
+       gdZW1->SetMarkerColor(kBlue);
+       gdZW1->SetLineColor(kBlue);
+       gdZW1->SetMarkerStyle(kCircle);
+       gdZW1->SetMarkerSize(0.8);
+       gdZW1->Draw("ap");
+       gdZW1->GetYaxis()->SetTitleOffset(0.8);
+       gdZW1->GetXaxis()->SetTitle("Segment Number");
+       gdZW1->GetYaxis()->SetTitle("#sigma_{Z}/#LT#sigma_{Z}#GT");
+       gdZW1->GetYaxis()->SetTitleOffset(0.8);
+       gPad->Update();
+       gdZW1->Write();
+       c3->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%idZWidthvsCell%s.png", (alpha_type == 1 ? 212 : 214), fid.Data()));
+       f.Close();
+       gStyle->SetOptFit(1);
+       gStyle->SetOptStat(1111);
     }
-  }
-  if(0){
-    TCanvas *c0 = new TCanvas("c0","c0",0,0,700,500);
-    gStyle->SetPadRightMargin(0.1);
-    gStyle->SetOptStat(0);
-    hAPSDvE[2]->SetTitle("BiPo #alpha PSD vs. Energy");
-    hAPSDvE[2]->GetXaxis()->SetTitleSize(0.04);
-    hAPSDvE[2]->GetYaxis()->SetTitleSize(0.04);
-    hAPSDvE[2]->Draw("colz");
-
-    TCanvas *c2 = new TCanvas("c2","c2",0,0,700,500);
-    hBPSDvE[2]->SetTitle("BiPo #beta PSD vs. Energy");
-    hBPSDvE[2]->GetXaxis()->SetTitleSize(0.04);
-    hBPSDvE[2]->GetYaxis()->SetTitleSize(0.04);
-    hBPSDvE[2]->Draw("colz");
-
-    TCanvas *c3 = new TCanvas("c3","c3",0,0,700,500);
-    hAdZ[2]->SetTitle("BiPo #alpha - #beta dZ Distribution");
-    hAdZ[2]->GetXaxis()->SetTitle("dZ (mm)");
-    hAdZ[2]->GetXaxis()->SetTitleSize(0.04);
-    hAdZ[2]->GetYaxis()->SetTitleSize(0.04);
-    hAdZ[2]->Draw();
-  
-
-    gStyle->SetOptStat(0);
-    TCanvas *c4 = new TCanvas("c4","c4",0,0,700,500);
-    hABdt[2]->Draw();
-    hABdt[2]->GetXaxis()->SetTitle("dt (ms)");
-    hABdt[2]->GetXaxis()->SetTitleSize(0.04);
-    hABdt[2]->GetYaxis()->SetTitleSize(0.04);
   }
 
 
