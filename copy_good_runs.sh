@@ -1,6 +1,6 @@
 #!/bin/bash
 pass=$1
-RELEASE=Phys_Neutrino
+RELEASE=Phys_Neutrino_v2
 FILE=AD1_Wet_Phys${pass}.root
 if [ $# -lt 1 ];then
     echo "Pass argument required"
