@@ -386,7 +386,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       pal->SetX2NDC(0.93);
       cAPSDtn->SetRightMargin(0.11);
       hAPSDvE[2]->Draw("colz");      
-      cAPSDtn->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iAlphaPSD%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
+      cAPSDtn->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iAlphaPSDvsE%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
       TCanvas *cBPSDtn = new TCanvas("cBPSDtn", "cBPSDtn",0,0,800,600);
       cBPSDtn->SetRightMargin(0.11);
       hBPSDvE[2]->Draw("colz");
@@ -395,7 +395,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       pal->SetX2NDC(0.93);
       gPad->Modified();
       gPad->Update();
-      cBPSDtn->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iBetaPSD%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
+      cBPSDtn->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iBetaPSDvsE%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
     }
     
   }
@@ -449,7 +449,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        hAZ[2]->GetXaxis()->SetRangeUser(-900,900);
        hAZ[2]->GetYaxis()->SetTitleOffset(1);
        gPad->Update();
-       c12->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iZposition%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
+       c12->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iZdistribution%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
        //plot 13 from technote
        TCanvas *c13 = new TCanvas("c13","c13",0,0,800,700);
        hAdZ[2]->SetMarkerColor(kBlue);
