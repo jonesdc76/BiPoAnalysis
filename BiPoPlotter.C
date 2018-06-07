@@ -6,6 +6,7 @@
 #include "TH1D.h"
 #include "TVectorD.h"
 #include "TChain.h"
+#include "TPaletteAxis.h"
 #include "TChainElement.h"
 #include "TCollection.h"
 #include "TStyle.h"
@@ -44,6 +45,7 @@ double GetLiveTime(TChain *ch){
 }
 
 int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool recreate = 0){
+  bool technote_plots = 1;
   //alpha_type = 0, strictly Bi214-->Po214-->Pb210
   //alpha_type = 1, strictly Bi212-->Po212-->Pb208
   //alpha_type = 2, include both
@@ -88,7 +90,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   //Set boundary cut values on energy, psd, z-pos and time
   //-------------------------------------------------------
   double hAE = 1.0, lAE = 0.75, hApsd = 0.32, lApsd = 0.2;//alpha
-  double highBE = 5.0, lowBE = 0, hPpsd = 0.26, lPpsd = 0;//beta
+  double highBE = 4.0, lowBE = 0, hPpsd = 0.26, lPpsd = 0;//beta
   double t_start = 0.01, t_end = 3 * tauBiPo;//prompt window
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset + (t_start * f2n);//start time of far window 
@@ -130,7 +132,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     for(int i=0;i<N;++i){
       hAPSDvE[i] = new TH2D(Form("hAPSDvE%i",i),Form("%s #alpha PSD vs. Energy",title[alpha_type].Data()),200,lAE,hAE,200,lApsd,hApsd);
       hAPSDvE[i]->Sumw2();
-      hBPSDvE[i] = new TH2D(Form("hBPSDvE%i",i),Form("%s #beta PSD vs. Energy", title[alpha_type].Data()),200,0,5,200,lPpsd,hPpsd);
+      hBPSDvE[i] = new TH2D(Form("hBPSDvE%i",i),Form("%s #beta PSD vs. Energy", title[alpha_type].Data()),200,0,highBE,200,lPpsd,hPpsd);
       hBPSDvE[i]->Sumw2();
       hAPSDvZ[i] = new TH2D(Form("hAPSDvZ%i",i),Form("%s #alpha PSD vs. Z-position",title[alpha_type].Data()),200,-1000,1000,200,lApsd,hApsd);
       hAPSDvZ[i]->Sumw2();
@@ -162,8 +164,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   //3. Time distribution plot
   TH1D *hABdt[N];
   TCanvas *cdT;
-  double lt = alpha_type == 1 ? 0.00066 : t_start;//avoid empty bins that are artifact of analyzer holdoff 
-  TF1 *fdt = new TF1("fdt","[0]*pow(2,-x/[1])",lt, t_end);
+  double t0 = alpha_type == 1 ? 0.00066 : t_start;
+  TF1 *fdt = new TF1("fdt","[0]*pow(2,-x/[1])",t0, t_end);
   fdt->SetParName(0, "N");
   fdt->SetParName(1, "T_{1/2}");
   if(bool(plots["dt"] & which_plots)){
@@ -187,7 +189,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       h_AE[i]->SetMarkerColor(col[i]);
       h_AE[i]->SetLineColor(col[i]);
       
-      hBE[i] = new TH1D(Form("hBE%i",i),Form("%s #beta Energy Distribution", title[alpha_type].Data()),200,0,(alpha_type == 1 ? 3.5 : 5));
+      hBE[i] = new TH1D(Form("hBE%i",i),Form("%s #beta Energy Distribution", title[alpha_type].Data()),200,0,(alpha_type == 1 ? 3.5 : highBE));
       hBE[i]->Sumw2();
       hBE[i]->SetMarkerColor(col[i]);
       hBE[i]->SetLineColor(col[i]);
@@ -376,9 +378,26 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gPad->Update();
     hBPSDvZ[0]->GetXaxis()->SetTitle("#betaZ-position (mm)");
     hBPSDvZ[0]->GetYaxis()->SetTitle("#beta PSD");
-    cPSD->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoPSD%i%s.png", alpha_type, fid.Data()));
+    cPSD->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iPSD%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
+    if(technote_plots){
+      TCanvas *cAPSDtn = new TCanvas("cAPSDtn", "cAPSDtn",0,0,800,600);
+      TPaletteAxis *pal = (TPaletteAxis*)hAPSDvE[2]->FindObject("palette");
+      pal->SetX1NDC(0.9);
+      pal->SetX2NDC(0.93);
+      cAPSDtn->SetRightMargin(0.11);
+      hAPSDvE[2]->Draw("colz");      
+      cAPSDtn->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iAlphaPSD%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
+      TCanvas *cBPSDtn = new TCanvas("cBPSDtn", "cBPSDtn",0,0,800,600);
+      cBPSDtn->SetRightMargin(0.11);
+      hBPSDvE[2]->Draw("colz");
+      pal = (TPaletteAxis*)hBPSDvE[2]->FindObject("palette");
+      pal->SetX1NDC(0.9);
+      pal->SetX2NDC(0.93);
+      gPad->Modified();
+      gPad->Update();
+      cBPSDtn->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iBetaPSD%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
+    }
     
-    //cPSDBkSub =  new TCanvas("cPSDBkSub", "cPSDBkSub",0,0,1200,900);
   }
  //---------------------------------------------
 
@@ -418,12 +437,31 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     fdz->SetParameters(0.7*hAdZ[2]->GetMaximum(), 60);
     hAdZ[2]->Fit(fdz,"r");
     gPad->Update();
-    cZ->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoZposition%i%s.png", alpha_type,fid.Data()));
-    gStyle->SetOptFit(0);
-    gStyle->SetPadLeftMargin(0.1);
-    gStyle->SetPadRightMargin(0.07);
-    gStyle->SetPadTopMargin(0.06);
-
+    cZ->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iZposition%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
+    if(technote_plots){    
+       //plot 12 from technote
+       TCanvas *c12 = new TCanvas("c12","c12",0,0,800,700);
+       hAZ[2]->SetMarkerColor(kBlue);
+       hAZ[2]->SetLineColor(kBlue);
+       hAZ[2]->Draw();
+       hAZ[2]->GetXaxis()->SetTitle("#alpha Z-position (mm)");
+       hAZ[2]->GetYaxis()->SetTitle("Counts/mm");
+       hAZ[2]->GetXaxis()->SetRangeUser(-900,900);
+       hAZ[2]->GetYaxis()->SetTitleOffset(1);
+       gPad->Update();
+       c12->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iZposition%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
+       //plot 13 from technote
+       TCanvas *c13 = new TCanvas("c13","c13",0,0,800,700);
+       hAdZ[2]->SetMarkerColor(kBlue);
+       hAdZ[2]->SetLineColor(kBlue);
+       hAdZ[2]->Draw();
+       hAdZ[2]->GetXaxis()->SetTitle("Z_{#alpha}-Z_{#beta} (mm)");
+       hAdZ[2]->GetYaxis()->SetTitle("Counts/mm");
+       hAdZ[2]->GetYaxis()->SetTitleOffset(1);
+       gPad->Update();
+       c13->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%idZ%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
+    }
+ 
   }
   //---------------------------------------------
 
@@ -433,6 +471,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   if(bool(plots["dt"] & which_plots)){
     cdT = new TCanvas("cdT", "cdT",0,0,800,600);
     gStyle->SetOptStat(1111);
+    gStyle->SetOptFit(1111);
     hABdt[2] = (TH1D*)hABdt[0]->Clone("hABdt");
     hABdt[2]->Add(hABdt[1],-1);
     hABdt[0]->Draw();
@@ -450,8 +489,21 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     fdt2->SetLineStyle(4);
     fdt2->Draw("same");
     gPad->Update();
-    TPaveText *ptt = new TPaveText(0.3,0.8,0.6,0.89,"NDC");
+    TPaveText *pts = new TPaveText(0.4,0.8,0.65,0.92,"NDC");
+    pts->SetShadowColor(0);
+    //ptt->SetBorderSize(0);
+    pts->SetFillColor(0);
+    if(alpha_type == 1){
+      pts->AddText(Form("#chi^{2}/NDF:  %0.2f",fdt->GetChisquare()/fdt->GetNDF()));
+      pts->AddText(Form("T_{1/2}:  %0.4f #pm %0.4f #mus",fdt->GetParameter(1)*1000,fdt->GetParError(1)*1000));
+    }else{
+      pts->AddText(Form("#chi^{2}/NDF:    %0.2f    ",fdt->GetChisquare()/fdt->GetNDF()));
+      pts->AddText(Form("T_{1/2}:  %0.1f #pm %0.1f #mus",fdt->GetParameter(1)*1000,fdt->GetParError(1)*1000));
+    }
+    pts->Draw();
+    TPaveText *ptt = new TPaveText(0.7,0.78,0.899,0.92,"NDC");
     ptt->SetShadowColor(0);
+    ptt->SetBorderSize(0);
     ptt->SetFillColor(0);
     ptt->SetTextColor(kBlue);
     ptt->AddText("Coincidence");  
@@ -460,7 +512,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     tt = ptt->AddText("Acc-Subtracted");
     tt->SetTextColor(kRed);
     ptt->Draw();
-    cdT->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoDeltaTSpectrum%i%s.png", alpha_type, fid.Data()));
+    cdT->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iDeltaTSpectrum%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
+    gStyle->SetOptStat(0);
+    gStyle->SetOptFit(0);
   }
   //---------------------------------------------
 
@@ -501,7 +555,29 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     hBE[2]->SetMarkerColor(col[2]);;
     hBE[2]->SetLineColor(col[2]);;
     hBE[2]->Draw("same");
-    cE->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoEspectra%i%s.png", alpha_type, fid.Data()));
+    cE->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iEspectra%s.png", (alpha_type == 1 ? 212:214), fid.Data()));
+    gStyle->SetOptFit(0);
+    if(technote_plots){
+           //plot 10 from technote
+       TCanvas *c10 = new TCanvas("c10","c10",0,0,800,600);
+       h_AE[2]->SetLineColor(kBlue);
+       h_AE[2]->SetTitle(Form("Po-%i Alpha Energy Distribution", (alpha_type==1 ? 212 : 214)));
+       h_AE[2]->Draw();
+       gPad->Update();
+       h_AE[2]->GetXaxis()->SetTitle("E_{#alpha} (MeV)");
+       gPad->Update();
+       c10->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iAlphaE%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+       
+       //plot 11 from technote
+       TCanvas *c11 = new TCanvas("c11","c11",0,0,800,600);
+       hBE[2]->SetLineColor(kBlue);
+       hBE[2]->SetTitle(Form("Bi-%i Beta Energy Distribution", (alpha_type==1 ? 212 : 214)));
+       hBE[2]->Draw();
+       gPad->Update();
+       hBE[2]->GetXaxis()->SetTitle("E_{#beta} (MeV)");
+       gPad->Update();
+       c11->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iBetaE%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+   }
   }
   //---------------------------------------------
 
@@ -845,7 +921,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 		       (alpha_type==1 ? 212 : 214)));
     hAEW->GetXaxis()->SetTitle("Alpha Energy Width (MeV)");
     gPad->Update();
-    cCellAE->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoAlphaEvsCell%i%s.png", alpha_type, fid.Data()));
+    cCellAE->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iAlphaEvsCell%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
     //-------------------
 
     
@@ -926,7 +1002,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gAdEW_ET->Draw("samep");
     pt->Draw();
     gPad->Update();
-    cCellAdE->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoAlphadEvsCell%i%s.png", alpha_type, fid.Data()));
+    cCellAdE->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iAlphadEvsCell%s.png", (alpha_type == 1 ? 212:214), fid.Data()));
     //-------------------
     
 
@@ -998,7 +1074,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 			  (alpha_type==1 ? 212 : 214)));
     hApsdW->GetXaxis()->SetTitle("Alpha PSD Width");
     gPad->Update();
-    cCellApsd->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoAlphaPSDvsCell%i%s.png", alpha_type, fid.Data()));
+    cCellApsd->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iAlphaPSDvsCell%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
     //-------------------
     
 
@@ -1070,7 +1146,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 			  (alpha_type==1 ? 212 : 214)));
     hBpsdW->GetXaxis()->SetTitle("Beta PSD Width");
     gPad->Update();
-    cCellBpsd->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoBetaPSDvsCell%i%s.png", alpha_type, fid.Data()));
+    cCellBpsd->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iBetaPSDvsCell%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
 
 
     //Plot dZ
@@ -1137,7 +1213,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     hdZW->SetTitle("Alpha-Beta dZ Width vs Cell");
     hdZW->GetXaxis()->SetTitle("dZ (mm)");
     gPad->Update();
-    cCelldZ->SaveAs(Form("/home/jonesdc/prospect/plots/BiPodZvsCell%i%s.png", alpha_type, fid.Data()));
+    cCelldZ->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%idZvsCell%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
     //-------------------
 
 
@@ -1197,7 +1273,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gAZW_ET->Draw("samep");
     pt->Draw();
     gPad->Update();
-    cCellZ->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoZvsCell%i%s.png", alpha_type, fid.Data()));
+    cCellZ->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iZvsCell%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
     //-------------------
 
 
@@ -1313,7 +1389,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gPad->Update();
     cCellRate->SaveAs(Form("/home/jonesdc/prospect/plots/BiPRatevsCell%i%s.png", alpha_type, fid.Data()));
   
-    if(1){
+    if(technote_plots){
       TFile f("BiPoPublicationPlots.root",(recreate == 1 ? "RECREATE" : "UPDATE"),"BiPoPlots");
       gStyle->SetPadRightMargin(0.05);
       gStyle->SetPadLeftMargin(0.08);
@@ -1470,53 +1546,12 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        gAZ1->GetYaxis()->SetTitleSize(0.07);
        gAZ1->GetXaxis()->SetTitleSize(0.07);
        gAZ1->GetXaxis()->SetTitle("Segment Number");
-       gAZ1->GetYaxis()->SetTitle("Mean Z/#LT Mean Z}#GT");
+       gAZ1->GetYaxis()->SetTitle("Mean Z/#LT Mean Z#GT");
        if(!normalize) gAZ1->GetYaxis()->SetTitle("Mean Z (mm)");
        gPad->Update();
        gAZ1->Write();
        c4->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%imeanZvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
 
-       //plot 10 from technote
-       TCanvas *c5 = new TCanvas("c5","c5",0,0,800,600);
-       h_AE[2]->SetLineColor(kBlue);
-       h_AE[2]->SetTitle(Form("Po-%i Alpha Energy Distribution", (alpha_type==1 ? 212 : 214)));
-       h_AE[2]->Draw();
-       gPad->Update();
-       h_AE[2]->GetXaxis()->SetTitle("E_{#alpha} (MeV)");
-       gPad->Update();
-       c5->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iAlphaEvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
-       
-       //plot 11 from technote
-       TCanvas *c6 = new TCanvas("c6","c6",0,0,800,600);
-       hBE[2]->SetLineColor(kBlue);
-       hBE[2]->SetTitle(Form("Bi-%i Beta Energy Distribution", (alpha_type==1 ? 212 : 214)));
-       hBE[2]->Draw();
-       gPad->Update();
-       hBE[2]->GetXaxis()->SetTitle("E_{#beta} (MeV)");
-       gPad->Update();
-       c6->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iAlphaEvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
-    
-       //plot 12 from technote
-       TCanvas *c7 = new TCanvas("c7","c7",0,0,800,700);
-       hAZ[2]->SetMarkerColor(kBlue);
-       hAZ[2]->SetLineColor(kBlue);
-       hAZ[2]->Draw();
-       hAZ[2]->GetXaxis()->SetTitle("#alpha Z-position (mm)");
-       hAZ[2]->GetYaxis()->SetTitle("Counts/mm");
-       hAZ[2]->GetXaxis()->SetRangeUser(-900,900);
-       hAZ[2]->GetYaxis()->SetTitleOffset(1);
-       gPad->Update();
-       c7->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPoZposition%i%s.pdf", alpha_type,fid.Data()));
-       //plot 13 from technote
-       TCanvas *c8 = new TCanvas("c8","c8",0,0,800,700);
-       hAdZ[2]->SetMarkerColor(kBlue);
-       hAdZ[2]->SetLineColor(kBlue);
-       hAdZ[2]->Draw();
-       hAdZ[2]->GetXaxis()->SetTitle("Z_{#alpha}-Z_{#beta} (mm)");
-       hAdZ[2]->GetYaxis()->SetTitle("Counts/mm");
-       hAdZ[2]->GetYaxis()->SetTitleOffset(1);
-       gPad->Update();
-       c8->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPodZ%i%s.pdf", alpha_type,fid.Data()));
        f.Close();
 
     }

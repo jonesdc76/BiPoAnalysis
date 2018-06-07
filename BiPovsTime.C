@@ -66,7 +66,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   //alpha_type = 0, strictly Bi214-->Po214-->Pb210
   //alpha_type = 1, strictly Bi212-->Po212-->Pb208
   //alpha_type = 2, include both
-  bool slow = 0, time_in_epoch_sec = 1;
+  bool slow = 0, time_in_epoch_sec = 0;
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(1111);
   gStyle->SetTitleW(0.8);
@@ -86,7 +86,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   //Set boundary cut values on energy, psd, z-pos and time
   //-------------------------------------------------------
   double hAE = 1.0, lAE = 0.75, hApsd = 0.32, lApsd = 0.2;//alpha
-  double highBE = 5.0, lowBE = 0, hPpsd = 0.26, lPpsd = 0;//beta
+  double highBE = 5.0, lowBE = 0.0, hPpsd = 0.26, lPpsd = 0;//beta
   double t_start = 0.01, t_end = 3 * tauBiPo;//prompt window
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset + (t_start * f2n);//start time of far window 
@@ -160,7 +160,8 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
 	t0 = time_in_epoch_sec ? 0.0 : ts;
 	isFirst = false;
       }
-      if(tlive[p]>HrPerPnt*3600){
+      //stop when statistics accumulated and break at detector off period
+      if(tlive[p]>HrPerPnt*3600 || st.Contains("1521921213")){
 	t[p] /=  tlive[p];
 	cout<<"Time"<<p<<": "<<t[p]/3600.<<" Live: "<<tlive[p]/3600.0<<endl;
 	++p;
@@ -622,15 +623,18 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     grEpub->Draw("ap");
     grEpub->GetYaxis()->SetTitle("E_{#alpha}/#LTE_{#alpha}#GT");
     grEpub->GetXaxis()->SetTitle("Epoch Seconds");
+    grEpub->GetYaxis()->SetTitleOffset(0.4);
+    grEpub->GetXaxis()->SetTitleOffset(0.7);
+    grEpub->GetYaxis()->SetTitleSize(0.07);
+    grEpub->GetXaxis()->SetTitleSize(0.07);
     if(!time_in_epoch_sec){
       grEpub->GetXaxis()->SetTimeDisplay(1);
       grEpub->GetXaxis()->SetTimeFormat("%b %d");
       grEpub->GetXaxis()->SetTitle("Date in 2018");
     }
-    grEpub->GetYaxis()->SetTitleOffset(0.8);
     gPad->Update();
     grEpub->Write();
-    c1->SaveAs(Form("../plots/PubBiPoE%ivsT%s.pdf", alpha_type, fid.Data()));
+    c1->SaveAs(Form("../plots/PubBiPo%iEvsT%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
     
     TCanvas *c2 = new TCanvas("c2","c2",0,0,1200,300);
     TGraphErrors *grEWpub = new TGraphErrors();
@@ -650,15 +654,18 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     grEWpub->Draw("ap");
     grEWpub->GetYaxis()->SetTitle("#sigma_{E}/#LT#sigma_{E}#GT");
     grEWpub->GetXaxis()->SetTitle("Epoch Seconds");
+    grEWpub->GetYaxis()->SetTitleOffset(0.4);
+    grEWpub->GetXaxis()->SetTitleOffset(0.7);
+    grEWpub->GetYaxis()->SetTitleSize(0.07);
+    grEWpub->GetXaxis()->SetTitleSize(0.07);
     if(!time_in_epoch_sec){
       grEWpub->GetXaxis()->SetTimeDisplay(1);
       grEWpub->GetXaxis()->SetTimeFormat("%b %d");
       grEWpub->GetXaxis()->SetTitle("Date in 2018");
     }
-    grEWpub->GetYaxis()->SetTitleOffset(0.8);
     gPad->Update();
     grEWpub->Write();
-    c2->SaveAs(Form("../plots/PubBiPoEres%ivsT%s.pdf", alpha_type, fid.Data()));
+    c2->SaveAs(Form("../plots/PubBiPo%iEresvsT%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
     
     TCanvas *c3 = new TCanvas("c3","c3",0,0,1200,300);
     TGraphErrors *grdZWpub = new TGraphErrors();
@@ -678,15 +685,18 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     grdZWpub->Draw("ap");
     grdZWpub->GetYaxis()->SetTitle("#sigma_{#DeltaZ}/#LT#sigma_{#DeltaZ}#GT");
     grdZWpub->GetXaxis()->SetTitle("Epoch Seconds");
+    grdZWpub->GetYaxis()->SetTitleOffset(0.4);
+    grdZWpub->GetXaxis()->SetTitleOffset(0.7);
+    grdZWpub->GetYaxis()->SetTitleSize(0.07);
+    grdZWpub->GetXaxis()->SetTitleSize(0.07);
     if(!time_in_epoch_sec){
       grdZWpub->GetXaxis()->SetTimeDisplay(1);
       grdZWpub->GetXaxis()->SetTimeFormat("%b %d");
       grdZWpub->GetXaxis()->SetTitle("Date in 2018");
     }
-    grdZWpub->GetYaxis()->SetTitleOffset(0.8);
     gPad->Update();
     grdZWpub->Write();
-    c3->SaveAs(Form("../plots/PubBiPoZres%ivsT%s.pdf", alpha_type, fid.Data()));
+    c3->SaveAs(Form("../plots/PubBiPo%iZresvsT%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
 
     
     TCanvas *c4 = new TCanvas("c4","c4",0,0,1200,300);
@@ -705,17 +715,20 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
       grZWpub->SetPointError(i, 0, grZW->GetErrorY(i)/norm);
     }
     grZWpub->Draw("ap");
-    grZWpub->GetYaxis()->SetTitle("Z_{RMS}}/#LTZ_{RMS}#GT");
+    grZWpub->GetYaxis()->SetTitle("Z_{RMS}/#LTZ_{RMS}#GT");
     grZWpub->GetXaxis()->SetTitle("Epoch Seconds");
+    grZWpub->GetYaxis()->SetTitleOffset(0.4);
+    grZWpub->GetXaxis()->SetTitleOffset(0.7);
+    grZWpub->GetYaxis()->SetTitleSize(0.07);
+    grZWpub->GetXaxis()->SetTitleSize(0.07);
     if(!time_in_epoch_sec){
       grZWpub->GetXaxis()->SetTimeDisplay(1);
       grZWpub->GetXaxis()->SetTimeFormat("%b %d");
       grZWpub->GetXaxis()->SetTitle("Date in 2018");
     }
-    grZWpub->GetYaxis()->SetTitleOffset(0.8);
     gPad->Update();
     grZWpub->Write();
-    c4->SaveAs(Form("../plots/PubBiPoZrms%ivsT%s.pdf", alpha_type, fid.Data()));
+    c4->SaveAs(Form("../plots/PubBiPo%iZrmsvsT%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
 
 
 
