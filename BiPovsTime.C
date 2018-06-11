@@ -395,7 +395,10 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   grAPSD->Draw("ap");
   gPad->Update();
   grAPSD->GetYaxis()->SetTitle("#alpha PSD");
-  grAPSD->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
+  grAPSD->GetYaxis()->SetTitle("#alpha PSD Width (MeV)");
+  grAPSD->GetXaxis()->SetTimeDisplay(1);
+  grAPSD->GetXaxis()->SetTimeFormat("%m/%d");
+  grAPSD->GetXaxis()->SetTitle("Date in 2018");
   grAPSD->Fit("pol1");
   gPad->Update();
   cAPSD->cd(2);
@@ -449,6 +452,9 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   gPad->Update();
   grBPSD->GetYaxis()->SetTitle("#beta PSD");
   grBPSD->GetXaxis()->SetTitle("Hours since Mar. 5, 2018 18:36");
+  grBPSD->GetXaxis()->SetTimeDisplay(1);
+  grBPSD->GetXaxis()->SetTimeFormat("%m/%d");
+  grBPSD->GetXaxis()->SetTitle("Date in 2018");
   grBPSD->Fit("pol1");
   gPad->Update();
   cBPSD->cd(2);
