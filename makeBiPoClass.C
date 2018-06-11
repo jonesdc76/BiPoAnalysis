@@ -3,7 +3,8 @@
 #include "TSystem.h"
 #include "TROOT.h"
 #include <iostream>
-
+//This code is obsolete!!
+//*************************8
 int makeBiPoClass(TString pass = "BiPoNeutrino_v2", TString release = "Phys_Neutrino_v2"){
   TChain *ch = new TChain("BiPoTreePlugin/BiPo");
   cout<<ch->Add(Form("%s/%s/WetCommissioning/pass_%s/*.root",gSystem->Getenv("BIPO_OUTDIR"),release.Data(),pass.Data()))<<" files added from WetCommissioining\n";

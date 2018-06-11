@@ -8,7 +8,6 @@
 
 MAX_CORES=10 #Maximum number of cores to utilize for launching batch analysis
 LAUNCH=1 #Set to 1 if batch launch desired.
-COPY=0   #Set to 1 to copy files to pass dir
 pass=pass$1
 name=AD1_Wet_Phys$1
 file=${name}.root
@@ -65,27 +64,6 @@ else
 	done
     fi
     
-#Copy BiPo tree root files to common directory
-    if [ $COPY -eq 1 ]; then
-	for i in "${series[@]}"
-	do
-	    cd ${P2X_ANALYZED}/$i
-	    if [ ! -d  ../$pass ];then
-		echo "Making directory $pass"
-		mkdir ../${pass}
-	    fi
-	    pwd
-	    for dir in $(ls -d s*); 
-	    do
-		if [ -e ${dir}/${file} ]
-		then
-		    cp  ${dir}/$file ../${pass}/${dir}.root
-		else
-		    echo "${dir}/${file} not found in directory ${dir}"
-		fi
-	    done
-	done
-    fi
 fi
 
 #export SERIES=WetCommissioning/series015
