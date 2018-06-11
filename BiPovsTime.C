@@ -53,11 +53,11 @@ double GetLiveTime(TChain *ch){
     st = TString(element->GetTitle());
     if(first){
       first = 0;
-      time_t ts = time_t(TString(st(st.First(".")-10,10)).Atoi());
+      time_t ts = time_t(TString(st(st.Last('/')-10,10)).Atoi());
       printf("Date of first file: %s", asctime(localtime(&ts)));
     }
   }
-  time_t ts = time_t(TString(st(st.First(".")-10,10)).Atoi() + tl);
+  time_t ts = time_t(TString(st(st.Last('/')-10,10)).Atoi() + tl);
   printf("Date of last file: %s", asctime(localtime(&ts)));
   return tlive/3600.0;
 }
@@ -154,7 +154,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     if(file != prev_file){
       double rt = ((TVectorD*)bp->chain->GetFile()->Get("runtime"))->Norm1();
       TString st(bp->chain->GetFile()->GetName());
-      double ts = TString(st(st.First(".")-10,10)).Atof();
+      double ts = TString(st(st.Last('/')-10,10)).Atof();
 
       if(isFirst){
 	t0 = time_in_epoch_sec ? 0.0 : ts;
