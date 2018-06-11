@@ -60,7 +60,7 @@ void setup_PROSPECT_style(TStyle* prospectStyle) {
     // prospectStyle->SetPadBottomMargin(.111);
 
     // Margins, assuming no top label or z scale
-    prospectStyle->SetPadTopMargin(.03); // just enough to clear exponent on y axis
+    prospectStyle->SetPadTopMargin(.06); // just enough to clear exponent on y axis
     prospectStyle->SetPadLeftMargin(.151);
     prospectStyle->SetPadRightMargin(.04);
     prospectStyle->SetPadBottomMargin(.12);
