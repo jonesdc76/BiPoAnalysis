@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Tue Jun 12 09:07:56 2018 by ROOT version 6.13/01
+// Wed Jun 13 09:19:05 2018 by ROOT version 6.13/01
 // from TChain P2kIBDPlugin/Tibd/
 //////////////////////////////////////////////////////////
 
@@ -24,12 +24,14 @@ public:
    // Declaration of leaf types
    Long64_t        evt;
    Double_t        t_abs;
+   Float_t         Encapt;
    Float_t         E;
    Float_t         Esmear;
    Int_t           maxseg;
    Float_t         xyz[3];
    Float_t         E_maxseg;
    Float_t         E_adjacent;
+   Float_t         ncapt_psd;
    Float_t         prompt_psd;
    Int_t           segmult;
    Float_t         diameter;
@@ -45,12 +47,14 @@ public:
    // List of branches
    TBranch        *b_evt;   //!
    TBranch        *b_t_abs;   //!
+   TBranch        *b_Encapt;   //!
    TBranch        *b_E;   //!
    TBranch        *b_Esmear;   //!
    TBranch        *b_maxseg;   //!
    TBranch        *b_xyz;   //!
    TBranch        *b_E_maxseg;   //!
    TBranch        *b_E_adjacent;   //!
+   TBranch        *b_ncapt_psd;   //!
    TBranch        *b_prompt_psd;   //!
    TBranch        *b_segmult;   //!
    TBranch        *b_diameter;   //!
@@ -814,12 +818,14 @@ void IBDoff::Init(TTree *tree)
 
    fChain->SetBranchAddress("evt", &evt, &b_evt);
    fChain->SetBranchAddress("t_abs", &t_abs, &b_t_abs);
+   fChain->SetBranchAddress("Encapt", &Encapt, &b_Encapt);
    fChain->SetBranchAddress("E", &E, &b_E);
    fChain->SetBranchAddress("Esmear", &Esmear, &b_Esmear);
    fChain->SetBranchAddress("maxseg", &maxseg, &b_maxseg);
    fChain->SetBranchAddress("xyz", xyz, &b_xyz);
    fChain->SetBranchAddress("E_maxseg", &E_maxseg, &b_E_maxseg);
    fChain->SetBranchAddress("E_adjacent", &E_adjacent, &b_E_adjacent);
+   fChain->SetBranchAddress("ncapt_psd", &ncapt_psd, &b_ncapt_psd);
    fChain->SetBranchAddress("prompt_psd", &prompt_psd, &b_prompt_psd);
    fChain->SetBranchAddress("segmult", &segmult, &b_segmult);
    fChain->SetBranchAddress("diameter", &diameter, &b_diameter);

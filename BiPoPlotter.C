@@ -711,7 +711,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	hAEW->Fill(f->GetParameter(2));
 	double lnsig = (f->GetParameter(1) - lAE)/f->GetParameter(2);
 	double hnsig = (hAE - f->GetParameter(1))/f->GetParameter(2);
-	effAE[i] = (erf(lnsig) + erf(hnsig))/2.0;
+	effAE[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
 	grEffAE->SetPoint(nAE, i, effAE[i]);
 	++nAE;
 	if(isET(i)){
@@ -746,7 +746,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	hApsdW->Fill(f->GetParameter(2));
       	double lnsig = (f->GetParameter(1) - lApsd)/f->GetParameter(2);
       	double hnsig = (hApsd - f->GetParameter(1))/f->GetParameter(2);
-      	effAPSD[i] = (erf(lnsig) + erf(hnsig))/2.0;
+      	effAPSD[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
 	grEffApsd->SetPoint(nApsd, i, effAPSD[i]);
       	++nApsd;
       	if(isET(i)){
@@ -780,7 +780,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	hBpsdW->Fill(f->GetParameter(2));
       	double lnsig = (f->GetParameter(1) - lPpsd)/f->GetParameter(2);
       	double hnsig = (hPpsd - f->GetParameter(1))/f->GetParameter(2);
-      	effBPSD[i] = (erf(lnsig) + erf(hnsig))/2.0;
+      	effBPSD[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
 	grEffBpsd->SetPoint(nBpsd, i, effBPSD[i]);
       	++nBpsd;
       	if(isET(i)){
@@ -814,7 +814,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	hdZW->Fill(f->GetParameter(2));
       	double lnsig = (f->GetParameter(1) - ldZ)/f->GetParameter(2);
       	double hnsig = (hdZ - f->GetParameter(1))/f->GetParameter(2);
-      	effdZ[i] = (erf(lnsig) + erf(hnsig))/2.0;
+      	effdZ[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
  	grEffdZ->SetPoint(ndZ, i, effdZ[i]);
      	++ndZ;
       	if(isET(i)){

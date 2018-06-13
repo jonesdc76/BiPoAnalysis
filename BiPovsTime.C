@@ -323,7 +323,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     hE[i][2]->Fit("f", "r");
     double lnsig = (f.GetParameter(1) - lAE)/f.GetParameter(2);
     double hnsig = (hAE - f.GetParameter(1))/f.GetParameter(2);
-    effAE[i] = (erf(lnsig) + erf(hnsig))/2.0;
+    effAE[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
     grEffE->SetPoint(i,t[i],effAE[i]);
     gPad->Update();
     if(slow) sleep(1);;
@@ -385,7 +385,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     if(slow) sleep(1);;
     double lnsig = (f.GetParameter(1) - lApsd)/f.GetParameter(2);
     double hnsig = (hApsd - f.GetParameter(1))/f.GetParameter(2);
-    effAPSD[i] = (erf(lnsig) + erf(hnsig))/2.0;
+    effAPSD[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
     grEffAPSD->SetPoint(i,t[i],effAPSD[i]);
     grAPSD->SetPoint(i, t[i], f.GetParameter(1));
     grAPSD->SetPointError(i, 0, f.GetParError(1));
@@ -441,7 +441,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     if(slow) sleep(1);;
     double lnsig = (f.GetParameter(1) - lPpsd)/f.GetParameter(2);
     double hnsig = (hPpsd - f.GetParameter(1))/f.GetParameter(2);
-    effBPSD[i] = (erf(lnsig) + erf(hnsig))/2.0;
+    effBPSD[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
     grEffBPSD->SetPoint(i,t[i],effBPSD[i]);
     grBPSD->SetPoint(i, t[i], f.GetParameter(1));
     grBPSD->SetPointError(i, 0, f.GetParError(1));
@@ -543,7 +543,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     hdZ[i][2]->Fit("f", "rq");
     double lnsig = (f.GetParameter(1) + 200)/f.GetParameter(2);
     double hnsig = (200 - f.GetParameter(1))/f.GetParameter(2);
-    effdZ[i] = (erf(lnsig) + erf(hnsig))/2.0;
+    effdZ[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
     grEffdZ->SetPoint(i,t[i],effdZ[i]);
     gPad->Update();
     if(slow) sleep(1);;

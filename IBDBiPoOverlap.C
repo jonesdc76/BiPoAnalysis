@@ -44,10 +44,17 @@ double GetLiveTime(TChain *ch){
 }
 
 int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
-  if(P2style)setup_PROSPECT_style();
+  if(P2style){
+    setup_PROSPECT_style();
+  }else{
+    gStyle->SetOptStat(0);
+    //gStyle->SetOptFit(1111);
+    gStyle->SetPadLeftMargin(0.12);
+    gStyle->SetPadRightMargin(0.04);
+  }
   bool deadtime_corr = 1;
-  double lowE = prompt ? 0 : 0.4, highE = prompt ? 8 : 0.8, highEncapt = 0.6;
-  int nBins = prompt ? int((highE-lowE)/0.2) : 100, colOn = kRed, colOff = kBlue, colAcc = kBlack, colCorr = kGreen+2;
+  double lowE = prompt ? 0 : 0.4, highE = prompt ? 8 : 0.9, highEncapt = 0.6;
+  int nBins = prompt ? int((highE-lowE)/0.2) : int((highE-lowE)/0.01), colOn = kRed, colOff = kBlue, colAcc = kBlack, colCorr = kGreen+2;
   IBDon *on = new IBDon();
   TChain *chon = on->chain;
   chon->SetAlias("energy", prompt ? "E" : "Encapt");
@@ -62,7 +69,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   cout<<"Reactor off live time: "<<Toff<<" hours\n";
   TCut cutdt = Form("ncapt_dt>%f&&ncapt_dt<%f", tlow, thigh);
   TCut cutdtacc = Form("fabs(ncapt_dt)>%f&&fabs(ncapt_dt)<%f",tlowacc,thighacc);
-  if(prompt&&0){
+  if(prompt){
     cutdt = Form("ncapt_dt>%f&&ncapt_dt<%f&&Encapt<%f",
 		 tlow, thigh, highEncapt);
     cutdtacc = Form("fabs(ncapt_dt)>%f&&fabs(ncapt_dt)<%f&&Encapt<%f",
@@ -74,7 +81,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   TH1D *hOn = (TH1D*)gDirectory->Get("hOn");
   hOn->Sumw2();
   gPad->Update();
-  hOn->SetTitle("IBD Candidate Delayed Energy");
+  hOn->SetTitle("Reactor ON IBD Candidate Delayed Energy");
   hOn->GetXaxis()->SetTitle("Energy (MeV)");
   hOn->GetYaxis()->SetTitle("Counts");
   hOn->GetYaxis()->SetRangeUser(0,hOn->GetMaximum()*1.1);
@@ -86,7 +93,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   TH1D *hOnAcc = (TH1D*)gDirectory->Get("hOnAcc");
   hOnAcc->Sumw2();
   hOnAcc->Scale(n2f);
-  hOnAcc->SetTitle("Accidental IBD Candidate Delayed Energy");
+  hOnAcc->SetTitle("Reactor ON Accidental IBD Candidate Delayed Energy");
   hOnAcc->GetXaxis()->SetTitle("Energy (MeV)");
   hOnAcc->GetYaxis()->SetTitle("Counts");
   hOnAcc->SetMarkerColor(colAcc);
@@ -99,7 +106,9 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   hOn->Draw();
   hOnAcc->Draw("sames");
   hOnCorr->Draw("sames");
-  TPaveText *pton = new TPaveText(0.8,0.7,0.99,0.93,"ndc");
+  TF1 *f = new TF1("f","[0]*exp(-pow(x-0.862,2)/(2*pow(0.04272,2)))",0.7,highE);
+  hOnCorr->Fit(f,"r");
+  TPaveText *pton = new TPaveText(0.77,0.74,0.99,0.93,"ndc");
   pton->SetFillColor(0);
   pton->SetShadowColor(0);
   pton->SetTextColor(colOn);
@@ -116,7 +125,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   TH1D *hOff = (TH1D*)gDirectory->Get("hOff");
   hOff->Sumw2();
   gPad->Update();
-  hOff->SetTitle("IBD Candidate Delayed Energy");
+  hOff->SetTitle("Reactor OFF IBD Candidate Delayed Energy");
   hOff->GetXaxis()->SetTitle("Energy (MeV)");
   hOff->GetYaxis()->SetTitle("Counts");
   hOff->GetYaxis()->SetRangeUser(0,hOn->GetMaximum()*1.1);
@@ -127,7 +136,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   TH1D *hOffAcc = (TH1D*)gDirectory->Get("hOffAcc");
   hOffAcc->Sumw2();
   hOffAcc->Scale(n2f);
-  hOffAcc->SetTitle("Accidental IBD Candidate Delayed Energy");
+  hOffAcc->SetTitle("Reactor OFF Accidental IBD Candidate Delayed Energy");
   hOffAcc->GetXaxis()->SetTitle("Energy (MeV)");
   hOffAcc->GetYaxis()->SetTitle("Counts");
   hOffAcc->SetMarkerColor(colAcc);
@@ -140,7 +149,8 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   hOff->Draw();
   hOffAcc->Draw("sames");
   hOffCorr->Draw("sames");
-  TPaveText *ptoff = new TPaveText(0.8,0.7,0.99,0.93,"ndc");
+  hOffCorr->Fit(f,"r");
+  TPaveText *ptoff = new TPaveText(0.77,0.74,0.99,0.93,"ndc");
   ptoff->SetFillColor(0);
   ptoff->SetShadowColor(0);
   ptoff->SetTextColor(colOff);
@@ -152,12 +162,19 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   ptoff->Draw();
 
   TCanvas *cPrE = new TCanvas("cPrE", "cPrE",0,600,800,600);
-  gStyle->SetOptFit(1111);
   TH1D *hOnCorr2 = (TH1D*)hOnCorr->Clone("hOnCorr2");
   hOnCorr2->Add(hOffCorr,-on2offscale);
-  hOnCorr2->SetTitle("IBD Delayed Energy Distribution");
+  hOnCorr2->SetTitle("Background Subtracted IBD Delayed Energy Distribution");
   hOnCorr2->Draw();
-  hOnCorr2->Fit("gaus");
+  TF1 *f1 = new TF1("f1","gaus",lowE,0.8);
+  if(!prompt)hOnCorr2->Fit(f1,"r");
+  TPaveText *pt = new TPaveText(0.56,0.64,0.82,0.83,"ndc");
+  pt->SetFillColor(0);
+  pt->SetShadowColor(0);
+  pt->AddText(Form("#chi^{2}/NDF:  %0.2f",f1->GetChisquare()/double(f1->GetNDF())));
+  pt->AddText(Form("Mean:  %0.4f #pm %0.4f",f1->GetParameter(1),f1->GetParError(1)));
+  pt->AddText(Form("#sigma:    %0.3f #pm %0.3f",f1->GetParameter(2),f1->GetParError(2)));
+  pt->Draw();
   return 0; 
 }
 
