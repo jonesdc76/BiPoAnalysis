@@ -15,10 +15,12 @@ int makeIBDClassFromRunlist(const char *fname="NeutrinoGoodRuns.txt", const char
   while(file.good()&!file.eof()){
     string line;
     getline(file, line);
-    TString st = Form("%s/%s/%s/AD1_Wet_Phys%s.root",gSystem->Getenv("BIPO_OUTDIR"), release, line.data(), passname);
+    TString rel(release);
+    TString ston = Form("%s/%s/%s/AD1_Wet_Phys%s.root",gSystem->Getenv("BIPO_OUTDIR"), rel.Data(), line.data(), passname);
+    TString stoff = Form("%s/%s/%s/AD1_Wet_Phys%s.root",gSystem->Getenv("BIPO_OUTDIR"), rel.Data(), line.data(), passname);
     //printf("%s", st.Data());
-    if(st.Contains("Background")) chOff->Add(st.Data());
-    else chOn->Add(st.Data());
+    if(stoff.Contains("Background")) chOff->Add(stoff.Data());
+    else chOn->Add(ston.Data());
     file.peek();
   }
   int nadded = chOn->GetListOfFiles()->GetEntries();

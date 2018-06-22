@@ -52,9 +52,10 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
     gStyle->SetPadLeftMargin(0.12);
     gStyle->SetPadRightMargin(0.04);
   }
+  const double EBW = 0.05;//energy bin width in MeV
   bool deadtime_corr = 1;
   double lowE = prompt ? 0 : 0.4, highE = prompt ? 8 : 0.9, highEncapt = 0.6;
-  int nBins = prompt ? int((highE-lowE)/0.2) : int((highE-lowE)/0.01), colOn = kRed, colOff = kBlue, colAcc = kBlack, colCorr = kGreen+2;
+  int nBins = prompt ? int((highE-lowE)/EBW) : int((highE-lowE)/0.01), colOn = kRed, colOff = kBlue, colAcc = kBlack, colCorr = kGreen+2;
   IBDon *on = new IBDon();
   TChain *chon = on->chain;
   chon->SetAlias("energy", prompt ? "E" : "Encapt");
@@ -107,7 +108,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   hOnAcc->Draw("sames");
   hOnCorr->Draw("sames");
   TF1 *f = new TF1("f","[0]*exp(-pow(x-0.862,2)/(2*pow(0.04272,2)))",0.7,highE);
-  hOnCorr->Fit(f,"r");
+  if(!prompt)hOnCorr->Fit(f,"r");
   TPaveText *pton = new TPaveText(0.77,0.74,0.99,0.93,"ndc");
   pton->SetFillColor(0);
   pton->SetShadowColor(0);
@@ -149,7 +150,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   hOff->Draw();
   hOffAcc->Draw("sames");
   hOffCorr->Draw("sames");
-  hOffCorr->Fit(f,"r");
+  if(!prompt)hOffCorr->Fit(f,"r");
   TPaveText *ptoff = new TPaveText(0.77,0.74,0.99,0.93,"ndc");
   ptoff->SetFillColor(0);
   ptoff->SetShadowColor(0);
