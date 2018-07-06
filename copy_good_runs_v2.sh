@@ -1,12 +1,12 @@
 #!/bin/bash
 pass=$1
-RELEASE=Phys_Neutrino_v2
-ANARELEASE=Analyzed_20180601
-FILE=AD1_Wet_Phys.root
+RELEASE=Phys_NuFact_v1
+ANARELEASE=Analyzed_NuFact_v1
+FILE=AD1_Extra_Phys.root
 if [ $# -lt 1 ];then
     echo "Pass argument required"
 else
-    for i in $(cat NeutrinoGoodRuns.txt);do
+    for i in $(cat RunList.txt);do
 	if [ -d ${P2X_ANADAT}/${ANARELEASE}/${i} ];then
 	    dir="$(cut -d'/' -f1 <<<$i)"
 	    #echo $dir

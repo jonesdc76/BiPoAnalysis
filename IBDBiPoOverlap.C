@@ -54,7 +54,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   }
   const double EBW = 0.05;//energy bin width in MeV
   bool deadtime_corr = 1;
-  double lowE = prompt ? 0 : 0.4, highE = prompt ? 8 : 0.9, highEncapt = 0.6;
+  double lowE = prompt ? 0 : 0.4, highE = prompt ? 8 : 0.9, lowEncapt = 0.46, highEncapt = 0.6;
   int nBins = prompt ? int((highE-lowE)/EBW) : int((highE-lowE)/0.01), colOn = kRed, colOff = kBlue, colAcc = kBlack, colCorr = kGreen+2;
   IBDon *on = new IBDon();
   TChain *chon = on->chain;
@@ -71,10 +71,10 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   TCut cutdt = Form("ncapt_dt>%f&&ncapt_dt<%f", tlow, thigh);
   TCut cutdtacc = Form("fabs(ncapt_dt)>%f&&fabs(ncapt_dt)<%f",tlowacc,thighacc);
   if(prompt){
-    cutdt = Form("ncapt_dt>%f&&ncapt_dt<%f&&Encapt<%f",
-		 tlow, thigh, highEncapt);
-    cutdtacc = Form("fabs(ncapt_dt)>%f&&fabs(ncapt_dt)<%f&&Encapt<%f",
-		    tlowacc,thighacc, highEncapt);
+    cutdt = Form("ncapt_dt>%f&&ncapt_dt<%f&&Encapt>%f&&Encapt<%f",
+		 tlow, thigh, lowEncapt, highEncapt);
+    cutdtacc =Form("fabs(ncapt_dt)>%f&&fabs(ncapt_dt)<%f&&Encapt>%f&&Encapt<%f",
+		   tlowacc,thighacc, lowEncapt, highEncapt);
   }
 
   TCanvas *cOn = new TCanvas("cOn", "cOn",0,0,800,600);
