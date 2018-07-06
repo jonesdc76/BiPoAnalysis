@@ -24,7 +24,7 @@ int getRunStats(){
     st = TString(element->GetTitle());
     if(st.Contains(data[n]) && first_of_dataset){
       first_of_dataset = 0;
-      ts1 = time_t(TString(st(st.First(".")-10,10)).Atoi());
+      ts1 = time_t(TString(st(st.Last('/')-10,10)).Atoi());
     }
     if((!st.Contains(data[n])) && n < N-1){
       //ut<<st.Data()<<"\n"<<prev_st.Data()<<endl<<endl;
@@ -34,7 +34,7 @@ int getRunStats(){
       printf("%s %s %i, %i %02i:%02i", week[t->tm_wday].Data(), month[t->tm_mon].Data(), t->tm_mday, t->tm_year+1900, t->tm_hour, t->tm_min);
       t = localtime(&ts2);
       printf(" and %s %s %i, %i %02i:%02i}\n", week[t->tm_wday].Data(), month[t->tm_mon].Data(), t->tm_mday, t->tm_year+1900, t->tm_hour, t->tm_min);
-      ts1 = time_t(TString(st(st.First(".")-10,10)).Atoi());
+      ts1 = time_t(TString(st(st.Last('/')-10,10)).Atoi());
       prev_tlive = tlive;
       ++n;
     }
@@ -43,13 +43,13 @@ int getRunStats(){
     tlive += tl;
     if(first){
       first = 0;
-      time_t ts = time_t(TString(st(st.First(".")-10,10)).Atoi());
+      time_t ts = time_t(TString(st(st.Last('/')-10,10)).Atoi());
       printf("Start time of first file: %s", asctime(localtime(&ts)));
     }
     prev_st = st;
-    prev_ts = time_t(TString(st(st.First(".")-10,10)).Atoi());
+    prev_ts = time_t(TString(st(st.Last('/')-10,10)).Atoi());
   }
-  time_t ts = time_t(TString(st(st.First(".")-10,10)).Atoi() + tl);
+  time_t ts = time_t(TString(st(st.Last('/')-10,10)).Atoi() + tl);
   cout<<"\\item{"<<data[n].ReplaceAll("_","\\_")<<": "<<Form("%0.3f",(tlive-prev_tlive)/3600.0)<<" hours of data between ";
   auto t = localtime(&ts1);
   printf("%s %s %i, %i %02i:%02i", week[t->tm_wday].Data(), month[t->tm_mon].Data(), t->tm_mday, t->tm_year+1900, t->tm_hour, t->tm_min);

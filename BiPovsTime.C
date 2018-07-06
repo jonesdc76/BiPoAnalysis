@@ -27,7 +27,7 @@ using namespace std;
 using namespace std;
 const int N = 3, ncol = 14, nrow = 11;
 const double tauBiPo = 0.1643/log(2);
-const double HrPerPnt = 23.5;//hours of data per point
+const double HrPerPnt = 47.5;//hours of data per point
 const double n2f = 1.0/12.0;//ratio of lengths of near to far windows
 const double f2n = 12.0;//ratio of lengths of far to near windows
 const double tmin = 0.002;//start coincidence window tmin ms away from electron
@@ -53,11 +53,11 @@ double GetLiveTime(TChain *ch){
     st = TString(element->GetTitle());
     if(first){
       first = 0;
-      time_t ts = time_t(TString(st(st.First(".")-10,10)).Atoi());
+      time_t ts = time_t(TString(st(st.Last('/')-10,10)).Atoi());
       printf("Date of first file: %s", asctime(localtime(&ts)));
     }
   }
-  time_t ts = time_t(TString(st(st.First(".")-10,10)).Atoi() + tl);
+  time_t ts = time_t(TString(st(st.Last('/')-10,10)).Atoi() + tl);
   printf("Date of last file: %s", asctime(localtime(&ts)));
   return tlive/3600.0;
 }
@@ -93,7 +93,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
   double fidZ = fiducialize ? 1000.0 : 1000;//448.0;
   if(alpha_type == 1){
-    t_start = 2e-4;
+    t_start = 6.6e-4;//2e-4;
     t_end = 6e-3;
     hAE = 1.26;
     lAE = 0.97;
@@ -154,7 +154,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     if(file != prev_file){
       double rt = ((TVectorD*)bp->chain->GetFile()->Get("runtime"))->Norm1();
       TString st(bp->chain->GetFile()->GetName());
-      double ts = TString(st(st.First(".")-10,10)).Atof();
+      double ts = TString(st(st.Last('/')-10,10)).Atof();
 
       if(isFirst){
 	t0 = time_in_epoch_sec ? 0.0 : ts;
@@ -284,6 +284,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   grEffdZ->SetMarkerStyle(8);
   grEffdZ->SetMarkerSize(0.8);
   grEffdZ->SetLineColor(col[3]);
+  mg->Add(grEffdZ);
   tt = (TText*)pt->AddText("dZ Cut Efficiency");
   tt->SetTextColor(col[3]);
 
@@ -323,7 +324,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     hE[i][2]->Fit("f", "r");
     double lnsig = (f.GetParameter(1) - lAE)/f.GetParameter(2);
     double hnsig = (hAE - f.GetParameter(1))/f.GetParameter(2);
-    effAE[i] = (erf(lnsig) + erf(hnsig))/2.0;
+    effAE[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
     grEffE->SetPoint(i,t[i],effAE[i]);
     gPad->Update();
     if(slow) sleep(1);;
@@ -385,7 +386,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     if(slow) sleep(1);;
     double lnsig = (f.GetParameter(1) - lApsd)/f.GetParameter(2);
     double hnsig = (hApsd - f.GetParameter(1))/f.GetParameter(2);
-    effAPSD[i] = (erf(lnsig) + erf(hnsig))/2.0;
+    effAPSD[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
     grEffAPSD->SetPoint(i,t[i],effAPSD[i]);
     grAPSD->SetPoint(i, t[i], f.GetParameter(1));
     grAPSD->SetPointError(i, 0, f.GetParError(1));
@@ -441,7 +442,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     if(slow) sleep(1);;
     double lnsig = (f.GetParameter(1) - lPpsd)/f.GetParameter(2);
     double hnsig = (hPpsd - f.GetParameter(1))/f.GetParameter(2);
-    effBPSD[i] = (erf(lnsig) + erf(hnsig))/2.0;
+    effBPSD[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
     grEffBPSD->SetPoint(i,t[i],effBPSD[i]);
     grBPSD->SetPoint(i, t[i], f.GetParameter(1));
     grBPSD->SetPointError(i, 0, f.GetParError(1));
@@ -543,7 +544,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     hdZ[i][2]->Fit("f", "rq");
     double lnsig = (f.GetParameter(1) + 200)/f.GetParameter(2);
     double hnsig = (200 - f.GetParameter(1))/f.GetParameter(2);
-    effdZ[i] = (erf(lnsig) + erf(hnsig))/2.0;
+    effdZ[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
     grEffdZ->SetPoint(i,t[i],effdZ[i]);
     gPad->Update();
     if(slow) sleep(1);;
