@@ -16,7 +16,7 @@ then
     echo "pass string required as command line argument"
 else
     cd ${P2X_ANALYSIS_CODE}/ControlScripts
-    RELEASE=Phys_Neutrino_v2
+    RELEASE=Phys_20180605
     if [ ! -d ${P2X_ANALYZED}/${RELEASE} ];then
 	mkdir $P2X_ANALYZED/${RELEASE}
     fi
@@ -46,12 +46,16 @@ else
     series[${n}]=180501_ReactorOn/series003; echo "Adding  ${series[$n]}";  ((n++))
     series[${n}]=180501_ReactorOn/series004; echo "Adding  ${series[$n]}";  ((n++))
     series[${n}]=180525_Background/series000; echo "Adding  ${series[$n]}";  ((n++))
+
+    n=0
+    seriestemp[${n}]=180525_Background/series000; echo "Adding  ${seriestemp[$n]}";  ((n++))
+    seriestemp[${n}]=180605_Background/series001; echo "Adding  ${seriestemp[$n]}";  ((n++))
     
 
     
 #Launch analysis batches
     if [ $LAUNCH -eq 1 ]; then
-	for i in "${series[@]}"
+	for i in "${seriestemp[@]}"
 	do
 	    export SERIES=$i
 	    echo " ${P2X_ANALYZED}/${i}"
