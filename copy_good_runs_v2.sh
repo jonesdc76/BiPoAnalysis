@@ -21,5 +21,3 @@ for i in $(cat NuFactGoodRuns.txt);do
 	echo "$i missing"
     fi
 done
-
-    
