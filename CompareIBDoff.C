@@ -5,23 +5,23 @@
   gStyle->SetOptStat(0);
   TChain *ch1 = new TChain("P2kIBDPlugin/Tibd");
   TChain *ch2 = new TChain("P2kIBDPlugin/Tibd");
-
+  TString pass = "";
   ifstream file("RunList.txt");
   int n1 = 0, n2 = 0;
   double lt1 = 0, lt2 = 0;
   while(file.good()&&!file.eof()){
   string line;
     getline(file,line);
-    TString rel("Phys_Neutrino_v2");
-    if(TString(line).Contains("180605_Background")){
-      rel = "Phys_20180605";
-    }else if(TString(line).Contains("180525_Background")&&
-	     (TString(line).Contains("series000/s000_f0011") || 
-	      TString(line).Contains("series000/s000_f0012"))){
-      rel = "Phys_20180605";
-    }
+    TString rel("Analyzed_NuFact_v1");
+    // if(TString(line).Contains("180605_Background")){
+    //   rel = "Phys_20180605";
+    // }else if(TString(line).Contains("180525_Background")&&
+    // 	     (TString(line).Contains("series000/s000_f0011") || 
+    // 	      TString(line).Contains("series000/s000_f0012"))){
+    //   rel = "Phys_20180605";
+    // }
     if(TString(line).Contains("180316_Background")){
-      TString fname(Form("%s/%s/%s/AD1_Wet_Phys_IBDwBiPo.root",gSystem->Getenv("BIPO_OUTDIR"),rel.Data(),line.data()));
+      TString fname(Form("%s/%s/%s/AD1_Wet_Phys%s.root",gSystem->Getenv("BIPO_OUTDIR"),rel.Data(),line.data(), pass.Data()));
       ch1->Add(fname.Data());
       TFile tfile(fname.Data());
       if(tfile.IsOpen()){
@@ -31,7 +31,7 @@
       }
     }else if(TString(line).Contains("180525_Background")||
 	     TString(line).Contains("180605_Background")){
-      TString fname(Form("%s/%s/%s/AD1_Wet_Phys_IBDwBiPo.root",gSystem->Getenv("BIPO_OUTDIR"),rel.Data(),line.data()));
+      TString fname(Form("%s/%s/%s/AD1_Wet_Phys%s.root",gSystem->Getenv("BIPO_OUTDIR"),rel.Data(),line.data(), pass.Data()));
       ch2->Add(fname.Data());
       TFile tfile(fname.Data());
       if(tfile.IsOpen()){
@@ -160,6 +160,8 @@
   hdiffpct->GetXaxis()->SetTitle("Energy (MeV)");
   hdiffpct->GetYaxis()->SetTitle("Difference (%)");
   hdiffpct->GetYaxis()->SetRangeUser(-100,100);
-  hdiffpct->Fit("pol0");
+  TF1 *f = new TF1("f","pol0",0.2,8);
+  f->FixParameter(0,0);
+  hdiffpct->Fit(f,"r");
   gPad->Update();
 }
