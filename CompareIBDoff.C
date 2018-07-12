@@ -22,8 +22,7 @@ int CompareIBDoff()
   gStyle->SetPadRightMargin(0.03);
   gStyle->SetLineWidth(2);
   gStyle->SetOptStat(0);
-  char * trname = (char*)(Neutrino_v2 ? "P2kIBDPlugin/Tibd" : "Tibd");
-  cout<<trname<<endl;
+  char* trname = "P2kIBDPlugin/Tibd";
   TChain *ch1 = new TChain(trname);
   TChain *ch2 = new TChain(trname);
   TString pass = (char*) (Neutrino_v2 ? "_IBDwBiPo" : "");
