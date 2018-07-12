@@ -1,5 +1,6 @@
 #include "TFile.h"
 #include "TTree.h"
+#include "TVectorD.h"
 
 void copyTree(const char *infname, const char *outfname, const char* treename= "BiPoTreePlugin/BiPo") {
 
@@ -10,7 +11,8 @@ void copyTree(const char *infname, const char *outfname, const char* treename= "
    //Create a new file + a clone of old tree in new file
    TFile *newfile = new TFile(outfname,"recreate");
    TTree *newtree = oldtree->CloneTree();
-
+   TVectorD *runtime = (TVectorD*)oldfile->Get("runtime");
+   //   runtime->Write("runtime");
    newtree->Print();
    newfile->Write();
    delete oldfile;

@@ -1,29 +1,53 @@
+#include <iostream>
+#include <fstream>
+#include "TH1D.h"
+#include "TString.h"
+#include "TStyle.h"
+#include "TSystem.h"
+#include "TPad.h"
+#include "TCanvas.h"
+#include "TChain.h"
+#include "TCut.h"
+#include "TFile.h"
+#include "TF1.h"
+#include "TVectorD.h"
+#include "TPaveText.h"
+#include "TPaveStats.h"
+
+
+int CompareIBDoff()
 {
-  bool Neutrino_v2 = 1;
+  bool Neutrino_v2 = 0;
   gStyle->SetPadLeftMargin(0.12);
   gStyle->SetPadRightMargin(0.03);
   gStyle->SetLineWidth(2);
   gStyle->SetOptStat(0);
-  TChain *ch1 = new TChain("P2kIBDPlugin/Tibd");
-  TChain *ch2 = new TChain("P2kIBDPlugin/Tibd");
-  TString pass = "_IBDwBiPo";
-  ifstream file("RunList.txt");
+  char * trname = (char*)(Neutrino_v2 ? "P2kIBDPlugin/Tibd" : "Tibd");
+  cout<<trname<<endl;
+  TChain *ch1 = new TChain(trname);
+  TChain *ch2 = new TChain(trname);
+  TString pass = (char*) (Neutrino_v2 ? "_IBDwBiPo" : "");
+  ifstream file("RxOffRunList.txt");
   int n1 = 0, n2 = 0;
   double lt1 = 0, lt2 = 0;
   while(file.good()&&!file.eof()){
+    cout<<"hi\n";
     string line;
     getline(file,line);
     TString rel("Analyzed_NuFact_v1");
-    if(Neutrino_v2) rel = "Phys_Neutrino_v2";
-    if(TString(line).Contains("180605_Background")){
-      rel = "Phys_20180605";
-    }else if(TString(line).Contains("180525_Background")&&
-    	     (TString(line).Contains("series000/s000_f0011") || 
-    	      TString(line).Contains("series000/s000_f0012"))){
-      rel = "Phys_20180605";
+    if(Neutrino_v2) {
+      rel = "Phys_Neutrino_v2";
+      if(TString(line).Contains("180605_Background")){
+	rel = "Phys_20180605";
+      }else if(TString(line).Contains("180525_Background")&&
+	       (TString(line).Contains("series000/s000_f0011") || 
+		TString(line).Contains("series000/s000_f0012"))){
+	rel = "Phys_20180605";
+      }
     }
     if(TString(line).Contains("180316_Background")){
       TString fname(Form("%s/%s/%s/AD1_Wet_Phys%s.root",gSystem->Getenv("BIPO_OUTDIR"),rel.Data(),line.data(), pass.Data()));
+      cout<<fname.Data()<<endl;
       ch1->Add(fname.Data());
       TFile tfile(fname.Data());
       if(tfile.IsOpen()){
@@ -187,7 +211,7 @@
   hdiffpct->GetYaxis()->SetTitle("Difference (%)");
   hdiffpct->GetYaxis()->SetRangeUser(-100,100);
   TF1 *f = new TF1("f","pol0",0.2,8);
-  f->FixParameter(0,0);
+  // f->FixParameter(0,0);
   hdiffpct->Fit(f,"r");
   gPad->Update();
   TCanvas *c5 = new TCanvas("c5", "c5",900,0,800,600);
@@ -251,4 +275,5 @@
   ps2->SetY2NDC(0.69);
   ps2->Draw();
   gPad->Update();
+  return 0;
 }
