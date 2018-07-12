@@ -1,9 +1,11 @@
 #!/bin/bash
 IBD=0
-TREE=BiPoTreePlugin/BiPo
+PLUGIN=BiPoTreePlugin
+TREE=BiPo
 FILE=AD1_Extra_Phys.root
 if [ $IBD -eq 1 ]; then
-    TREE=P2kIBDPlugin/Tibd
+    PLUGIN=P2kIBDPlugin
+    TREE=Tibd
     FILE=AD1_Wet_Phys.root
 fi
 RELEASE=Phys_NuFact_v1
@@ -20,7 +22,7 @@ for i in $(cat NuFactGoodRuns.txt);do
 	infname=${P2X_ANADAT}/${ANARELEASE}/${i}/$FILE
 	outfname=${BIPO_OUTDIR}/${ANARELEASE}/${i}/$FILE
 	if [ ! -f $outfname ];then
-	    root -b -l -q "copyTree.C+(\"$infname\", \"$outfname\", \"$TREE\")"
+	    root -b -l -q "copyTree.C+(\"$infname\", \"$outfname\", \"$TREE\", \"$PLUGIN\")"
 	else
 	    echo "$outfname already exists. Skipping."
 	fi
