@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Fri Jul 13 15:39:20 2018 by ROOT version 6.13/01
+// Fri Jul 13 16:46:17 2018 by ROOT version 6.13/01
 // from TChain P2kIBDPlugin/Tibd/
 //////////////////////////////////////////////////////////
 
@@ -294,7 +294,10 @@ IBDoff::IBDoff(TTree *tree) : fChain(0)
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series001/s001_f00167_ts1521904069/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series001/s001_f00168_ts1521907782/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series001/s001_f00169_ts1521909739/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
+      chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series002/s002_f00001_ts1521910199/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series001/s001_f00170_ts1521913931/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
+      chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series002/s002_f00002_ts1521917597/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
+      chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series002/s002_f00003_ts1521921213/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series001/s001_f00171_ts1521924828/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series001/s001_f00172_ts1521928475/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series001/s001_f00173_ts1521932096/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
@@ -387,8 +390,6 @@ IBDoff::IBDoff(TTree *tree) : fChain(0)
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series001/s001_f00260_ts1522250629/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series001/s001_f00261_ts1522254251/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180316_Background/series001/s001_f00262_ts1522257997/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
-      chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180417_Background/series000/s000_f00001_ts1524019601/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
-      chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180417_Background/series000/s000_f00002_ts1524020072/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180417_Background/series000/s000_f00003_ts1524021346/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180417_Background/series000/s000_f00004_ts1524021591/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180417_Background/series000/s000_f00005_ts1524025242/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
@@ -762,7 +763,6 @@ IBDoff::IBDoff(TTree *tree) : fChain(0)
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180525_Background/series000/s000_f00109_ts1527644599/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180525_Background/series000/s000_f00110_ts1527648218/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180525_Background/series000/s000_f00111_ts1527651836/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
-      chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180525_Background/series000/s000_f00112_ts1527655616/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180525_Background/series000/s000_f00113_ts1527659233/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180525_Background/series000/s000_f00114_ts1527662848/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
       chain->Add("file:///home/jonesdc/prospect/bipo_data//Analyzed_NuFact_v1/180525_Background/series000/s000_f00115_ts1527666470/AD1_Wet_Phys.root/P2kIBDPlugin/Tibd");
