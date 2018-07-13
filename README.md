@@ -44,7 +44,7 @@ BIPO_OUTDIR to location of BiPo physics release directories
   eg. export BIPO_OUTDIR=home/jonesdc/prospect/bipo_data/
   
 BIPO_ANALYSIS      set to the "BiPoAnalysis" directory (Github repos directory)
-  eg. export BIPO_OUTDIR=home/jonesdc/prospect/BiPoAnalysis/
+  eg. export BIPO_ANALYSIS=home/jonesdc/prospect/BiPoAnalysis/
 
 2. Ensure that the root trees exist. If you are working on Wright go to step 4.
 If you are working on your own machine, you can copy the TTrees using the
