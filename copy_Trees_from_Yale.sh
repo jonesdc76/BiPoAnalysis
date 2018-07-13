@@ -1,5 +1,5 @@
 #!/bin/bash
-IBD=1
+IBD=0
 DATA_DIR=/projects/prospect/converted_data/Analyzed/
 DATA_DIR=/home/jonesdc/prospect/data/Analyzed/
 RELEASE=Phys_NuFact_v1

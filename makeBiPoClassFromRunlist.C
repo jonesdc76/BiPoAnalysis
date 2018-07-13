@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-int makeBiPoClassFromRunlist(const char *fname="NeutrinoGoodRuns.txt", const char* passname = "_BiPoNeutrino_v2", const char* release = "Phys_Neutrino_v2"){
+int makeBiPoClassFromRunlist(const char *fname="NeutrinoGoodRuns.txt", const char* TFilename = "AD1_Extra_Phys.root", const char* release = "Analyzed_NuFact_v1"){
   std::ifstream file;
   file.open(fname, std::ifstream::in);
   if(!(file.is_open()&&file.good())){
@@ -14,7 +14,7 @@ int makeBiPoClassFromRunlist(const char *fname="NeutrinoGoodRuns.txt", const cha
   while(file.good()&!file.eof()){
     string line;
     getline(file, line);
-    TString st = Form("%s/%s/%s/AD1_Wet_Phys%s.root",gSystem->Getenv("BIPO_OUTDIR"), release, line.data(), passname);
+    TString st = Form("%s/%s/%s/%s",gSystem->Getenv("BIPO_OUTDIR"), release, line.data(), TFilename);
     //printf("%s", st.Data());
     ch->Add(st.Data());
     file.peek();

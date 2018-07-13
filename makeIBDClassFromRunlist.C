@@ -2,8 +2,9 @@
 #include "TSystem.h"
 #include <iostream>
 #include <fstream>
+#include <string>
 
-int makeIBDClassFromRunlist(const char *fname="NeutrinoGoodRuns.txt", const char* passname = "_IBDwBiPo", const char* release = "Phys_Neutrino_v2"){
+int makeIBDClassFromRunlist(const char *fname="NeutrinoGoodRuns_RxStat.txt", const char* passname = "", const char* release = "Analyzed_NuFact_v1"){
   std::ifstream file;
   file.open(fname, std::ifstream::in);
   if(!(file.is_open()&&file.good())){
@@ -13,14 +14,17 @@ int makeIBDClassFromRunlist(const char *fname="NeutrinoGoodRuns.txt", const char
   TChain *chOn = new TChain("P2kIBDPlugin/Tibd");
   TChain *chOff = new TChain("P2kIBDPlugin/Tibd");
   while(file.good()&!file.eof()){
-    string line;
+    string line, dir, status;
     getline(file, line);
+    stringstream ss(line);
+    getline(ss, dir, ' ');
+    getline(ss, status, ' ');
+    //cout<<status<<endl;
     TString rel(release);
-    TString ston = Form("%s/%s/%s/AD1_Wet_Phys%s.root",gSystem->Getenv("BIPO_OUTDIR"), rel.Data(), line.data(), passname);
-    TString stoff = Form("%s/%s/%s/AD1_Wet_Phys%s.root",gSystem->Getenv("BIPO_OUTDIR"), rel.Data(), line.data(), passname);
-    //printf("%s", st.Data());
-    if(stoff.Contains("Background")) chOff->Add(stoff.Data());
-    else chOn->Add(ston.Data());
+    TString str = Form("%s/%s/%s/AD1_Wet_Phys%s.root",gSystem->Getenv("BIPO_OUTDIR"), rel.Data(), dir.data(), passname);
+    if(stoi(status) == 0) chOff->Add(str.Data());
+    else if(stoi(status) == 1) chOn->Add(str.Data());
+    else cout<<"Problem. Rx status not 0 or 1\n";
     file.peek();
   }
   int nadded = chOn->GetListOfFiles()->GetEntries();

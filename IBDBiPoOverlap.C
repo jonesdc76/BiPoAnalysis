@@ -39,6 +39,8 @@ double GetLiveTime(TChain *ch){
   while((element = (TChainElement*)next())){
     TFile *file = TFile::Open(element->GetTitle());
     tlive += ((TVectorD*)file->Get("runtime"))->Norm1();
+    if(((TVectorD*)file->Get("runtime"))->Norm1()<1)
+      cout<<((TVectorD*)file->Get("runtime"))->Norm1()<<endl;
   }
   return tlive/3600.0;
 }
@@ -65,7 +67,10 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   double Ton = GetLiveTime(chon);
   double Toff = GetLiveTime(choff);
   double on2offscale = Ton/Toff;
-  if(deadtime_corr)on2offscale = 30.09/25.88;
+  if(deadtime_corr){
+    on2offscale = 30.09/25.88;
+    cout<<"\n*\nNOTE! Correcting for deadtime\n*\n";
+  }
   cout<<"Reactor on live time: "<<Ton<<" hours\n";
   cout<<"Reactor off live time: "<<Toff<<" hours\n";
   TCut cutdt = Form("ncapt_dt>%f&&ncapt_dt<%f", tlow, thigh);

@@ -15,14 +15,13 @@
 #include "TPaveStats.h"
 
 
-int CompareIBDoff()
+int CompareIBDoff(bool Neutrino_v2 = 0)
 {
-  bool Neutrino_v2 = 0;
   gStyle->SetPadLeftMargin(0.12);
   gStyle->SetPadRightMargin(0.03);
   gStyle->SetLineWidth(2);
   gStyle->SetOptStat(0);
-  char* trname = "P2kIBDPlugin/Tibd";
+  const char* trname = "P2kIBDPlugin/Tibd";
   TChain *ch1 = new TChain(trname);
   TChain *ch2 = new TChain(trname);
   TString pass = (char*) (Neutrino_v2 ? "_IBDwBiPo" : "");
@@ -30,7 +29,6 @@ int CompareIBDoff()
   int n1 = 0, n2 = 0;
   double lt1 = 0, lt2 = 0;
   while(file.good()&&!file.eof()){
-    cout<<"hi\n";
     string line;
     getline(file,line);
     TString rel("Analyzed_NuFact_v1");
