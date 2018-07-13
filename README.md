@@ -42,6 +42,7 @@ To make BiPo analysis plots
 1. Set the following environment variables:
 BIPO_OUTDIR to location of BiPo physics release directories
   eg. export BIPO_OUTDIR=home/jonesdc/prospect/bipo_data/
+  
 BIPO_ANALYSIS      set to the "BiPoAnalysis" directory (Github repos directory)
   eg. export BIPO_OUTDIR=home/jonesdc/prospect/BiPoAnalysis/
 
