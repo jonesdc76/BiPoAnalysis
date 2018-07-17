@@ -17,6 +17,7 @@
 
 int CompareIBDoff(bool Neutrino_v2 = 0)
 {
+  TString release = (char *)(Neutrino_v2==0 ? "NuFact_v1" : "Neutrino_v2");
   gStyle->SetPadLeftMargin(0.12);
   gStyle->SetPadRightMargin(0.03);
   gStyle->SetLineWidth(2);
@@ -142,7 +143,9 @@ int CompareIBDoff(bool Neutrino_v2 = 0)
   h2acc->SetLineWidth(2);
   h2acc->SetLineColor(col[1]);
   h2acc->SetMarkerColor(col[1]);
-  
+  gPad->Update();
+  c1->SaveAs(Form("../plots/MarRxOff%s.pdf",release.Data()));
+
   TCanvas *c2 = new TCanvas("c2", "c2",900,0,800,600);
   h2->Draw();
   gPad->Update();
@@ -159,6 +162,7 @@ int CompareIBDoff(bool Neutrino_v2 = 0)
   ptc->Draw();
   c2->SetLogy();
   gPad->Update();
+  c2->SaveAs(Form("../plots/MayRxOff%s.pdf",release.Data()));
 
   TCanvas *c3 = new TCanvas("c3", "c3",900,0,800,600);
   c3->SetGrid();
@@ -190,6 +194,7 @@ int CompareIBDoff(bool Neutrino_v2 = 0)
   tt->SetTextColor(kGreen+2);
   pt->Draw();
   gPad->Update();
+  c3->SaveAs(Form("../plots/MarMayRxOff%s.pdf",release.Data()));
 
   gStyle->SetOptFit(1111);
   TCanvas *c4 = new TCanvas("c4", "c4",900,0,800,600);
@@ -211,6 +216,8 @@ int CompareIBDoff(bool Neutrino_v2 = 0)
   // f->FixParameter(0,0);
   hdiffpct->Fit(f,"r");
   gPad->Update();
+  c4->SaveAs(Form("../plots/RelMarMayRxOff%s.pdf",release.Data()));
+
   TCanvas *c5 = new TCanvas("c5", "c5",900,0,800,600);
   ch1->SetLineColor(kBlack);
   ch2->SetLineColor(kRed);
@@ -272,5 +279,7 @@ int CompareIBDoff(bool Neutrino_v2 = 0)
   ps2->SetY2NDC(0.69);
   ps2->Draw();
   gPad->Update();
+  c5->SaveAs(Form("../plots/nLiRxOff%s.pdf",release.Data()));
+
   return 0;
 }
