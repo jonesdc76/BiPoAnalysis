@@ -71,8 +71,8 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
     on2offscale = 30.09/25.88;
     cout<<"\n*\nNOTE! Correcting for deadtime\n*\n";
   }
-  cout<<"Reactor on live time: "<<Ton<<" hours\n";
-  cout<<"Reactor off live time: "<<Toff<<" hours\n";
+  cout<<"Reactor on live time: "<<Form("%0.4f hours = %0.4f days\n",Ton, Ton/24.0);
+  cout<<"Reactor off live time: "<<Form("%0.4f hours = %0.4f days\n",Toff, Toff/24.0);
   TCut cutdt = Form("ncapt_dt>%f&&ncapt_dt<%f", tlow, thigh);
   TCut cutdtacc = Form("fabs(ncapt_dt)>%f&&fabs(ncapt_dt)<%f",tlowacc,thighacc);
   if(prompt){

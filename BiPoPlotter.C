@@ -276,6 +276,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	  hAPSDvE[0]->Fill(bp->aE, bp->aPSD);
 	  hBPSDvE[0]->Fill(bp->pE->at(j),bp->pPSD->at(j));
 	}
+	//	if(bool(plots["z"] & which_plots)){
 	if(bool(plots["z"] & which_plots)){
 	  hAZ[0]->Fill(bp->az);
 	  hAdZ[0]->Fill(bp->az-bp->pz->at(j));
@@ -1368,7 +1369,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        gAEW1->SetMarkerStyle(kCircle);
        gAEW1->SetMarkerSize(0.8);
        gAEW1->Draw("ap");
-       gAEW1->GetXaxis()->SetMaxDigits(4);
+       //gAEW1->GetXaxis()->SetMaxDigits(4);
        gAEW1->GetXaxis()->SetTitle("Segment Number");
        gAEW1->GetYaxis()->SetTitleOffset(0.4);
        gAEW1->GetXaxis()->SetTitleOffset(0.7);
