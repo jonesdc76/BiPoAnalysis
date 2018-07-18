@@ -46,6 +46,7 @@ double GetLiveTime(TChain *ch){
 }
 
 int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
+  char *particle = (char *)(prompt==0 ? "Delayed":"prompt");
   if(P2style){
     setup_PROSPECT_style();
   }else{
@@ -54,8 +55,8 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
     gStyle->SetPadLeftMargin(0.12);
     gStyle->SetPadRightMargin(0.04);
   }
-  const double EBW = 0.05;//energy bin width in MeV
-  bool deadtime_corr = 1;
+  const double EBW = 0.2;//energy bin width in MeV
+  bool deadtime_corr = 0;
   double lowE = prompt ? 0 : 0.4, highE = prompt ? 8 : 0.9, lowEncapt = 0.46, highEncapt = 0.6;
   int nBins = prompt ? int((highE-lowE)/EBW) : int((highE-lowE)/0.01), colOn = kRed, colOff = kBlue, colAcc = kBlack, colCorr = kGreen+2;
   IBDon *on = new IBDon();
@@ -87,7 +88,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   TH1D *hOn = (TH1D*)gDirectory->Get("hOn");
   hOn->Sumw2();
   gPad->Update();
-  hOn->SetTitle("Reactor ON IBD Candidate Delayed Energy");
+  hOn->SetTitle(Form("Reactor ON IBD Candidate %s Energy", particle));
   hOn->GetXaxis()->SetTitle("Energy (MeV)");
   hOn->GetYaxis()->SetTitle("Counts");
   hOn->GetYaxis()->SetRangeUser(0,hOn->GetMaximum()*1.1);
@@ -99,7 +100,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   TH1D *hOnAcc = (TH1D*)gDirectory->Get("hOnAcc");
   hOnAcc->Sumw2();
   hOnAcc->Scale(n2f);
-  hOnAcc->SetTitle("Reactor ON Accidental IBD Candidate Delayed Energy");
+  hOnAcc->SetTitle(Form("Reactor ON Accidental IBD Candidate %s Energy", particle));
   hOnAcc->GetXaxis()->SetTitle("Energy (MeV)");
   hOnAcc->GetYaxis()->SetTitle("Counts");
   hOnAcc->SetMarkerColor(colAcc);
@@ -131,7 +132,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   TH1D *hOff = (TH1D*)gDirectory->Get("hOff");
   hOff->Sumw2();
   gPad->Update();
-  hOff->SetTitle("Reactor OFF IBD Candidate Delayed Energy");
+  hOff->SetTitle(Form("Reactor OFF IBD Candidate %s Energy", particle));
   hOff->GetXaxis()->SetTitle("Energy (MeV)");
   hOff->GetYaxis()->SetTitle("Counts");
   hOff->GetYaxis()->SetRangeUser(0,hOn->GetMaximum()*1.1);
@@ -142,7 +143,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   TH1D *hOffAcc = (TH1D*)gDirectory->Get("hOffAcc");
   hOffAcc->Sumw2();
   hOffAcc->Scale(n2f);
-  hOffAcc->SetTitle("Reactor OFF Accidental IBD Candidate Delayed Energy");
+  hOffAcc->SetTitle(Form("Reactor OFF Accidental IBD Candidate %s Energy", particle));
   hOffAcc->GetXaxis()->SetTitle("Energy (MeV)");
   hOffAcc->GetYaxis()->SetTitle("Counts");
   hOffAcc->SetMarkerColor(colAcc);
@@ -170,7 +171,7 @@ int IBDBiPoOverlap(bool prompt = 0, bool P2style = 1){
   TCanvas *cPrE = new TCanvas("cPrE", "cPrE",0,600,800,600);
   TH1D *hOnCorr2 = (TH1D*)hOnCorr->Clone("hOnCorr2");
   hOnCorr2->Add(hOffCorr,-on2offscale);
-  hOnCorr2->SetTitle("Background Subtracted IBD Delayed Energy Distribution");
+  hOnCorr2->SetTitle(Form("Background Subtracted IBD %s Energy Distribution", particle));
   hOnCorr2->Draw();
   TF1 *f1 = new TF1("f1","gaus",lowE,0.8);
   if(!prompt)hOnCorr2->Fit(f1,"r");
