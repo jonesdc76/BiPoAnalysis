@@ -1,6 +1,6 @@
 #!/bin/bash
-IBD=1
-export P2X_ANADAT=/home/prospect-collab/converted_data/Analyzed/
+IBD=0
+export P2X_ANADAT=/home/prospect-collab/converted_data/Analyzed/Analyzed_20180718_Extra/
 PLUGIN=BiPoTreePlugin
 TREE=BiPo
 FILE=AD1_Extra_Phys.root
@@ -11,7 +11,7 @@ if [ $IBD -eq 1 ]; then
 fi
 RELEASE=Phys_NuFact_v1
 ANARELEASE=Analyzed_NuFact_v1
-ANARELEASE=Analyzed_20180717
+ANARELEASE=Analyzed_20180718
 
 
 for i in $(cat NuFact18_GoodRuns.txt);do
