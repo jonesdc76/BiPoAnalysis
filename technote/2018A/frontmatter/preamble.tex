@@ -1,0 +1,65 @@
+%%  This is the main file to compile the document
+\documentclass[12pt]{article}
+\usepackage{setspace}
+\usepackage{fullpage} %% better margin use
+\usepackage[final]{graphicx}
+\usepackage{xcolor,colortbl}
+\usepackage{enumitem}
+\usepackage{mathtools}
+\usepackage{placeins}
+%\usepackage{subfig}
+\usepackage{caption}
+\usepackage{subfigure}
+\usepackage{multirow}
+\usepackage{amsmath}
+\setdescription{leftmargin=\parindent,labelindent=\parindent}
+\usepackage{units}
+\usepackage{xfrac} %slanted fractions
+\usepackage[colorlinks,linkcolor={red},citecolor={red}]{hyperref}
+%\hypersetup[colorlinks, linkcolor=red, filecolor=red,  pagecolor=red,
+%urlcolor=red]{hyperref}
+\usepackage[version=4]{mhchem}
+\usepackage{float}
+
+\graphicspath{{./figures/}{./figures/introduction/}{./figures/evaluations/}{./figures/experiment_overview/}{./figures/ratiocalculation/}{./figures/simulation/}{./figures/neutron_energy/}{./figures/energy_shape/}{./figures/isotopics/}{./figures/target_normalization/}{./figures/wraparound/}{./figures/efficiency/}{./figures/uncertainty/}{./figures/validations/}}
+
+
+\newcommand{\verify}{\textbf{\textcolor{red}{Verify}}}
+\newcommand{\etal}{\emph{et al.}}
+\newcommand{\ie}{\emph{i.e.}}
+\newcommand{\eg}{\emph{e.g.}}
+\newcommand{\etc}{\emph{etc}}
+\newcommand{\pu}[1][239]{$\mathrm{^{#1}}$Pu}
+%\newcommand{\cf}[1][252]{$\mathrm{^{#1}}$Cf} 
+\renewcommand{\u}[1][235]{$\mathrm{^{#1}}$U}
+\newcommand{\hyd}[1][1]{$\mathrm{^{#1}}$H}  
+\newcommand{\talpha}{$\alpha$}
+\newcommand{\talphas}{$\alpha$s}
+\newcommand{\ftpc}{fissionTPC}
+\newcommand{\mev}{MeV}
+\newcommand{\mus}{~$\mu$s}
+\newcommand{\massunits}{\ensuremath{\mathrm{\mu g /cm^{2}}}}
+\renewcommand{\textfraction}{0.15}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.65}
+\renewcommand{\floatpagefraction}{0.6}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+%% ==============================================
+%%  package for commenting
+%%  documentation at: http://get-software.net/macros/latex/contrib/fixme/fixme.pdf
+%% ==============================================
+% use option 'final' to remove all comments
+\usepackage[draft, inline, nomargin]{fixme}
+\fxsetup{theme=color, mode=multiuser}
+% this create a custom note command for a user
+\FXRegisterAuthor{nb}{anb}{\color{blue}NB}      % creates \nbnote{} command
+\FXRegisterAuthor{rv}{arv}{\color{red}RV}      % creates \rvnote{} command
+ 
+
+\bibliographystyle{unsrt}
+
+
+
+
