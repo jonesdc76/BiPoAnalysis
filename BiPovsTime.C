@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include "TSystem.h"
 #include "TH1D.h"
 #include "TDatime.h"
 #include "TVectorD.h"
@@ -713,7 +714,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     }
     gPad->Update();
     grEpub->Write();
-    c1->SaveAs(Form("../plots/PubBiPo%iEvsT%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
+    c1->SaveAs(Form("%s/PubBiPo%iEvsT%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), fid.Data()));
     
     TCanvas *c2 = new TCanvas("c2","c2",0,0,1200,300);
     TGraphErrors *grEWpub = new TGraphErrors();
@@ -744,7 +745,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     }
     gPad->Update();
     grEWpub->Write();
-    c2->SaveAs(Form("../plots/PubBiPo%iEresvsT%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
+    c2->SaveAs(Form("%s/PubBiPo%iEresvsT%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), fid.Data()));
     
     TCanvas *c3 = new TCanvas("c3","c3",0,0,1200,300);
     TGraphErrors *grdZWpub = new TGraphErrors();
@@ -775,7 +776,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     }
     gPad->Update();
     grdZWpub->Write();
-    c3->SaveAs(Form("../plots/PubBiPo%iZresvsT%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
+    c3->SaveAs(Form("%s/PubBiPo%iZresvsT%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), fid.Data()));
 
     
     TCanvas *c4 = new TCanvas("c4","c4",0,0,1200,300);
@@ -807,7 +808,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     }
     gPad->Update();
     grZWpub->Write();
-    c4->SaveAs(Form("../plots/PubBiPo%iZrmsvsT%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
+    c4->SaveAs(Form("%s/PubBiPo%iZrmsvsT%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), fid.Data()));
 
 
 

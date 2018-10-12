@@ -23,6 +23,8 @@
 
 using namespace std;
 const int N = 3, ncol = 14, nrow = 11;
+const double kCellSize = 146.0;//cell cross sectional size in mm
+const double kMaxDisplacement = 700.0;//maximum displacement between alpha and beta (max pulse in prompt cluster)
 const double tauBiPo = 0.1643/log(2); 
 const double n2f = 1.0/12.0;//ratio of lengths of near to far windows
 const double f2n = 12.0;//ratio of lengths of far to near windows
@@ -46,10 +48,11 @@ double GetLiveTime(TChain *ch){
 }
 
 int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool recreate = 0){
-  bool technote_plots = 1;
   //alpha_type = 0, strictly Bi214-->Po214-->Pb210
   //alpha_type = 1, strictly Bi212-->Po212-->Pb208
   //alpha_type = 2, include both
+  bool technote_plots = 1, useEsmear = 1;;
+  TString smear((useEsmear ? "Smeared ":""));
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(1111);
   gStyle->SetTitleW(0.8);
@@ -269,6 +272,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	continue;//throw out clusters with recoils mixed in
       if(bp->pEtot->at(j) < lowBE || bp->pEtot->at(j) > highBE)
 	continue;//optional beta energy cut used for special studies
+      
+      double dx = kCellSize*((bp->aseg - bp->pseg->at(j))%ncol);
+      double dy = int((bp->aseg - bp->pseg->at(j))/ncol)*kCellSize;
+      double dz = bp->az - bp->pz->at(j);
+      double d = sqrt(dx*dx+dy*dy+dz*dz);
+      if(d > kMaxDisplacement)//discard largely displaced prompt and delayed
+	continue;
       double dt = bp->at - bp->pt->at(j);
       if(dt > t_start && dt < t_end){
 	if(bool(plots["psd"] & which_plots)){
@@ -311,6 +321,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	continue;//throw out clusters with recoils mixed in
       if(bp->fEtot->at(j) < lowBE || bp->fEtot->at(j) > highBE)
 	continue;//optional beta energy cut used for special studies
+      
+      double dx = kCellSize*((bp->aseg - bp->fseg->at(j))%ncol);
+      double dy = int((bp->aseg - bp->fseg->at(j))/ncol)*kCellSize;
+      double dz = bp->az - bp->fz->at(j);
+      double d = sqrt(dx*dx+dy*dy+dz*dz);
+      if(d > kMaxDisplacement)//discard largely displaced prompt and delayed
+	continue;
       double dt = bp->ft->at(j) - bp->at - ft_offset;
       dt *= n2f;
       if(dt > t_start && dt < t_end){
@@ -1451,7 +1468,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        gAZ1->SetTitle(Form("Po-%i Mean of Z-distribution vs. Cell", (alpha_type == 1 ? 212 : 214)));
        gAZ->Fit("fE");
        norm = fE.GetParameter(0);
-       if(!normalize)norm = 1.0;
+       normalize = 0;
+       if(!normalize) norm = 1.0;
        for(int i=0;i<gAZ->GetN();++i){
 	 gAZ->GetPoint(i, x, y);
 	 gAZ1->SetPoint(i, x, y/norm);
