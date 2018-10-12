@@ -317,7 +317,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	  hAPSDvZ[1]->Fill(bp->az, bp->aPSD, n2f);
 	  hBPSDvZ[1]->Fill(bp->fz->at(j), bp->fPSD->at(j), n2f);
 	  hAPSDvE[1]->Fill(bp->aE, bp->aPSD, n2f);
-	  hBPSDvE[1]->Fill(bp->fE->at(j),bp->fPSD->at(j),n2f);
+	  hBPSDvE[1]->Fill(bp->fEtot->at(j),bp->fPSD->at(j),n2f);
 	}
 	if(bool(plots["z"] & which_plots)){
 	  hAZ[1]->Fill(bp->az, n2f);
