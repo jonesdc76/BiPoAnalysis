@@ -4,6 +4,7 @@
 #include "PROSPECT_Style.cc"
 #include <iostream>
 #include "TH1D.h"
+#include "TSystem.h"
 #include "TVectorD.h"
 #include "TChain.h"
 #include "TPaletteAxis.h"
@@ -450,7 +451,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        hAZ[2]->GetXaxis()->SetRangeUser(-900,900);
        hAZ[2]->GetYaxis()->SetTitleOffset(1);
        gPad->Update();
-       c12->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iZdistribution%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
+       c12->SaveAs(Form("%s/PubBiPo%iZdistribution%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214),fid.Data()));
        //plot 13 from technote
        TCanvas *c13 = new TCanvas("c13","c13",0,0,800,700);
        hAdZ[2]->SetMarkerColor(kBlue);
@@ -460,7 +461,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        hAdZ[2]->GetYaxis()->SetTitle("Counts/mm");
        hAdZ[2]->GetYaxis()->SetTitleOffset(1);
        gPad->Update();
-       c13->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%idZ%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
+       c13->SaveAs(Form("%s/PubBiPo%idZ%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214),fid.Data()));
     }
  
   }
@@ -567,7 +568,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        gPad->Update();
        h_AE[2]->GetXaxis()->SetTitle("E_{#alpha} (MeV)");
        gPad->Update();
-       c10->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iAlphaE%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+       c10->SaveAs(Form("%s/PubBiPo%iAlphaE%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
        
        //plot 11 from technote
        TCanvas *c11 = new TCanvas("c11","c11",0,0,800,600);
@@ -577,7 +578,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        gPad->Update();
        hBE[2]->GetXaxis()->SetTitle("E_{#beta} (MeV)");
        gPad->Update();
-       c11->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iBetaE%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+       c11->SaveAs(Form("%s/PubBiPo%iBetaE%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
    }
   }
   //---------------------------------------------
@@ -1343,7 +1344,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       gAE1->GetXaxis()->SetTitleSize(0.07);
       gPad->Update();
       gAE1->Write();
-      c0->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iEvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+      c0->SaveAs(Form("%s/PubBiPo%iEvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
       
       //plot 2 from technote
       bool sigma_at_1MeV = 0;
@@ -1383,7 +1384,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        }
        gPad->Update();
        gAEW1->Write();
-       c1->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iEresvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+       c1->SaveAs(Form("%s/PubBiPo%iEresvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
        
       //plot 3 from technote
        TCanvas *c2 = new TCanvas("c2","c2",0,0,1200,300);
@@ -1412,7 +1413,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        if(!normalize) gdZW1->GetYaxis()->SetTitle("#sigma_{Z} (mm)");
        gPad->Update();
        gdZW1->Write();
-       c2->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%idZWidthvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+       c2->SaveAs(Form("%s/PubBiPo%idZWidthvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
 
        //plot 4 from technote
        TCanvas *c3 = new TCanvas("c3","c3",0,0,1200,300);
@@ -1441,7 +1442,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        if(!normalize) gAZW1->GetYaxis()->SetTitle("Z_{RMS} (mm)");
        gPad->Update();
        gAZW1->Write();
-       c3->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%iZRMSvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+       c3->SaveAs(Form("%s/PubBiPo%iZRMSvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
 
        //plot 9 from technote
        TCanvas *c4 = new TCanvas("c4","c4",0,0,1200,300);
@@ -1470,7 +1471,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        if(!normalize) gAZ1->GetYaxis()->SetTitle("Mean Z (mm)");
        gPad->Update();
        gAZ1->Write();
-       c4->SaveAs(Form("/home/jonesdc/prospect/plots/PubBiPo%imeanZvsCell%s.pdf", (alpha_type == 1 ? 212 : 214), fid.Data()));
+       c4->SaveAs(Form("%s/PubBiPo%imeanZvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
 
        f.Close();
 
