@@ -64,7 +64,7 @@ The PhysPulse .h5 files used to make this plot at the time of this writing are s
 \section{Event selection and cuts\label{sec:cuts}}
 This section deals with the cuts applied to the data to obtain the final event selection. Loose cuts were applied at the plugin-level to limit the size of the event trees. More restrictive cuts were then applied to this event selection in the analysis code that utilized these event trees. The plugin-level cuts were broad enough to include both isotopes of polonium. Some of the more restrictive analysis cuts were isotope-specific.
 \subsection{Plugin-level cuts}
-The following list of segments were excluded from the analysis inside the BiPoTreePlugin using the ``exclude" feature in the configuration file: 0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 18, 21, 23, 24, 27, 32, 34, 40, 44, 52, 68, 79, 86, 102, 115, 122, 127, 130, and 139. No fiducial cuts were applied to the data either at the cell level or in z-position.
+The following list of segments were excluded from the analysis inside the BiPoTreePlugin using the ``exclude" feature in the configuration file: 0, 1, 2, 3, 5, 6, 9, 10, 11, 12, 13, 18, 21, 23, 27, 31, 32, 34, 41, 44, 48, 52, 56, 63, 69, 79, 86, 87, 115, 122, 127, and 139. No fiducial cuts were applied to the data either at the cell level or in z-position.
 Table \ref{tab:plugincuts} summarizes the cuts made at the plugin level for creating the BiPo event trees.
 \begin{table}
 \begin{center}
@@ -80,7 +80,6 @@ beta PSD & \vline&$0<$PSD$_{\beta}<0.3$\\\hline
 Spatial topology&~&~\\\hline\hline
 $x/y$ (cell) cut &\vline& No cut on prompt/delayed relative cell positions\\
 $z$-position&\vline& No cut on absolute $z$-position except $z\neq \pm1000$~mm\\
-$\Delta z$&\vline&Difference in position between delayed alpha and first beta candidate in cluster $<20$~cm\\\hline
 Timing&~&~\\\hline\hline
 $\Delta t=t_{\alpha}-t_{\beta}$&\vline &$0< dt < 3\tau$, where $\tau$ is the lifetime of Po-214 given by $0.1643/\ln{(2)}~$ms\\\hline
 
@@ -95,29 +94,40 @@ Although the code is set up to handle fiducial cuts, neither $z$ nor cell-wise f
 \caption{\label{tab:analysiscuts}Event selection cuts applied in the analysis code. Cuts that are isotope-specific are specified by ``214" for $^{214}$Po and ``212" for $^{212}$Po.}
 \begin{tabular}[ht]{c c p{10.5cm}}\hline
 Energy and PSD&~&~\\\hline\hline
-Alpha energy &\vline& $0.75~\textrm{MeV}<$E$_{\alpha}(214)<1.00~\textrm{MeV}$\\
-~&\vline&$0.97~\textrm{MeV}<$E$_{\alpha}(212)<1.26~\textrm{MeV}$  \\
-Alpha PSD cut& \vline&$0.18<$PSD$_{\alpha}<0.34$\\
+Alpha energy &\vline& $0.73~\textrm{MeV}<$E$_{\alpha}(214)<0.98~\textrm{MeV}$\\
+~&\vline&$0.95~\textrm{MeV}<$E$_{\alpha}(212)<1.27~\textrm{MeV}$  \\
+Alpha PSD cut& \vline&$0.2<$PSD$_{\alpha}<0.32$\\
 beta cluster energy &\vline& E$_{tot}\leq 4$~MeV\\
 beta PSD & \vline&First event in prompt cluster $0<$PSD$_{\beta}<0.26$\\\hline
 Spatial topology&~&~\\\hline\hline
-$x/y$ (cell) cut &\vline& No cut on prompt/delayed relative cell positions\\
+$\Delta z$&\vline&Difference in position between delayed alpha and first beta candidate in cluster $<20$~cm\\\hline
 $z$-position&\vline& No cut on absolute $z$-position except $z\neq \pm1000$~mm\\
+$\Delta z$&\vline&Difference in position between delayed alpha and first beta candidate in cluster $<20$~cm\\\hline
 $\Delta z$&\vline&Difference in position between delayed alpha and first beta candidate in cluster $<20$~cm\\\hline
 Timing&~&~\\\hline\hline
 $\Delta t=t_{\alpha}-t_{\beta}$&\vline &$10~\mu\textrm{s}< \Delta t(214) < 3\tau$, where $\tau$ is the lifetime of Po-214 \\
-~&\vline&$0.2~\mu\textrm{s}< \Delta t(212) < 6~\mu$s\\\hline
+~&\vline&$0.25~\mu\textrm{s}< \Delta t(212) < 2.5~\mu$s\\\hline
 
 \end{tabular}
 \end{center}
 \end{table}
 
 Figures \ref{fig:apsd212} and \ref{fig:apsd214} show the PSD selection for the delayed alphas. The full energy range covering the alphas in both decay chains is included.
-It is worth noting that only the PSD, position and energy of the first event in the prompt cluster is recorded. Therefore, further cuts on these quantities on the prompt beta are limited to the first event in the prompt cluster. In addition to the parameters of the first event, the displacement of the prompt event furthest away from the delayed alpha is also saved as the ``max\_dist" variable. There was no obvious place to cut on this variable so no cut on ``max\_dist" was applied. Figures \ref{fig:bpsd212} and \ref{fig:bpsd214}show the PSD and energy selection for the prompt betas. 
+It is worth noting that with the exception of $Etot$, the total cluster energy, information for the prompt cluster (PSD, position, energy etc) refer only to the maximum energy event in the cluster. Therefore, further cuts on these quantities on the prompt beta are limited to the maximum energy event in the prompt cluster. In addition to the parameters of the maximum event, the displacement of the prompt event furthest away from the delayed alpha is also saved as the ``max\_dist" variable. There was no obvious place to cut on this variable so no cut on ``max\_dist" was applied. Figures \ref{fig:bpsd212} and \ref{fig:bpsd214} show the PSD and energy selection for the prompt betas. 
+However, a cut on maximum prompt/delayed displacement did prove fruitful in reducing background. The prompt/delayed displacement $d$ is calculated as follows:
+\[
+d=\sqrt{\Delta n_x^2+\Delta n_y^2 + \Delta z^2},
+\]
+where $n_x(y)$ is the displacment in the x(y) direction between the prompt and delayed events measured in number of cells. Figure \ref{fig:deltaD} shows the distribution of prompt/delay displacements. A cut was placed at $d<700$~mm.
+\begin{figure}[ht]
+\centering
+\includegraphics[width=1.0\textwidth]{../figures/distance_cut.pdf}
+\caption{\label{fig:deltaD}Plots illustrating distribution of displacement between prompt and delayed BiPo-212 events. (Left)Distribution of prompt/delayed displacements (blue) and accidental (red) prompt/delayed displacements. (Right) Accidental subtracted prompt/delayed displacements. Vertical line shows position of distance cut.}
+\end{figure}
 
-The half-life of the $^{214}$Po decay is 0.1643~ms. The time difference between the prompt beta and delayed alpha candidates for this decay is limited to 0.01~ms$<$dt$<3\times\tau$ where $\tau=0.1643/ln(2)$~ms, the lifetime of $^{214}$Po. Figure \ref{fig:dt214} show2 the $\Delta$t distribution. A fit to the half-life of $^{214}$Po is in good agreement with the accepted value.
+The half-life of the $^{214}$Po decay is 0.1643~ms. The time difference between the prompt beta and delayed alpha candidates for this decay is limited to 0.01~ms$<$dt$<3\times\tau$ where $\tau=0.1643/\textrm{ln}(2)$~ms, the lifetime of $^{214}$Po. Figure \ref{fig:dt214} show the $\Delta$t distribution. A fit to the half-life of $^{214}$Po is in good agreement with the accepted value.
 
-The half-life of the $^{212}$Po decay is 299~ns. The time difference between the prompt beta and delayed alpha candidates for this decay is limited to 200~ns$<$dt$<6~mu$s. The time distribution (see Figure \ref{fig:dt212}) below 650~ns is shaped by artifacts of the length of the waveforms and an analysis hold off time.  A fit to the half-life of $^{212}$Po is in good agreement with the accepted value. Only the data from 660~ns upward is used in the half-life fit. However, the result of the fit is extended (dashed line) over the whole data set to justify the use of data outside this region. The entire data set from 0 to 6~$\mu$s is used in this analysis. 
+The half-life of the $^{212}$Po decay is 299~ns. The time difference between the prompt beta and delayed alpha candidates for this decay is limited to 250~ns$<$dt$<250~\mu$s. The time distribution (see Figure \ref{fig:dt212}) below 650~ns is shaped by artifacts of the length of the waveforms and an analysis hold off time.  A fit to the half-life of $^{212}$Po is in good agreement with the accepted value. Only the data from 660~ns upward is used in the half-life fit. However, the result of the fit is extended (dashed line) over the whole data set to justify the use of data outside this region. The entire data set from 0.25~$\mu$s to 2.5~$\mu$s is used in this analysis. 
 
 Accidental subtraction is performed using a time offset window. For both alpha decays the offset window starts 10$\times\tau_{214}\approx2.4~ms$ forward from the alpha. The length of the accidentals offset window is set to be 12 times the length of the window for the prompt signal to accumulate more statistics. The accidentals histogram is then scaled by 1/12 to account for this. Other than the timing differences, the signals in the accidentals window are treated exactly the same as those in the prompt window, being subjected to exactly the same cuts and conditions.
 

@@ -27,8 +27,8 @@ const double n2f = 1.0/12.0;//ratio of lengths of near to far windows
 const double f2n = 12.0;//ratio of lengths of far to near windows
 const double tmin = 0.002;//start coincidence window tmin ms away from electron
 const int kNcell = ncol * nrow;
-const int ExcludeCellArr[31] = {0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 18, 21, 23, 24, 27, 32, 34, 40, 44, 52, 68, 79, 86, 102, 115, 122, 127, 130, 139};
-
+const int ExcludeCellArr[32] = {0,1,2,3,5,6,9,10,11,12,13,18,21,23,27,31,32,34,
+				41,44,48,52,56,63,69,79,86,87,115,122,127,139};
 bool isET(int seg){
   return (seg%14 == 13 || seg%14 == 0 || seg >= 140);
 }
@@ -95,7 +95,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset + (t_start * f2n);//start time of far window 
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
-  double  ldZ = -200, hdZ = 200, fidZ = fiducialize ? 1000.0 : 444.0;
+  double  ldZ = -200, hdZ = 200, fidZ = fiducialize ? 1000.0 : 1000.0;//444.0;
   if(alpha_type == 1){
     t_start = 2.5e-4;
     t_end = 2.5e-3;

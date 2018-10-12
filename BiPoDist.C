@@ -6,6 +6,7 @@
 #include "TDatime.h"
 #include "TVectorD.h"
 #include "TChain.h"
+#include "TSystem.h"
 #include "TChainElement.h"
 #include "TCollection.h"
 #include "TStyle.h"
@@ -134,6 +135,14 @@ int BiPoDist(){
   hp->Draw();
   hf->Draw("same");
   gPad->Update();
+  TCanvas *ctn = new TCanvas("ctn","ctn",0,0,1000,500);
+  ctn->Divide(2,1);
+  ctn->cd(1);
+  hp->Draw();
+  hf->Draw("same");
+  gPad->Update();
+  hp->GetXaxis()->SetTitle("Prompt/Delay displacement (mm)");
+  hp->GetYaxis()->SetTitle("Counts");
   
   c->cd(2);
   hp->Sumw2();
@@ -141,9 +150,20 @@ int BiPoDist(){
   TH1D *hs = (TH1D*)hp->Clone("hs");     
   hs->Add(hf,-1);
   hs->SetLineColor(kMagenta);
+  hs->SetMarkerColor(kMagenta);
   hs->SetLineWidth(2);
   hs->Draw("simple");
-  
+  hs->GetXaxis()->SetTitle("Prompt/Delay displacement (mm)");
+  hs->GetYaxis()->SetTitle("Counts");
+  TLine *tl = new TLine(700,0.0,700,5.e5);
+  tl->SetLineColor(kBlack);
+  tl->SetLineWidth(2);
+  tl->SetLineStyle(9);
+  ctn->cd(2);  
+  hs->Draw();
+  tl->Draw();
+  gPad->Update();
+  ctn->SaveAs(Form("%s/distance_cut.pdf",gSystem->Getenv("TECHNOTE")));
   c->cd(3);
   haf2->Scale(1/12.0);
   hap2->Add(haf2,-1);
@@ -171,6 +191,7 @@ int BiPoDist(){
   TH1D *hsdz = (TH1D*)hpdz->Clone("hsdz");
   hsdz->Add(hfdz,-1);
   hsdz->SetLineColor(kMagenta);
+  hsdz->SetMarkerColor(kMagenta);
   hsdz->SetLineWidth(2);
   hfdz->Draw("same");
   hsdz->Draw("same");

@@ -106,7 +106,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset + (t_start * f2n);//start time of far window 
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
-  double fidZ = fiducialize ? 1000.0 : 444;//448.0;
+  double fidZ = fiducialize ? 1000.0 : 1000.0;//444.0;
   if(alpha_type == 1){
     //    t_start = 6.6e-4;
     t_start = 2.5e-4;
