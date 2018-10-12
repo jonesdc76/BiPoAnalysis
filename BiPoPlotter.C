@@ -89,22 +89,22 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   
   //Set boundary cut values on energy, psd, z-pos and time
   //-------------------------------------------------------
-  double hAE = 1.0, lAE = 0.75, hApsd = 0.32, lApsd = 0.2;//alpha
+  double hAE = 0.98, lAE = 0.73, hApsd = 0.32, lApsd = 0.2;//alpha
   double highBE = 4.0, lowBE = 0, hPpsd = 0.26, lPpsd = 0;//beta
   double t_start = 0.01, t_end = 3 * tauBiPo;//prompt window
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset + (t_start * f2n);//start time of far window 
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
-  double  ldZ = -200, hdZ = 200, fidZ = fiducialize ? 1000.0 : 448.0;
+  double  ldZ = -200, hdZ = 200, fidZ = fiducialize ? 1000.0 : 444.0;
   if(alpha_type == 1){
-    t_start = 2e-4;
-    t_end = 6e-3;
-    hAE = 1.26;
-    lAE = 0.97;
+    t_start = 2.5e-4;
+    t_end = 2.5e-3;
+    hAE = 1.27;
+    lAE = 0.95;
     ft_end = ft_start + f2n * (t_end - t_start);
   }else if(alpha_type == 2){
-    t_start = 2e-4;
-    hAE = 1.26;
+    t_start = 2.5e-4;
+    hAE = 1.27;
     ft_end = ft_start + f2n * (t_end - t_start); 
   }
   //-------------------------------------------------------

@@ -14,12 +14,12 @@ int getRunStats(){
   TString st, prev_st = "";
   double tlive = 0, tl = 0, prev_rt = 0, prev_tlive = 0;
   bool first = 1, first_of_dataset = 1;
-  const int N=6;
+  const int N=10;
   int n = 0;
   time_t ts1, ts2, prev_ts = 0;
   TString month[12] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
   TString week[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
-  TString data[N] = {"WetCommissioning", "180316_Background",  "180417_Background","180420_Background","180501_ReactorOn","180520_Background"};
+  TString data[N] = {"WetCommissioning", "180316_Background",  "180417_Background","180420_Background","180501_ReactorOn","180525_Background","180531_Calibration","180605_Background","180612_ReactorOn","180706_Background"};
   while((element = (TChainElement*)next())){
     st = TString(element->GetTitle());
     if(st.Contains(data[n]) && first_of_dataset){

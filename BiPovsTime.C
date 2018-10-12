@@ -26,14 +26,27 @@ using namespace std;
 
 using namespace std;
 const int N = 3, ncol = 14, nrow = 11;
+const double kCellSize = 146.0;//cell cross sectional size in mm
+const double kMaxDisplacement = 700.0;//maximum displacement between alpha and beta (max pulse in prompt cluster)
 const double tauBiPo = 0.1643/log(2);
-const double HrPerPnt = 47.5;//hours of data per point
 const double n2f = 1.0/12.0;//ratio of lengths of near to far windows
 const double f2n = 12.0;//ratio of lengths of far to near windows
-const double tmin = 0.002;//start coincidence window tmin ms away from electron
 const int kNcell = ncol * nrow;
-const int ExcludeCellArr[28] = {0,1,2,3,4,5,6,9,11,12,13,18,21,23,24,27,32,40,
-				44,68,73,79,102,107,122,127,130,139};
+const int ExcludeCellArr[32] = {0,1,2,3,5,6,9,10,11,12,13,18,21,23,27,31,32,34,
+				41,44,48,52,56,63,69,79,86,87,115,122,127,139};
+//start and end runs of reactor on times
+const int nRxOn = 3;
+const int RxOn[nRxOn][2] = {{1520293010, 1521195058}, {1525164995, 1527240253},
+			    {1528800853, 1530883525}};
+
+bool RxStat(int runnum){
+  //return 0 if reactor is off 1 if on
+  for(int i=0; i<nRxOn; ++i){
+    if(runnum >= RxOn[i][0] && runnum <= RxOn[i][1]) return true;
+  }
+  return false;
+}
+
 bool isET(int seg){
   return (seg%14 == 13 || seg%14 == 0 || seg >= 140);
 }
@@ -66,7 +79,9 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   //alpha_type = 0, strictly Bi214-->Po214-->Pb210
   //alpha_type = 1, strictly Bi212-->Po212-->Pb208
   //alpha_type = 2, include both
-  bool slow = 0, time_in_epoch_sec = 0;
+  double HrPerPnt = (alpha_type == 0 ? 23.6 : 47.6);//hours of data per point
+  bool slow = 0, time_in_epoch_sec = 0, useEsmear = 1;
+  TString smear((useEsmear ? "Smeared ":""));
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(1111);
   gStyle->SetTitleW(0.8);
@@ -85,22 +100,23 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   
   //Set boundary cut values on energy, psd, z-pos and time
   //-------------------------------------------------------
-  double hAE = 1.0, lAE = 0.75, hApsd = 0.32, lApsd = 0.2;//alpha
-  double highBE = 5.0, lowBE = 0.0, hPpsd = 0.26, lPpsd = 0;//beta
+  double hAE = 0.98, lAE = 0.73, hApsd = 0.32, lApsd = 0.2;//alpha
+  double highBE = 4.0, lowBE = 0.0, hPpsd = 0.26, lPpsd = 0;//beta
   double t_start = 0.01, t_end = 3 * tauBiPo;//prompt window
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset + (t_start * f2n);//start time of far window 
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
-  double fidZ = fiducialize ? 1000.0 : 1000;//448.0;
+  double fidZ = fiducialize ? 1000.0 : 444;//448.0;
   if(alpha_type == 1){
-    t_start = 6.6e-4;//2e-4;
-    t_end = 6e-3;
-    hAE = 1.26;
-    lAE = 0.97;
+    //    t_start = 6.6e-4;
+    t_start = 2.5e-4;
+    t_end = 2.5e-3;
+    hAE = 1.27;
+    lAE = 0.95;
     ft_end = ft_start + f2n * (t_end - t_start); 
   }else if(alpha_type == 2){
-    t_start = 2e-4;
-    hAE = 1.26;
+    t_start = 2.5e-4;
+    hAE = 1.27;
     ft_end = ft_start + f2n * (t_end - t_start); 
   }
   //-------------------------------------------------------
@@ -114,10 +130,13 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     for(int j=0;j<N-1;++j){
       hE[i][j] = new TH1D(Form("hE%i_%i",i,j),Form("hE%i_%i",i,j), 50, lAE, hAE);
       hE[i][j]->Sumw2();
+      
       hAPSD[i][j] = new TH1D(Form("hAPSD%i_%i",i,j),Form("hAPSD%i_%i",i,j), 50, lApsd, hApsd);
       hAPSD[i][j]->Sumw2();
+      
       hBPSD[i][j] = new TH1D(Form("hBPSD%i_%i",i,j),Form("hBPSD%i_%i",i,j), 50, lPpsd, hPpsd);
       hBPSD[i][j]->Sumw2();
+      
       hZ[i][j] = new TH1D(Form("hZ%i_%i",i,j),Form("hZ%i_%i",i,j), 200, -1000,1000);
       hZ[i][j]->Sumw2();
 
@@ -147,6 +166,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   double tot_live = 0;
   Long64_t nEnt = Long64_t(bp->fChain->GetEntries()/10);
   cout<<nEnt<<endl;
+  bool prev_rxstat = 0;
   for(Long64_t i=0;i<bp->fChain->GetEntries();++i){
     bp->LoadTree(i);
     bp->GetEntry(i);
@@ -158,10 +178,16 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
 
       if(isFirst){
 	t0 = time_in_epoch_sec ? 0.0 : ts;
+	t0 = 0;
 	isFirst = false;
       }
       //stop when statistics accumulated and break at detector off period
-      if(tlive[p]>HrPerPnt*3600 || st.Contains("1521921213")){
+      bool rxstat = RxStat(int(ts));
+      double rxOnScale = (rxstat ? 3 : 1);
+      if(alpha_type == 1)rxOnScale = 1.0;
+      bool onoffchange = (prev_rxstat != rxstat && i!=0);
+      prev_rxstat = rxstat;
+      if(tlive[p]>HrPerPnt*rxOnScale*3600 || (onoffchange&&0)){
 	t[p] /=  tlive[p];
 	cout<<"Time"<<p<<": "<<t[p]/3600.<<" Live: "<<tlive[p]/3600.0<<endl;
 	++p;
@@ -200,9 +226,15 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
       	continue;//throw out clusters with recoils mixed in
       if(bp->pEtot->at(j) < lowBE || bp->pEtot->at(j) > highBE)
 	continue;//optional beta energy cut used for special studies
+      double dx = kCellSize*((bp->aseg - bp->pseg->at(j))%ncol);
+      double dy = int((bp->aseg - bp->pseg->at(j))/ncol)*kCellSize;
+      double dz = bp->az - bp->pz->at(j);
+      double d = sqrt(dx*dx+dy*dy+dz*dz);
+      if(d > kMaxDisplacement)//discard largely displaced prompt and delayed
+	continue;
       double dt = bp->at - bp->pt->at(j);
       if(dt > t_start && dt < t_end){
-	hE[p][0]->Fill(bp->aE);
+	hE[p][0]->Fill((useEsmear ? bp->aEsmear : bp->aE));
 	hAPSD[p][0]->Fill(bp->aPSD);
 	hBPSD[p][0]->Fill(bp->pPSD->at(j));
 	hZ[p][0]->Fill(bp->az);
@@ -219,10 +251,17 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
       	continue;//throw out clusters with recoils mixed in
       if(bp->fEtot->at(j) < lowBE || bp->fEtot->at(j) > highBE)
 	continue;//optional beta energy cut used for special studies
+      
+      double dx = kCellSize*((bp->aseg - bp->fseg->at(j))%ncol);
+      double dy = int((bp->aseg - bp->fseg->at(j))/ncol)*kCellSize;
+      double dz = bp->az - bp->fz->at(j);
+      double d = sqrt(dx*dx+dy*dy+dz*dz);
+      if(d > kMaxDisplacement)//discard largely displaced prompt and delayed
+	continue;
       double dt = bp->ft->at(j) - bp->at - ft_offset;
       dt *= n2f;
       if(dt > t_start && dt < t_end){
-	hE[p][1]->Fill(bp->aE, n2f);
+	hE[p][1]->Fill((useEsmear ? bp->aEsmear : bp->aE), n2f);
 	hAPSD[p][1]->Fill(bp->aPSD, n2f);
 	hBPSD[p][1]->Fill(bp->fPSD->at(j), n2f);
 	hZ[p][1]->Fill(bp->az, n2f);
@@ -237,8 +276,8 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   TString title[3] = {"(^{214}Bi-->^{214}Po-->^{208}Pb) ","(^{212}Bi-->^{212}Po-->^{210}Pb) ","(Bi-->Po-->Pb) "};
 
   //Set time offset to beginning of data taking Mar 5, 2018 18:36
-  TDatime da(2018,03,05,18,36,00);
-  gStyle->SetTimeOffset(da.Convert());
+  //TDatime da(2018,04,17,23,15,46);
+  // gStyle->SetTimeOffset(da.Convert());
 
   //BiPo rate and efficiency plots
   TGraphErrors *grR = new TGraphErrors();
@@ -299,35 +338,54 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
 
   //Alpha energy and rate plots
   gStyle->SetOptFit(0);
-  TCanvas *cE = new TCanvas("cE","cE",0,0,1200,600);
-  cE->Divide(2,1);
-  cE->cd(1);
   TGraphErrors *grE = new TGraphErrors();
   grE->SetMarkerColor(kBlue);
   grE->SetMarkerStyle(8);
   grE->SetMarkerSize(0.8);
   grE->SetLineColor(kBlue);
-  grE->SetTitle(Form("%s #alpha Mean Energy vs Time",title[alpha_type].Data()));
+  grE->SetTitle(Form("%s #alpha Mean %sEnergy vs Time",title[alpha_type].Data(), smear.Data()));
   TGraphErrors *grEW = new TGraphErrors();
   grEW->SetMarkerColor(kBlue);
   grEW->SetMarkerStyle(8);
   grEW->SetMarkerSize(0.8);
   grEW->SetLineColor(kBlue);
-  grEW->SetTitle(Form("%s #alpha Energy 1#sigma Width vs Time",title[alpha_type].Data()));
+  grEW->SetTitle(Form("%s #alpha %sEnergy 1#sigma Width vs Time",title[alpha_type].Data(), smear.Data()));
+  TCanvas *ctemp = new TCanvas("ctemp","ctemp",0,0,700,500);
+  double guess = alpha_type == 1 ? 1.06 : 0.84;
+  double guessErr = 0.051*sqrt(guess);
+  TF1 f("f","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))", 0, 1);
   for(int i=0;i<=p; i++){
-    TF1 f("f","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))",0,1); 
     hE[i][2] = (TH1D*)hE[i][0]->Clone(Form("hE%i_2",i));
     hE[i][2]->Add(hE[i][1], -1);
-    f.SetParameters(hE[i][2]->GetMaximum(), (alpha_type == 1 ? 1.12 : 0.89), 0.05);
-    f.SetRange(lAE, hAE);
-    hE[i][2]->Draw();
+    for(int j=0;j<hE[i][2]->GetNbinsX();++j){//low stat bins with ~0 error bias fit
+      if(hE[i][2]->GetBinError(j)<1)hE[i][2]->SetBinError(j,1.0);
+    }
+    f.SetParameters(hE[i][2]->GetMaximum(), guess, guessErr);
+    f.SetRange(guess-2*guessErr, guess+2*guessErr);
     hE[i][2]->Fit("f", "r");
+    if(1){//use for printing all energy fits for debugging
+      hE[i][0]->Draw();
+      hE[i][1]->SetLineColor(kMagenta);
+      hE[i][1]->Draw("same");
+      hE[i][2]->SetLineColor(kRed);
+      hE[i][2]->Draw();
+      TPaveText pt(0.75,0.75,1,1,"ndc");
+      pt.SetFillColor(0);
+      pt.SetShadowColor(0);
+      pt.AddText(Form("#chi^{2}/NDF:  %0.3f",f.GetChisquare()/double(f.GetNDF())));
+      pt.AddText(Form("Mean E:  %0.3f#pm%0.3f",f.GetParameter(1),f.GetParError(1)));
+      pt.AddText(Form("Width E:  %0.3f#pm%0.3f",f.GetParameter(2),f.GetParError(2)));
+      pt.Draw();
+      gPad->Update();
+      TDatime td(t[i]);
+      ctemp->SaveAs(Form("../plots/E%s%02i_%02i_%02i_%i.png", (useEsmear ? "smear" : ""), td.GetMonth(), td.GetDay(), td.GetHour(),(alpha_type == 1?212:214)));
+    }
     double lnsig = (f.GetParameter(1) - lAE)/f.GetParameter(2);
     double hnsig = (hAE - f.GetParameter(1))/f.GetParameter(2);
     effAE[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
+    //effAE[i] = f.Integral(lAE, hAE)/f.Integral(0,5);
     grEffE->SetPoint(i,t[i],effAE[i]);
-    gPad->Update();
-    if(slow) sleep(1);;
+    if(slow) sleep(1);
     double err;
     double rate = double(hE[i][2]->IntegralAndError(0,hE[i][2]->GetNbinsX(), err))/tlive[i]*1000.0;
     err /= tlive[i]/1000.0;
@@ -338,6 +396,9 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     grEW->SetPoint(i, t[i], f.GetParameter(2));
     grEW->SetPointError(i, 0, f.GetParError(2));
   }
+  TCanvas *cE = new TCanvas("cE","cE",0,0,1200,600);
+  cE->Divide(2,1);
+  cE->cd(1);
   grE->Draw("ap");
   gPad->Update();
   grE->GetYaxis()->SetTitle("E_{#alpha} (MeV)");
@@ -352,7 +413,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   grEW->GetYaxis()->SetTitle("E_{#alpha} Width (MeV)");
   grEW->GetXaxis()->SetTimeDisplay(1);
   grEW->GetXaxis()->SetTimeFormat("%m/%d");
-  grEW->GetXaxis()->SetTitle("Epoch seconds");
+  grEW->GetXaxis()->SetTitle("Date in 2018");
   
   grEW->Fit("pol0");
   gPad->Update();
@@ -583,7 +644,18 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   grR->GetXaxis()->SetTimeDisplay(1);
   grR->GetXaxis()->SetTimeFormat("%m/%d");
   grR->GetXaxis()->SetTitle("Date in 2018");
-  grR->Fit("pol0");
+  //  TF1 fh("fh","[0]*pow(0.5,(x-[1])/[2])",0,1);
+  TF1 fh("fh","[0]*(pow(0.5,(x-[1])/1.81456e8)+[2]*(x-[1]))",0,1);
+  fh.SetParameters(25,1523923200,8e-10);
+  grR->Fit("fh");
+  TPaveText *pth = new TPaveText(0.7,0.8,0.99,0.9,"ndc");
+  pth->SetFillColor(0);
+  pth->SetShadowColor(0);
+  pth->AddText(Form("#chi^{2}/NDF = %0.3f",fh.GetChisquare()/double(fh.GetNDF())));
+  double secinyr = 3600*24*365.25;
+  //  pth->AddText(Form("T_{1/2} (yr) = %0.2f #pm %0.2f",fh.GetParameter(2)/secinyr,fh.GetParError(2)/secinyr));
+  pth->AddText(Form("Percent Change (yr^{-1}) = %0.2f #pm %0.2f",100*fh.GetParameter(2)*secinyr, 100*fh.GetParError(2)*secinyr));
+  pth->Draw();
   gPad->Update();
   // TLine *line = new TLine(RxOffT,gPad->GetUymin(),RxOffT,gPad->GetUymax());
   // line->SetLineColor(kBlack);
@@ -614,7 +686,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     TCanvas *c1 = new TCanvas("c1","c1",0,0,1200,300);
     TGraphErrors *grEpub = new TGraphErrors();
     grEpub->SetName(Form("grEvsTPo%i", (alpha_type == 1 ? 212 : 214)));
-    grEpub->SetTitle(Form("Po%i #alpha Energy vs Time", (alpha_type == 1 ? 212 : 214)));
+    grEpub->SetTitle(Form("Po%i #alpha %sEnergy vs Time", (alpha_type == 1 ? 212 : 214), smear.Data()));
     grEpub->SetMarkerStyle(kCircle);
     grEpub->SetMarkerSize(0.8);
     grEpub->SetMarkerColor(kBlue);
@@ -646,7 +718,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     TCanvas *c2 = new TCanvas("c2","c2",0,0,1200,300);
     TGraphErrors *grEWpub = new TGraphErrors();
     grEWpub->SetName(Form("grsigmaEvsTPo%i", (alpha_type == 1 ? 212 : 214)));
-    grEWpub->SetTitle(Form("Po%i #alpha Energy 1#sigma Width vs Time", (alpha_type == 1 ? 212 : 214)));
+    grEWpub->SetTitle(Form("Po%i #alpha %sEnergy 1#sigma Width vs Time", (alpha_type == 1 ? 212 : 214), smear.Data()));
     grEWpub->SetMarkerStyle(kCircle);
     grEWpub->SetMarkerSize(0.8);
     grEWpub->SetMarkerColor(kBlue);
