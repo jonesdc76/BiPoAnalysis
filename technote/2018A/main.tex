@@ -18,18 +18,18 @@ In principle, a uniformly dissolved source such as trace $^{232}$Th giving a sig
 This study focuses on using the nearly monoenergetic alphas from these decays to measure the stability of the energy calibration, PSD and the position and energy resolution of the AD. 
 
 \subsection{Plots details}
-The following list of plots will be made for both the decays of $^{214}\textrm{Bi}\rightarrow^{214}\textrm{Po}\rightarrow^{210}\textrm{Pb}$ and $^{212}\textrm{Bi}\rightarrow^{212}\textrm{Po}\rightarrow^{208}\textrm{Pb}$.
+The following list of plots will be made for both the decays of $^{214}\textrm{Bi}\rightarrow^{214}\textrm{Po}\rightarrow^{210}\textrm{Pb}$ and $^{212}\textrm{Bi}\rightarrow^{212}\textrm{Po}\rightarrow^{208}\textrm{Pb}$. Any plots involving alpha energy will be shown in reconstructed energy and "smeared" reconstructed energy. Smeared reconstructed energy is an attempt to give all cells of the detector nearly the same energy resolution constant over time. The energy resolution is not identical segment to segment and is also degrading nearly linearly with time. Smeared energy adds a random noise that is segment and time dependent intended to produce a uniform energy resolution across all cells that does not change much with time. The energy resolution of the worst cells towards the end of the given analysis period then set the resolution of the full detector. For this analysis pass 2018A, the target resolution was 400 PE/MeV or approximately 5\% at 1 MeV. Beta energy is not smeared in these plots since beta's are not used in the stability plots for this analysis.
 \begin{enumerate}
-\item{Alpha mean energy vs. segment.}
-\item{Width (1$\sigma$) of the alpha energy distribution vs. segment.}
+\item{Alpha mean energy and smeared energy vs. segment.}
+\item{Width (1$\sigma$) of the alpha energy distribution and the smeared alpha energy distribution vs. segment.}
 \item{Width (1$\sigma$) of the $\Delta$Z distribution, separation distance between the alpha and beta vs. segment. This is a measure of the position resolution and should track the mean of the $\Delta$Z.}
 \item{RMS width of the Z-position distribution of alphas vs cell.}
-\item{Alpha mean energy versus time ($\sim$24~h bins). Ideally, this should be statistically consistent with a constant.}
-\item{Alpha mean energy width versus time ($\sim$24~h bins). This will track detector light yield and transport.}
+\item{Alpha mean energy and smeared alpha mean energy versus time ($\sim$24~h bins). Ideally, this should be statistically consistent with a constant.}
+\item{Alpha mean energy width  and smeared alpha mean energy width versus time ($\sim$24~h bins). This will track detector light yield and transport.}
 \item{RMS width of the Z-distribution of alphas averaged across detector versus time. This shows the stability of the position reconstruction over time.}
 \item{Width of $\Delta$Z distribution averaged across detector versus time. This tracks the position resolution over time.}
 \item{Mean of the Z-position distribution of alphas vs cell. This will be a verification that the position reconstruction is working as expected and should be statistically distributed around zero.}
-\item{Alpha energy distribution for whole detector. This will be used to estimate leakage into IBD event selection.}
+\item{Alpha energy and smeared alpha energy distribution for whole detector. This will be used to estimate leakage into IBD event selection.}
 \item{Beta energy spectrum for whole detector. The shape and endpoint is to be compared with a simulated spectrum to verify that the simulation properly captures the detector performance. }
 \item{Whole detector Po alpha Z-position distribution.}
 \item{Whole detector $\Delta$Z-position distribution.}
@@ -122,7 +122,7 @@ where $n_x(y)$ is the displacment in the x(y) direction between the prompt and d
 \begin{figure}[ht]
 \centering
 \includegraphics[width=1.0\textwidth]{../figures/distance_cut.pdf}
-\caption{\label{fig:deltaD}Plots illustrating distribution of displacement between prompt and delayed BiPo-212 events. (Left)Distribution of prompt/delayed displacements (blue) and accidental (red) prompt/delayed displacements. (Right) Accidental subtracted prompt/delayed displacements. Vertical line shows position of distance cut.}
+\caption{\label{fig:deltaD}Plots illustrating distribution of displacement between prompt and delayed BiPo-212 events. (Left)Distribution of prompt/delayed displacements (blue) and accidental (red) prompt/delayed displacements. (Right) Accidental-subtracted prompt/delayed displacements. Vertical line shows position of distance cut.}
 \end{figure}
 
 The half-life of the $^{214}$Po decay is 0.1643~ms. The time difference between the prompt beta and delayed alpha candidates for this decay is limited to 0.01~ms$<$dt$<3\times\tau$ where $\tau=0.1643/\textrm{ln}(2)$~ms, the lifetime of $^{214}$Po. Figure \ref{fig:dt214} show the $\Delta$t distribution. A fit to the half-life of $^{214}$Po is in good agreement with the accepted value.
@@ -159,90 +159,141 @@ Date:   Fri Oct 12 14:58:03 2018 -0400\\
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo212EvsCell.pdf}
-\caption{\label{fig:EvsCell212}Po-212 alpha energy versus segment number. The value is the mean of a Gaussian fit to the alpha energy peak and the error bar is the 1$\sigma$ width. Energy is normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy is 1.0873$\pm$0.0001~MeV and $\chi^2$/NDF=296/122.}
+\caption{\label{fig:EvsCell212}Po-212 alpha energy versus segment number. The value is the mean of a Gaussian fit to the alpha energy peak and the error bar is the 1$\sigma$ width. Energy is normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy is 1.06479$\pm$0.00014~MeV and $\chi^2$/NDF=244/121.}
+\end{figure}
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.05\textwidth]{figures/PubBiPo212EsmearvsCell.pdf}
+\caption{\label{fig:EsmearvsCell212}Po-212 {\bf smeared} alpha energy versus segment number. The value is the mean of a Gaussian fit to the alpha energy peak and the error bar is the 1$\sigma$ width. Energy is normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy is 1.06450$\pm$0.00016~MeV and $\chi^2$/NDF=206/121.}
 \end{figure}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo214EvsCell.pdf}
-\caption{\label{fig:EvsCell214}Po-214 alpha energy versus segment number. The value is the mean of a Gaussian fit to the alpha energy peak and the error bar is the 1$\sigma$ width. Energy is normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy is 0.8620$\pm$0.0001~MeV and $\chi^2$/NDF=169/122.} 
+\caption{\label{fig:EvsCell214}Po-214 alpha energy versus segment number. The value is the mean of a Gaussian fit to the alpha energy peak and the error bar is the 1$\sigma$ width. Energy is normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy is 0.84454$\pm$0.00007~MeV and $\chi^2$/NDF=302/121.} 
 \end{figure}
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.05\textwidth]{figures/PubBiPo214EsmearvsCell.pdf}
+\caption{\label{fig:EsmearvsCell214}Po-214 alpha energy versus segment number. The value is the mean of a Gaussian fit to the alpha energy peak and the error bar is the 1$\sigma$ width. Energy is normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy is 0.84424$\pm$0.00008~MeV and $\chi^2$/NDF=292/121.} 
+\end{figure}
+\clearpage
 \newpage
+
 %------------------------------
 \subsection{Energy resolution versus segment plots}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo212EresvsCell.pdf}
-\caption{\label{fig:EresvsCell212}Energy resolution versus segment using the alpha from Po-212 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.0488$\pm$0.0001~MeV and $\chi^2$/NDF=391/122. Segment 8 has been seen to be problematic. In general, the higher width segments are those outfitted with ET tubes.}
+\caption{\label{fig:EresvsCell212}Energy resolution versus segment using the alpha from Po-212 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.04917$\pm$0.00014~MeV and $\chi^2$/NDF=208/121.  In general, the higher width segments are those outfitted with ET tubes.}
+\end{figure}
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.05\textwidth]{figures/PubBiPo212EsmearresvsCell.pdf}
+\caption{\label{fig:EsmearresvsCell212}{\bf Smeared} energy resolution versus segment using the alpha from Po-212 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.05330$\pm$0.00017~MeV and $\chi^2$/NDF=706/121.  In general, the higher width segments are those outfitted with ET tubes.}
 \end{figure}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo214EresvsCell.pdf}
-\caption{\label{fig:EresvsCell214}Energy resolution versus segment using the alpha from Po-214 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.0427$\pm$0.0001~MeV and $\chi^2$/NDF=272/122. Segment 8 has been seen to be problematic. In general, the higher width segments are those outfitted with ET tubes.}
+\caption{\label{fig:EresvsCell214}Energy resolution versus segment using the alpha from Po-214 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.04365$\pm$0.00006~MeV and $\chi^2$/NDF=676/121.  In general, the higher width segments are those outfitted with ET tubes.}
 \end{figure}
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.05\textwidth]{figures/PubBiPo214EsmearresvsCell.pdf}
+\caption{\label{fig:EsmearresvsCell214}{\bf Smeared} energy resolution versus segment using the alpha from Po-214 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.04775$\pm$0.00007~MeV and $\chi^2$/NDF=182/121.  In general, the higher width segments are those outfitted with ET tubes.}
+\end{figure}
+\clearpage
 \newpage
 %------------------------------
 \subsection{Z-position resolution versus segment plots}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo212dZWidthvsCell.pdf}
-\caption{\label{fig:ZresvsCell212}Z-position resolution versus segment using the beta, alpha from Bi-212, Po-212. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha minus beta Z-distance distributions and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average $\Delta$Z width is 45.18$\pm$0.13~mm and $\chi^2$/NDF=429/122.}
+\caption{\label{fig:ZresvsCell212}Z-position resolution versus segment using the beta, alpha from Bi-212, Po-212. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha minus beta Z-distance distributions and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average $\Delta$Z width is 44.62$\pm$0.11~mm and $\chi^2$/NDF=597/121.}
 \end{figure}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo214dZWidthvsCell.pdf}
-\caption{\label{fig:ZresvsCell214}Z-position resolution versus segment using the beta, alpha from Bi-214, Po-214. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha minus beta Z-distance distributions and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average $\Delta$Z width is 52.71$\pm$0.17~mm and $\chi^2$/NDF=230/122. In general, the higher width segments are those outfitted with ET tubes.}
+\caption{\label{fig:ZresvsCell214}Z-position resolution versus segment using the beta, alpha from Bi-214, Po-214. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha minus beta Z-distance distributions and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average $\Delta$Z width is 51.95$\pm$0.09~mm and $\chi^2$/NDF=1023/121. In general, the higher width segments are those outfitted with ET tubes.}
 \end{figure}
+\clearpage
 \newpage
 %------------------------------
 \subsection{Z-distribution RMS width versus segment plots}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo212ZRMSvsCell.pdf}
-\caption{\label{fig:ZRMSvsCell212}RMS width of Z-distribution of Po-212 alphas versus segment. The error bars are the errors assigned by ROOT to the RMS values of the histograms. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average Z$_{RMS}$ width is 345.5$\pm$0.7~mm and $\chi^2$/NDF=1730/122. Segment 8 has been seen to be problematic.}
+\caption{\label{fig:ZRMSvsCell212}RMS width of Z-distribution of Po-212 alphas versus segment. The error bars are the errors assigned by ROOT to the RMS values of the histograms. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average Z$_{RMS}$ width is 345.0$\pm$0.6~mm and $\chi^2$/NDF=968/121. Segment 8 has been seen to be problematic.}
 \end{figure}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo214ZRMSvsCell.pdf}
-\caption{\label{fig:ZRMSvsCell214}RMS width of Z-distribution of Po-214 alphas versus segment. The error bars are the errors assigned by ROOT to the RMS values of the histograms. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average Z$_{RMS}$ width is 349.1$\pm$0.6~mm and $\chi^2$/NDF=153/122.}
+\caption{\label{fig:ZRMSvsCell214}RMS width of Z-distribution of Po-214 alphas versus segment. The error bars are the errors assigned by ROOT to the RMS values of the histograms. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average Z$_{RMS}$ width is 347.8$\pm$0.3~mm and $\chi^2$/NDF=305/121.}
 \end{figure}
+\clearpage
 \newpage
 %------------------------------
 \subsection{Energy versus time plots}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo212EvsT.pdf}
-\caption{\label{fig:EvsT212}Po-212 detector averaged alpha energy versus time. The value is the mean of a Gaussian fit to the alpha energy peak and the error bar is the 1$\sigma$ width. Energy is normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy is 1.08735$\pm$0.00015~MeV and $\chi^2$/NDF=68.5/60. }
+\caption{\label{fig:EvsT212}Po-212 detector averaged alpha energy versus time. The value is the mean of a Gaussian fit to the alpha energy peak and the error bar is the 1$\sigma$ width. Energy is normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy is 1.06402$\pm$0.00015~MeV and $\chi^2$/NDF=52/44. }
 \end{figure}
 \begin{figure}[!h]
 \centering
-\includegraphics[width=1.05\textwidth]{figures/PubBiPo214EvsT.pdf}
-\caption{\label{fig:EvsT214}Po-214 detector averaged alpha energy versus time. The value is the mean of a Gaussian fit to the alpha energy peak and the error bar is the 1$\sigma$ width. Energy is normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy is 0.8619$\pm$0.0001~MeV and $\chi^2$/NDF=77.1/60. The periods of increased error bar occur during reactor on when accidental backgrounds for this BiPo-214 decay process are much larger. The BiPo-212 decay has almost no accidental backgrounds due to the relatively short lifetime of Po-212 (299~ns).}
+\includegraphics[width=1.05\textwidth]{figures/PubBiPo212EsmearvsT.pdf}
+\caption{\label{fig:EsmearvsT212}Po-212 detector-averaged {\bf smeared} alpha energy versus time. The value is the mean of a Gaussian fit to the alpha energy peak and the error bar is the 1$\sigma$ width. Energy is normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy is 1.0648$\pm$0.00015~MeV and $\chi^2$/NDF=44/44. }
 \end{figure}
+\FloatBarrier
+\newpage
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.05\textwidth]{figures/PubBiPo214EvsT.pdf}
+\caption{\label{fig:EvsT214}Po-214 detector-averaged alpha energy versus time. The value is the mean of a Gaussian fit to the alpha energy peak and the error bar is the 1$\sigma$ width. Energy is normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy is 0.84479$\pm$0.00007~MeV and $\chi^2$/NDF=94/57. The periods of increased error bar occur during reactor on when accidental backgrounds for this BiPo-214 decay process are much larger. The BiPo-212 decay has almost no accidental backgrounds due to the relatively short lifetime of Po-212 (299~ns).}
+\end{figure}
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.05\textwidth]{figures/PubBiPo214EsmearvsT.pdf}
+\caption{\label{fig:EsmearvsT214}Po-214 detector-averaged {\bf smeared} alpha energy versus time. The value is the mean of a Gaussian fit to the alpha energy peak and the error bar is the 1$\sigma$ width. Energy is normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy is 0.84436$\pm$0.00008~MeV and $\chi^2$/NDF=88/57. Data points during reactor on periods include 3 times more data to reduce error bar size since accidental backgrounds for this BiPo-214 decay process are much larger. The BiPo-212 decay has almost no accidental backgrounds due to the relatively short lifetime of Po-212 (299~ns).}
+\end{figure}
+\FloatBarrier
 \newpage
 %------------------------------
 \subsection{Energy resolution versus time plots}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo212EresvsT.pdf}
-\caption{\label{fig:EresvsT212}Detector averaged energy resolution versus time using the alpha from Po-212 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.0490$\pm$0.0001~MeV and $\chi^2$/NDF=152/60.}
+\caption{\label{fig:EresvsT212}Detector averaged energy resolution versus time using the alpha from Po-212 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.04964$\pm$0.00013~MeV and $\chi^2$/NDF=96/44.}
 \end{figure}
 \begin{figure}[!h]
 \centering
-\includegraphics[width=1.05\textwidth]{figures/PubBiPo214EresvsT.pdf}
-\caption{\label{fig:EresvsT214}Detector averaged energy resolution versus time using the alpha from Po-214 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.0427$\pm$0.0001~MeV and $\chi^2$/NDF=165/60.}
+\includegraphics[width=1.05\textwidth]{figures/PubBiPo212EsmearresvsT.pdf}
+\caption{\label{fig:EsmearresvsT212}Detector averaged {\bf smeared} energy resolution versus time using the alpha from Po-212 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.05356$\pm$0.00016~MeV and $\chi^2$/NDF=56/44.}
 \end{figure}
+\clearpage
+\newpage
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.05\textwidth]{figures/PubBiPo214EresvsT.pdf}
+\caption{\label{fig:EresvsT214}Detector-averaged energy resolution versus time using the alpha from Po-214 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.04341$\pm$0.00007~MeV and $\chi^2$/NDF=319/57.}
+\end{figure}
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.05\textwidth]{figures/PubBiPo214EsmearresvsT.pdf}
+\caption{\label{fig:EsmearresvsT214}Detector-averaged {\bf smeared} energy resolution versus time using the alpha from Po-214 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.04692$\pm$0.00008~MeV and $\chi^2$/NDF=78/57.}
+\end{figure}
+\clearpage
 \newpage
 %------------------------------
 \subsection{Z-distribution RMS width versus time plots}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo212ZrmsvsT.pdf}
-\caption{\label{fig:ZRMSvsT212}RMS width of Z-distribution of Po-212 alphas versus time. The error bars are the errors assigned by ROOT to the RMS values of the histograms. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average Z$_{RMS}$ width is 349.0$\pm$0.5~mm and the $\chi^2$/NDF=69.9/60. }
+\caption{\label{fig:ZRMSvsT212}RMS width of Z-distribution of Po-212 alphas versus time. The error bars are the errors assigned by ROOT to the RMS values of the histograms. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average Z$_{RMS}$ width is 346.1$\pm$0.6~mm and the $\chi^2$/NDF=31/44. }
 \end{figure}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo214ZrmsvsT.pdf}
-\caption{\label{fig:ZRMSvsT214}RMS width of Z-distribution of Po-214 alphas versus Time. The error bars are the errors assigned by ROOT to the RMS values of the histograms. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average Z$_{RMS}$ width is 348.1$\pm$0.7~mm and the $\chi^2$/NDF=56.4/60}
+\caption{\label{fig:ZRMSvsT214}RMS width of Z-distribution of Po-214 alphas versus Time. The error bars are the errors assigned by ROOT to the RMS values of the histograms. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average Z$_{RMS}$ width is 347.5$\pm$0.3~mm and the $\chi^2$/NDF=83/57}
 \end{figure}
 \newpage
 %------------------------------
@@ -250,12 +301,12 @@ Date:   Fri Oct 12 14:58:03 2018 -0400\\
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo212ZresvsT.pdf}
-\caption{\label{fig:ZresvsT212}Z-position resolution versus time using the beta, alpha from Bi-212, Po-212. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha minus beta Z-distance distributions and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average $\Delta$Z width is 45.84$\pm$0.11~mm and the $\chi^2$/NDF=164/60.}
+\caption{\label{fig:ZresvsT212}Z-position resolution versus time using the beta, alpha from Bi-212, Po-212. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha minus beta Z-distance distributions and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average $\Delta$Z width is 46.4$\pm$0.1~mm and the $\chi^2$/NDF=112/44.}
 \end{figure}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo214ZresvsT.pdf}
-\caption{\label{fig:ZresvsT214}Z-position resolution versus time using the beta, alpha from Bi-214, Po-214. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha minus beta Z-distance distributions and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations.Un-normalized weighted average $\Delta$Z width is 55.75$\pm$0.13~mm and the $\chi^2$/NDF=164/60. Presumably, the larger width is due to the presence of higher energy gammas accompanying the Po-214 beta decay. Reactor on periods can be seen to have larger errors due to increased accidental backgrounds.}
+\caption{\label{fig:ZresvsT214}Z-position resolution versus time using the beta, alpha from Bi-214, Po-214. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha minus beta Z-distance distributions and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations.Un-normalized weighted average $\Delta$Z width is 56.1$\pm$0.1~mm and the $\chi^2$/NDF=164/60. Presumably, the larger width is due to the presence of higher energy gammas accompanying the Po-214 beta decay. Data points during reactor on periods include 3 times more data to reduce error bar size since accidental backgrounds for this BiPo-214 decay process are much larger.}
 \end{figure}
 \newpage
 %------------------------------
@@ -276,12 +327,12 @@ Date:   Fri Oct 12 14:58:03 2018 -0400\\
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.66\textwidth]{figures/PubBiPo212AlphaE.pdf}
-\caption{\label{fig:AlphaE212}Whole detector Po-212 alpha energy spectrum. The mean of this fit is 1.08757$\pm$0.00015~MeV and the width is 0.05000$\pm$0.00013~MeV. This is an essentially mono-energetic alpha with 8.785~MeV of energy.}
+\caption{\label{fig:AlphaE212}Whole detector Po-212 alpha energy spectrum. The mean of this fit is 1.06494$\pm$0.00014~MeV and the width is 0.05000$\pm$0.00013~MeV. This is an essentially mono-energetic alpha with 8.785~MeV of energy.}
 \end{figure}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.66\textwidth]{figures/PubBiPo214AlphaE.pdf}
-\caption{\label{fig:AlphaE214}Whole detector Po-214 alpha energy spectrum. The mean of this fit is 0.86200$\pm$0.00015~MeV and the width is 0.04272$\pm$0.00014~MeV. This is an essentially mono-energetic alpha with 7.687~MeV of energy.}
+\caption{\label{fig:AlphaE214}Whole detector Po-214 alpha energy spectrum. The mean of this fit is 0.84454$\pm$0.00009~MeV and the width is 0.04339$\pm$0.00009~MeV. This is an essentially mono-energetic alpha with 7.687~MeV of energy.}
 \end{figure}
 \newpage
 %------------------------------
@@ -315,12 +366,12 @@ Date:   Fri Oct 12 14:58:03 2018 -0400\\
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/PubBiPo212dZ.pdf}
-\caption{\label{fig:Z212}Whole detector distribution of Po-212 alpha, beta correlation distance $\Delta$Z. The width of this distribution is 46.06$\pm$0.13~mm.}
+\caption{\label{fig:dZ212}Whole detector distribution of Po-212 alpha, beta correlation distance $\Delta$Z. The width of this distribution is 46.06$\pm$0.13~mm.}
 \end{figure}
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/PubBiPo214dZ.pdf}
-\caption{\label{fig:Z214}Whole detector distribution of Po-214 alpha, beta correlation distance $\Delta$Z. The width of this distribution is 52.85$\pm$0.19~mm.}
+\caption{\label{fig:dZ214}Whole detector distribution of Po-214 alpha, beta correlation distance $\Delta$Z. The width of this distribution is 52.85$\pm$0.19~mm.}
 \end{figure}
 \newpage
 
@@ -332,22 +383,22 @@ This section contains supplementary plots that help explain/visualize the analys
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.7\textwidth]{figures/BiPo212AlphaPSD.pdf}
+\includegraphics[width=0.7\textwidth]{figures/BiPo212AlphaPSDvsE.pdf}
 \caption{\label{fig:apsd212}Po-212 alpha PSD vs energy selection.}
 \end{figure}
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.7\textwidth]{figures/BiPo214AlphaPSD.pdf}
+\includegraphics[width=0.7\textwidth]{figures/BiPo214AlphaPSDvsE.pdf}
 \caption{\label{fig:apsd214}Po-214 alpha PSD vs energy selection.}
 \end{figure}
 \begin{figure}[!b]
 \centering
-\includegraphics[width=0.7\textwidth]{figures/BiPo212BetaPSD.pdf}
+\includegraphics[width=0.7\textwidth]{figures/BiPo212BetaPSDvsE.pdf}
 \caption{\label{fig:bpsd212}Po-212 beta PSD vs energy selection. The beta PSD shown here is for the first event in each prompt cluster.}
 \end{figure}
 \begin{figure}[!b]
 \centering
-\includegraphics[width=0.7\textwidth]{figures/BiPo214BetaPSD.pdf}
+\includegraphics[width=0.7\textwidth]{figures/BiPo214BetaPSDvsE.pdf}
 \caption{\label{fig:bpsd214}Po-214 beta PSD vs energy selection. The beta PSD shown here is for the first event in each prompt cluster.}
 \end{figure}
 \begin{figure}[!b]
@@ -362,8 +413,8 @@ This section contains supplementary plots that help explain/visualize the analys
 \includegraphics[width=0.7\textwidth]{figures/BiPo214DeltaTSpectrum.pdf}
 \caption{\label{fig:dt214}Alpha minus beta time distribution used in Bi-214/Po-214 decay chain analysis.}
 \end{figure}
+\clearpage
 \newpage
-\FloatBarrier
 
 \section{Supporting Documentation}
 

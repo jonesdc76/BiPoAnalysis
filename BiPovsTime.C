@@ -76,13 +76,14 @@ double GetLiveTime(TChain *ch){
   return tlive/3600.0;
 }
 
-int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool recreate = 0){
+int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool useEsmear = 1, bool P2_style = 1, bool recreate = 0){
   //alpha_type = 0, strictly Bi214-->Po214-->Pb210
   //alpha_type = 1, strictly Bi212-->Po212-->Pb208
   //alpha_type = 2, include both
   double HrPerPnt = (alpha_type == 0 ? 23.6 : 47.6);//hours of data per point
-  bool slow = 0, time_in_epoch_sec = 0, useEsmear = 1;
-  TString smear((useEsmear ? "Smeared ":""));
+  bool slow = 0, time_in_epoch_sec = 0;
+  TString smear((useEsmear ? "smear":""));
+  TString smeared((useEsmear ? "Smeared ":""));
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(1111);
   gStyle->SetTitleW(0.8);
@@ -344,16 +345,16 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
   grE->SetMarkerStyle(8);
   grE->SetMarkerSize(0.8);
   grE->SetLineColor(kBlue);
-  grE->SetTitle(Form("%s #alpha Mean %sEnergy vs Time",title[alpha_type].Data(), smear.Data()));
+  grE->SetTitle(Form("%s #alpha Mean %sEnergy vs Time",title[alpha_type].Data(), smeared.Data()));
   TGraphErrors *grEW = new TGraphErrors();
   grEW->SetMarkerColor(kBlue);
   grEW->SetMarkerStyle(8);
   grEW->SetMarkerSize(0.8);
   grEW->SetLineColor(kBlue);
-  grEW->SetTitle(Form("%s #alpha %sEnergy 1#sigma Width vs Time",title[alpha_type].Data(), smear.Data()));
+  grEW->SetTitle(Form("%s #alpha %sEnergy 1#sigma Width vs Time",title[alpha_type].Data(), smeared.Data()));
   TCanvas *ctemp = new TCanvas("ctemp","ctemp",0,0,700,500);
   double guess = alpha_type == 1 ? 1.06 : 0.84;
-  double guessErr = 0.051*sqrt(guess);
+  double guessErr = 0.05*sqrt(guess);
   TF1 f("f","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))", 0, 1);
   for(int i=0;i<=p; i++){
     hE[i][2] = (TH1D*)hE[i][0]->Clone(Form("hE%i_2",i));
@@ -379,7 +380,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
       pt.Draw();
       gPad->Update();
       TDatime td(t[i]);
-      ctemp->SaveAs(Form("../plots/E%s%02i_%02i_%02i_%i.png", (useEsmear ? "smear" : ""), td.GetMonth(), td.GetDay(), td.GetHour(),(alpha_type == 1?212:214)));
+      ctemp->SaveAs(Form("../plots/E%s%02i_%02i_%02i_%i.png", smear.Data(), td.GetMonth(), td.GetDay(), td.GetHour(),(alpha_type == 1?212:214)));
     }
     double lnsig = (f.GetParameter(1) - lAE)/f.GetParameter(2);
     double hnsig = (hAE - f.GetParameter(1))/f.GetParameter(2);
@@ -687,7 +688,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     TCanvas *c1 = new TCanvas("c1","c1",0,0,1200,300);
     TGraphErrors *grEpub = new TGraphErrors();
     grEpub->SetName(Form("grEvsTPo%i", (alpha_type == 1 ? 212 : 214)));
-    grEpub->SetTitle(Form("Po%i #alpha %sEnergy vs Time", (alpha_type == 1 ? 212 : 214), smear.Data()));
+    grEpub->SetTitle(Form("Po%i #alpha %sEnergy vs Time", (alpha_type == 1 ? 212 : 214), smeared.Data()));
     grEpub->SetMarkerStyle(kCircle);
     grEpub->SetMarkerSize(0.8);
     grEpub->SetMarkerColor(kBlue);
@@ -714,12 +715,12 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     }
     gPad->Update();
     grEpub->Write();
-    c1->SaveAs(Form("%s/PubBiPo%iEvsT%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), fid.Data()));
+    c1->SaveAs(Form("%s/PubBiPo%iE%svsT%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), smear.Data(), fid.Data()));
     
     TCanvas *c2 = new TCanvas("c2","c2",0,0,1200,300);
     TGraphErrors *grEWpub = new TGraphErrors();
     grEWpub->SetName(Form("grsigmaEvsTPo%i", (alpha_type == 1 ? 212 : 214)));
-    grEWpub->SetTitle(Form("Po%i #alpha %sEnergy 1#sigma Width vs Time", (alpha_type == 1 ? 212 : 214), smear.Data()));
+    grEWpub->SetTitle(Form("Po%i #alpha %sEnergy 1#sigma Width vs Time", (alpha_type == 1 ? 212 : 214), smeared.Data()));
     grEWpub->SetMarkerStyle(kCircle);
     grEWpub->SetMarkerSize(0.8);
     grEWpub->SetMarkerColor(kBlue);
@@ -745,7 +746,7 @@ int BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool
     }
     gPad->Update();
     grEWpub->Write();
-    c2->SaveAs(Form("%s/PubBiPo%iEresvsT%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), fid.Data()));
+    c2->SaveAs(Form("%s/PubBiPo%iE%sresvsT%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), smear.Data(), fid.Data()));
     
     TCanvas *c3 = new TCanvas("c3","c3",0,0,1200,300);
     TGraphErrors *grdZWpub = new TGraphErrors();

@@ -47,12 +47,13 @@ double GetLiveTime(TChain *ch){
   return tlive/3600.0;
 }
 
-int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bool recreate = 0){
+int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool useEsmear = 1, bool P2_style = 1, bool recreate = 0){
   //alpha_type = 0, strictly Bi214-->Po214-->Pb210
   //alpha_type = 1, strictly Bi212-->Po212-->Pb208
   //alpha_type = 2, include both
-  bool technote_plots = 1, useEsmear = 1;;
-  TString smear((useEsmear ? "Smeared ":""));
+  bool technote_plots = 1;
+  TString smear((useEsmear ? "smear":""));
+  TString smeared((useEsmear ? "Smeared ":""));
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(1111);
   gStyle->SetTitleW(0.8);
@@ -134,9 +135,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   if(bool(plots["psd"] & which_plots)){
     cout<<"Including psd plots"<<endl;
     for(int i=0;i<N;++i){
-      hAPSDvE[i] = new TH2D(Form("hAPSDvE%i",i),Form("%s #alpha PSD vs. Energy",title[alpha_type].Data()),200,lAE,hAE,200,lApsd,hApsd);
+      hAPSDvE[i] = new TH2D(Form("hAPSDvE%i",i),Form("%s#alpha PSD vs. %sEnergy",title[alpha_type].Data(), smeared.Data()),200,lAE,hAE,200,lApsd,hApsd);
       hAPSDvE[i]->Sumw2();
-      hBPSDvE[i] = new TH2D(Form("hBPSDvE%i",i),Form("%s #beta PSD vs. Energy", title[alpha_type].Data()),200,0,highBE,200,lPpsd,hPpsd);
+      hBPSDvE[i] = new TH2D(Form("hBPSDvE%i",i),Form("%s #beta PSD vs. Total Energy", title[alpha_type].Data()),200,0,highBE,200,lPpsd,hPpsd);
       hBPSDvE[i]->Sumw2();
       hAPSDvZ[i] = new TH2D(Form("hAPSDvZ%i",i),Form("%s #alpha PSD vs. Z-position",title[alpha_type].Data()),200,-1000,1000,200,lApsd,hApsd);
       hAPSDvZ[i]->Sumw2();
@@ -188,7 +189,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   if(bool(plots["E"] & which_plots)){
     cout<<"Including E plots"<<endl;
     for(int i=0;i<N;++i){
-      h_AE[i] = new TH1D(Form("hAE%i",i),Form("%s #alpha Energy Distribution", title[alpha_type].Data()),100,lAE,hAE);
+      h_AE[i] = new TH1D(Form("hAE%i",i),Form("%s%s#alpha Energy Distribution", title[alpha_type].Data(), smeared.Data()),100,lAE,hAE);
       h_AE[i]->Sumw2();
       h_AE[i]->SetMarkerColor(col[i]);
       h_AE[i]->SetLineColor(col[i]);
@@ -285,7 +286,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	  hAPSDvZ[0]->Fill(bp->az, bp->aPSD);
 	  hBPSDvZ[0]->Fill(bp->az, bp->pPSD->at(j));
 	  hAPSDvE[0]->Fill(bp->aE, bp->aPSD);
-	  hBPSDvE[0]->Fill(bp->pE->at(j),bp->pPSD->at(j));
+	  hBPSDvE[0]->Fill(bp->pEtot->at(j), bp->pPSD->at(j));
 	}
 	//	if(bool(plots["z"] & which_plots)){
 	if(bool(plots["z"] & which_plots)){
@@ -296,13 +297,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	  hABdt[0]->Fill(dt);
 	}
 	if(bool(plots["E"] & which_plots)){
-	  h_AE[0]->Fill(bp->aE);
+	  h_AE[0]->Fill((useEsmear ? bp->aEsmear : bp->aE));
 	  hBE[0]->Fill(bp->pEtot->at(j));
 	}
 	if(bool(plots["by_cell"] & which_plots)){
 	  if( bp->pPSD->at(j) > lPpsd && bp->pPSD->at(j) < hPpsd &&
 	      fabs(bp->pz->at(j)) < 1000 ){
-	    hCellAE[bp->aseg][0]->Fill(bp->aE);
+	    hCellAE[bp->aseg][0]->Fill((useEsmear ? bp->aEsmear : bp->aE));
 	    hCellAPSD[bp->aseg][0]->Fill(bp->aPSD);
 	    hCellBPSD[bp->pseg->at(j)][0]->Fill(bp->pPSD->at(j));
 	    hCellZ[bp->aseg][0]->Fill(bp->az);
@@ -334,8 +335,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	if(bool(plots["psd"] & which_plots)){
 	  hAPSDvZ[1]->Fill(bp->az, bp->aPSD, n2f);
 	  hBPSDvZ[1]->Fill(bp->fz->at(j), bp->fPSD->at(j), n2f);
-	  hAPSDvE[1]->Fill(bp->aE, bp->aPSD, n2f);
-	  hBPSDvE[1]->Fill(bp->fEtot->at(j),bp->fPSD->at(j),n2f);
+	  hAPSDvE[1]->Fill((useEsmear ? bp->aEsmear : bp->aE), bp->aPSD, n2f);
+	  hBPSDvE[1]->Fill(bp->fEtot->at(j), bp->fPSD->at(j), n2f);
 	}
 	if(bool(plots["z"] & which_plots)){
 	  hAZ[1]->Fill(bp->az, n2f);
@@ -345,13 +346,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	  hABdt[1]->Fill(dt, n2f);
 	}
 	if(bool(plots["E"] & which_plots)){
-	  h_AE[1]->Fill(bp->aE, n2f);
+	  h_AE[1]->Fill((useEsmear ? bp->aEsmear : bp->aE), n2f);
 	  hBE[1]->Fill(bp->fEtot->at(j), n2f);
 	}
 	if(bool(plots["by_cell"] & which_plots)){
 	  if( bp->fPSD->at(j) > lPpsd && bp->fPSD->at(j) < hPpsd &&
 	      fabs(bp->fz->at(j)) < 1000 ){
-	    hCellAE[bp->aseg][1]->Fill(bp->aE, n2f);
+	    hCellAE[bp->aseg][1]->Fill((useEsmear ? bp->aEsmear : bp->aE), n2f);
 	    hCellAPSD[bp->aseg][1]->Fill(bp->aPSD, n2f);
 	    hCellBPSD[bp->fseg->at(j)][1]->Fill(bp->fPSD->at(j), n2f);
 	    hCellZ[bp->aseg][1]->Fill(bp->az, n2f);
@@ -372,7 +373,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     cPSD->cd(1);
     hAPSDvE[0]->Draw("colz");
     gPad->Update();
-    hAPSDvE[0]->GetXaxis()->SetTitle("#alpha Energy (MeV)");
+    hAPSDvE[0]->GetXaxis()->SetTitle(Form("%s#alpha Energy (MeV)", smeared.Data()));
     hAPSDvE[0]->GetYaxis()->SetTitle("#alpha PSD");
     hAPSDvE[2] = (TH2D*)hAPSDvE[0]->Clone("hAPSDvE2");
     hAPSDvE[2]->Add(hAPSDvE[1],-1);
@@ -381,7 +382,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     cPSD->cd(2);
     hBPSDvE[0]->Draw("colz");
     gPad->Update();
-    hBPSDvE[0]->GetXaxis()->SetTitle("#beta Energy (MeV)");
+    hBPSDvE[0]->GetXaxis()->SetTitle("Total #beta Energy (MeV)");
     hBPSDvE[0]->GetYaxis()->SetTitle("#beta PSD");
     hBPSDvE[2] = (TH2D*)hBPSDvE[0]->Clone("hBPSDvE2");
     hBPSDvE[2]->Add(hBPSDvE[1],-1);
@@ -405,7 +406,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       pal->SetX2NDC(0.93);
       cAPSDtn->SetRightMargin(0.11);
       hAPSDvE[2]->Draw("colz");      
-      cAPSDtn->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iAlphaPSDvsE%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
+      cAPSDtn->SaveAs(Form("%s/BiPo%iAlphaPSDvsE%s%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214),smear.Data(),fid.Data()));
       TCanvas *cBPSDtn = new TCanvas("cBPSDtn", "cBPSDtn",0,0,800,600);
       cBPSDtn->SetRightMargin(0.11);
       hBPSDvE[2]->Draw("colz");
@@ -414,7 +415,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       pal->SetX2NDC(0.93);
       gPad->Modified();
       gPad->Update();
-      cBPSDtn->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iBetaPSDvsE%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
+      cBPSDtn->SaveAs(Form("%s/BiPo%iBetaPSDvsE%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214),fid.Data()));
     }
     
   }
@@ -531,7 +532,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     tt = ptt->AddText("Acc-Subtracted");
     tt->SetTextColor(kRed);
     ptt->Draw();
-    cdT->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iDeltaTSpectrum%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
+    cdT->SaveAs(Form("%s/BiPo%iDeltaTSpectrum%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), fid.Data()));
     gStyle->SetOptStat(0);
     gStyle->SetOptFit(0);
   }
@@ -553,12 +554,21 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gPad->Update();
     h_AE[0]->GetYaxis()->SetTitle("Counts/MeV");
     h_AE[0]->GetYaxis()->SetRangeUser(0,h_AE[0]->GetMaximum()*1.1);
-    h_AE[0]->GetXaxis()->SetTitle("Energy (MeV)");
+    h_AE[0]->GetXaxis()->SetTitle(Form("%sEnergy (MeV)", smeared.Data()));
     h_AE[2] = (TH1D*)h_AE[0]->Clone("h_AE[2]");
     h_AE[2]->Add(h_AE[1],-1);
-    h_AE[2]->SetMarkerColor(col[2]);;
-    h_AE[2]->SetLineColor(col[2]);;
-    h_AE[2]->Fit("gaus");
+    h_AE[2]->SetMarkerColor(col[2]);
+    h_AE[2]->SetLineColor(col[2]);
+    double guess = alpha_type == 1 ? 1.06 : 0.84;
+    double guessErr = 0.05 * sqrt(guess);
+    TF1 fg1("fg1","gaus",guess-2*guessErr, guess+2*guessErr);
+    fg1.SetParameters(h_AE[2]->GetMaximum(), guess, guessErr);
+    fg1.SetLineWidth(2);
+    TF1 fg2("fg2","gaus",0,3);
+    fg2.SetLineStyle(7);
+    fg2.SetLineWidth(1);
+    h_AE[2]->Fit("fg1", "r");
+    fg2.SetParameters(fg1.GetParameter(0),fg1.GetParameter(1),fg1.GetParameter(2));
     h_AE[2]->Draw("sames");
     gPad->Update();
     cE->cd(2);
@@ -568,7 +578,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     hBE[1]->Draw("same");
     gPad->Update();
     hBE[0]->GetYaxis()->SetTitle("Counts/MeV");
-    hBE[0]->GetXaxis()->SetTitle("Energy (MeV)");
+    hBE[0]->GetXaxis()->SetTitle("Total Energy (MeV)");
     hBE[2] = (TH1D*)hBE[0]->Clone("hBE[2]");
     hBE[2]->Add(hBE[1],-1);
     hBE[2]->SetMarkerColor(col[2]);;
@@ -580,15 +590,18 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
            //plot 10 from technote
        TCanvas *c10 = new TCanvas("c10","c10",0,0,800,600);
        h_AE[2]->SetLineColor(kBlue);
-       h_AE[2]->SetTitle(Form("Po-%i Alpha Energy Distribution", (alpha_type==1 ? 212 : 214)));
+       h_AE[2]->SetTitle(Form("Po-%i %sAlpha Energy Distribution", (alpha_type==1 ? 212 : 214), smeared.Data()));
        h_AE[2]->Draw();
+       fg1.Draw("same");
+       fg2.Draw("same");
        gPad->Update();
-       h_AE[2]->GetXaxis()->SetTitle("E_{#alpha} (MeV)");
+       h_AE[2]->GetXaxis()->SetTitle(Form("%sE_{#alpha} (MeV)", smeared.Data()));
        gPad->Update();
-       c10->SaveAs(Form("%s/PubBiPo%iAlphaE%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
+       c10->SaveAs(Form("%s/PubBiPo%iAlphaE%s%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), smear.Data(),fid.Data()));
        
        //plot 11 from technote
        TCanvas *c11 = new TCanvas("c11","c11",0,0,800,600);
+       hBE[2]->SetMarkerColor(kBlue);
        hBE[2]->SetLineColor(kBlue);
        hBE[2]->SetTitle(Form("Bi-%i Beta Energy Distribution", (alpha_type==1 ? 212 : 214)));
        hBE[2]->Draw();
@@ -695,8 +708,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     
     int nAE = 0, nApsd = 0, nBpsd = 0, ndZ = 0, nZ = 0 , nEff = 0;
     int nAE_ET = 0, nApsd_ET = 0, nBpsd_ET = 0, ndZ_ET = 0, nZ_ET = 0;
-    double  y76 = 0, y76W = 0;
+
     for(int i=0;i<kNcell;++i){
+      //sleep(1);
       if(exclude_cells)
 	if( find(begin(ExcludeCellArr), end(ExcludeCellArr), i)
 	    != end(ExcludeCellArr) )
@@ -705,22 +719,19 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	c1->cd(1);
 	hCellAE[i][2] = (TH1D*)hCellAE[i][0]->Clone(Form("hCellAE[%i][2]",i));
 	hCellAE[i][2]->Add(hCellAE[i][1],-1);
-	double guess = alpha_type == 1 ? 1.12 : 0.89;
-	double guessErr = 0.046/sqrt(guess);
+	double guess = alpha_type == 1 ?  1.06 : 0.84;
+	double guessErr = 0.05/sqrt(guess);
 	TF1 *f = new TF1("f","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))",
 			 guess-2*guessErr, guess + 2*guessErr);
-	f->SetParameters(hCellAE[i][2]->GetMaximum(),guess,0.046/sqrt(guess));
-	f->SetRange(lAE, hAE);
+	f->SetParameters(hCellAE[i][2]->GetMaximum(),guess,guessErr);
+	f->SetRange(guess-2*guessErr, guess + 2*guessErr);
 	hCellAE[i][2]->Draw();
 	gPad->Update();
-	hCellAE[i][2]->Fit(f,"rq");
+	printf("\n\nCell %i\n", i);
+	hCellAE[i][2]->Fit(f,"r");
 	if(f->GetParameter(2)<0){//deal with negative width
 	  f->SetParameter(2,fabs(f->GetParameter(2)));
-	  hCellAE[i][2]->Fit(f,"rq"); 
-	}
-	if(i==76){
-	  y76 = f->GetParameter(1);
-	  y76W = f->GetParameter(2);
+	  hCellAE[i][2]->Fit(f,"r"); 
 	}
 	gAE->SetPoint(nAE, i, f->GetParameter(1));
 	gAE->SetPointError(nAE, 0, f->GetParError(1));
@@ -740,7 +751,6 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	  gAEW_ET->SetPointError(nAE_ET, 0, f->GetParError(2));
 	  ++nAE_ET;
 	}
-	gAE->Fit("pol0");
       }
       
       if(hCellAPSD[i][0]->GetEntries()>0){//Alpha PSD
@@ -775,8 +785,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	  gApsdW_ET->SetPointError(nApsd_ET, 0, f->GetParError(2));
       	  ++nApsd_ET;
       	}
-      	gApsd->Fit("pol0");
-      }
+     }
       
       if(hCellBPSD[i][0]->GetEntries()>0){//beta PSD
       	c1->cd(3);
@@ -809,7 +818,6 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	  gBpsdW_ET->SetPointError(nBpsd_ET, 0, f->GetParError(2));
       	  ++nBpsd_ET;
       	}
-      	gBpsd->Fit("pol0");
       }
       
       if(hCelldZ[i][0]->GetEntries()>0){//dZ
@@ -843,7 +851,6 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	  gdZW_ET->SetPointError(ndZ_ET, 0, f->GetParError(2));
       	  ++ndZ_ET;
       	}
-      	gdZ->Fit("pol0");
       }
       
       if(hCellZ[i][0]->GetEntries()>0){//dZ
@@ -864,7 +871,6 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	  gAZ_ET->SetPointError(nZ_ET, 0, hCellZ[i][2]->GetRMSError());
       	  ++nZ_ET;
       	}
-      	gAZ->Fit("pol0");
       }
        grEff->SetPoint(nEff,i,effAE[i]*effAPSD[i]*effBPSD[i]*effdZ[i]);
       ++nEff;
@@ -876,8 +882,11 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     cCellAE->Divide(2,2);
   
     cCellAE->cd(1);
-    gAE->SetTitle(Form("^{%i}Po Alpha Energy Mean vs Cell",
-		       (alpha_type==1?212:214)));
+    TF1 fp0("fp0","pol0",0,1); 
+    gAE->Fit("fp0");
+    printf("***AE\nChiSquare/NDF: %0.5f/%i\nFit: %0.5f$\\pm$%0.5f\n",fp0.GetChisquare(), fp0.GetNDF(), fp0.GetParameter(0), fp0.GetParError(0));
+    gAE->SetTitle(Form("^{%i}Po %s Alpha Energy Mean vs Cell",
+		       (alpha_type==1?212:214), smeared.Data()));
     gAE->SetMarkerColor(kBlue);
     gAE->SetLineColor(kBlue);
     gAE->SetMarkerStyle(8);
@@ -893,7 +902,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       ps->SetY2NDC(0.78);
     }
     gAE->GetXaxis()->SetTitle("Cell Number");
-    gAE->GetYaxis()->SetTitle("Alpha Energy (MeV)");
+    gAE->GetYaxis()->SetTitle(Form("%sAlpha Energy (MeV)", smeared.Data()));
     gAE_ET->SetMarkerColor(kRed);
     gAE_ET->SetLineColor(kRed);
     gAE_ET->SetMarkerStyle(8);
@@ -903,19 +912,20 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gPad->Update();
     cCellAE->cd(2);
     h_AE->Draw();
-    h_AE->SetTitle(Form("^{%i}Po Alpha Energy By Cell",
-			(alpha_type==1 ? 212 : 214)));
+    h_AE->SetTitle(Form("^{%i}Po %sAlpha Energy By Cell",
+			(alpha_type==1 ? 212 : 214), smeared.Data()));
     h_AE->GetXaxis()->SetTitle("Alpha Energy (MeV)");
     gPad->Update();
     cCellAE->cd(3);
-    gAEW->SetTitle(Form("^{%i}Po Alpha Energy Width vs Cell",
-		       (alpha_type==1 ? 212 : 214)));
+    gAEW->SetTitle(Form("^{%i}Po %sAlpha Energy Width vs Cell",
+		       (alpha_type==1 ? 212 : 214), smeared.Data()));
     gAEW->SetMarkerColor(kBlue);
     gAEW->SetLineColor(kBlue);
     gAEW->SetMarkerStyle(8);
     gAEW->SetMarkerSize(0.6);
     gAEW->Draw("ap");
-    gAEW->Fit("pol0");
+    gAEW->Fit("fp0");
+    printf("***AEW\nChiSquare/NDF: %0.5f/%i\nFit: %0.5f$\\pm$%0.5f\n",fp0.GetChisquare(), fp0.GetNDF(), fp0.GetParameter(0), fp0.GetParError(0));
     gPad->Update();
     TPaveStats *ps1;
     if(!P2_style){
@@ -926,7 +936,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       ps1->SetY2NDC(0.78);
     }
     gAEW->GetXaxis()->SetTitle("Cell Number");
-    gAEW->GetYaxis()->SetTitle("Alpha Energy Width (MeV)");
+    gAEW->GetYaxis()->SetTitle(Form("%sAlpha Energy Width (MeV)", smeared.Data()));
     gAEW_ET->SetMarkerColor(kRed);
     gAEW_ET->SetLineColor(kRed);
     gAEW_ET->SetMarkerStyle(8);
@@ -936,11 +946,11 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gPad->Update();
     cCellAE->cd(4);
     hAEW->Draw();
-    hAEW->SetTitle(Form("^{%i}Po Alpha Energy Width By Cell",
-		       (alpha_type==1 ? 212 : 214)));
-    hAEW->GetXaxis()->SetTitle("Alpha Energy Width (MeV)");
+    hAEW->SetTitle(Form("^{%i}Po %sAlpha Energy Width By Cell",
+		       (alpha_type==1 ? 212 : 214), smeared.Data()));
+    hAEW->GetXaxis()->SetTitle(Form("%sAlpha Energy Width (MeV)",smeared.Data()));
     gPad->Update();
-    cCellAE->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iAlphaEvsCell%s.pdf", (alpha_type == 1 ? 212:214), fid.Data()));
+    cCellAE->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iAlphaE%svsCell%s.pdf", (alpha_type == 1 ? 212:214), smear.Data(),fid.Data()));
     //-------------------
 
 
@@ -950,6 +960,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     cCellApsd->Divide(2,2);
   
     cCellApsd->cd(1);
+    gApsd->Fit("fp0");
+    printf("***Apsd\nChiSquare/NDF: %0.5f/%i\nFit: %0.5f$\\pm$%0.5f\n",fp0.GetChisquare(), fp0.GetNDF(), fp0.GetParameter(0), fp0.GetParError(0));
     gApsd->SetTitle(Form("^{%i}Po Alpha PSD Mean vs Cell",
 		       (alpha_type==1 ? 212 : 214)));
     gApsd->SetMarkerColor(kBlue);
@@ -988,7 +1000,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gApsdW->SetMarkerStyle(8);
     gApsdW->SetMarkerSize(0.6);
     gApsdW->Draw("ap");
-    gApsdW->Fit("pol0");
+    gApsdW->Fit("fp0");
+    printf("***ApsdW\nChiSquare/NDF: %0.5f/%i\nFit: %0.5f$\\pm$%0.5f\n",fp0.GetChisquare(), fp0.GetNDF(), fp0.GetParameter(0), fp0.GetParError(0));
     gPad->Update();
     if(!P2_style){
       ps1 = (TPaveStats*)gApsdW->FindObject("stats");
@@ -1022,6 +1035,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     cCellBpsd->Divide(2,2);
   
     cCellBpsd->cd(1);
+    gBpsd->Fit("fp0");
+    printf("***Bpsd\nChiSquare/NDF: %0.5f/%i\nFit: %0.5f$\\pm$%0.5f\n",fp0.GetChisquare(), fp0.GetNDF(), fp0.GetParameter(0), fp0.GetParError(0));
+
     gBpsd->SetTitle(Form("^{%i}Bi Beta PSD Mean vs Cell",
 			 (alpha_type==1 ? 212 : 214)));
     gBpsd->SetMarkerColor(kBlue);
@@ -1060,7 +1076,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gBpsdW->SetMarkerStyle(8);
     gBpsdW->SetMarkerSize(0.6);
     gBpsdW->Draw("ap");
-    gBpsdW->Fit("pol0");
+    gBpsdW->Fit("fp0");
+    printf("***BpsdW\nChiSquare/NDF: %0.5f/%i\nFit: %0.5f$\\pm$%0.5f\n",fp0.GetChisquare(), fp0.GetNDF(), fp0.GetParameter(0), fp0.GetParError(0));
     gPad->Update();
     if(!P2_style){
       ps1 = (TPaveStats*)gBpsdW->FindObject("stats");
@@ -1093,6 +1110,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     cCelldZ->Divide(2,2);
   
     cCelldZ->cd(1);
+
+    gdZ->Fit("fp0");
+    printf("***dZ\nChiSquare/NDF: %0.5f/%i\nFit: %0.5f$\\pm$%0.5f\n",fp0.GetChisquare(), fp0.GetNDF(), fp0.GetParameter(0), fp0.GetParError(0));
     gdZ->SetTitle("Alpha-Beta dZ Mean vs Cell");
     gdZ->SetMarkerColor(kBlue);
     gdZ->SetLineColor(kBlue);
@@ -1128,7 +1148,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gdZW->SetMarkerStyle(8);
     gdZW->SetMarkerSize(0.6);
     gdZW->Draw("ap");
-    gdZW->Fit("pol0");
+    gdZW->Fit("fp0");
     gPad->Update();
     if(!P2_style){
       ps1 = (TPaveStats*)gdZW->FindObject("stats");
@@ -1156,12 +1176,14 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 
 
 
-    //Plot dZ
+    //Plot Z
     //-------------------
     cCellZ = new TCanvas("cCellZ","cCellZ",0,0,1400,600);
     cCellZ->Divide(2,1);
   
     cCellZ->cd(1);
+    gAZ->Fit("fp0");
+    printf("***AZ\nChiSquare/NDF: %0.5f/%i\nFit: %0.5f$\\pm$%0.5f\n",fp0.GetChisquare(), fp0.GetNDF(), fp0.GetParameter(0), fp0.GetParError(0));
     gAZ->SetTitle("Alpha Z-distribution Mean vs Cell");
     gAZ->SetMarkerColor(kBlue);
     gAZ->SetLineColor(kBlue);
@@ -1193,7 +1215,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gAZW->SetMarkerStyle(8);
     gAZW->SetMarkerSize(0.6);
     gAZW->Draw("ap");
-    gAZW->Fit("pol0");
+    gAZW->Fit("fp0");
+    printf("***AZW\nChiSquare/NDF: %0.5f/%i\nFit: %0.5f$\\pm$%0.5f\n",fp0.GetChisquare(), fp0.GetNDF(), fp0.GetParameter(0), fp0.GetParError(0));
     gPad->Update();
     if(!P2_style){
       ps1 = (TPaveStats*)gAZW->FindObject("stats");
@@ -1340,6 +1363,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       gAE1->SetTitle(Form("Po-%i #alpha Energy vs. Cell", (alpha_type == 1 ? 212 : 214)));
       TF1 fE("fE","pol0",0,1);
       gAE->Fit("fE");
+      printf("***AE\nChiSquare/NDF: %0.5f/%i\nFit: %0.5f$\\pm$%0.5f\n",fE.GetChisquare(), fE.GetNDF(), fE.GetParameter(0), fE.GetParError(0));
       double x, y, norm = fE.GetParameter(0);
       if(!normalize)norm = 1.0;
       for(int i=0;i<gAE->GetN();++i){
@@ -1361,14 +1385,14 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       gAE1->GetXaxis()->SetTitleSize(0.07);
       gPad->Update();
       gAE1->Write();
-      c0->SaveAs(Form("%s/PubBiPo%iEvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
+      c0->SaveAs(Form("%s/PubBiPo%iE%svsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), smear.Data(),fid.Data()));
       
       //plot 2 from technote
       bool sigma_at_1MeV = 0;
       TCanvas *c1 = new TCanvas("c1","c1",0,0,1200,300);
       TGraphErrors *gAEW1 = new TGraphErrors();
       gAEW1->SetName(Form("grE_resvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
-      gAEW1->SetTitle(Form("Po-%i #alpha Energy Resolution vs. Cell", (alpha_type == 1 ? 212 : 214)));
+      gAEW1->SetTitle(Form("Po-%i %s#alpha Energy Resolution vs. Cell", (alpha_type == 1 ? 212 : 214), smeared.Data()));
       
        if(sigma_at_1MeV){
 	norm = sqrt(norm);
@@ -1401,7 +1425,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        }
        gPad->Update();
        gAEW1->Write();
-       c1->SaveAs(Form("%s/PubBiPo%iEresvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
+       c1->SaveAs(Form("%s/PubBiPo%iE%sresvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), smear.Data(),fid.Data()));
        
       //plot 3 from technote
        TCanvas *c2 = new TCanvas("c2","c2",0,0,1200,300);
