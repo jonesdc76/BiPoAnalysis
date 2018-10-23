@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.12)  19 OCT 2018 17:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.12)  23 OCT 2018 12:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -897,15 +897,15 @@ File: ./figures/../figures/distance_cut.pdf Graphic file (type pdf)
 
 <use ./figures/../figures/distance_cut.pdf>
 Package pdftex.def Info: ./figures/../figures/distance_cut.pdf used on input li
-ne 124.
+ne 125.
 (pdftex.def)             Requested size: 469.75502pt x 222.04678pt.
  [6] [7 <./figures/../figures/distance_cut.pdf, page is rotated 90 degrees>]
-Underfull \hbox (badness 10000) in paragraph at lines 145--149
+Underfull \hbox (badness 10000) in paragraph at lines 144--148
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 150--155
+Underfull \hbox (badness 10000) in paragraph at lines 149--154
 
  []
 
@@ -913,10 +913,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 150--155
 File: figures/PubBiPo212EvsCell.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo212EvsCell.pdf>
-Package pdftex.def Info: figures/PubBiPo212EvsCell.pdf used on input line 161.
+Package pdftex.def Info: figures/PubBiPo212EvsCell.pdf used on input line 160.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 161--162
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 160--161
  [][] 
  []
 
@@ -925,10 +925,10 @@ File: figures/PubBiPo212EsmearvsCell.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo212EsmearvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo212EsmearvsCell.pdf used on input line 
-166.
+165.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 166--167
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 165--166
  [][] 
  []
 
@@ -936,10 +936,10 @@ Overfull \hbox (23.48918pt too wide) in paragraph at lines 166--167
 File: figures/PubBiPo214EvsCell.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo214EvsCell.pdf>
-Package pdftex.def Info: figures/PubBiPo214EvsCell.pdf used on input line 171.
+Package pdftex.def Info: figures/PubBiPo214EvsCell.pdf used on input line 170.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 171--172
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 170--171
  [][] 
  []
 
@@ -951,10 +951,10 @@ File: figures/PubBiPo214EsmearvsCell.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo214EsmearvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo214EsmearvsCell.pdf used on input line 
-176.
+175.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 176--177
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 175--176
  [][] 
  []
 
@@ -970,10 +970,10 @@ File: figures/PubBiPo212EresvsCell.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo212EresvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo212EresvsCell.pdf used on input line 18
-6.
+5.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 186--187
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 185--186
  [][] 
  []
 
@@ -982,10 +982,10 @@ File: figures/PubBiPo212EsmearresvsCell.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo212EsmearresvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo212EsmearresvsCell.pdf used on input li
-ne 191.
+ne 190.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 191--192
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 190--191
  [][] 
  []
 
@@ -994,10 +994,10 @@ File: figures/PubBiPo214EresvsCell.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo214EresvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo214EresvsCell.pdf used on input line 19
-6.
+5.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 196--197
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 195--196
  [][] 
  []
 
@@ -1009,10 +1009,10 @@ File: figures/PubBiPo214EsmearresvsCell.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo214EsmearresvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo214EsmearresvsCell.pdf used on input li
-ne 201.
+ne 200.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 201--202
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 200--201
  [][] 
  []
 
@@ -1030,10 +1030,10 @@ File: figures/PubBiPo212dZWidthvsCell.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo212dZWidthvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo212dZWidthvsCell.pdf used on input line
- 210.
+ 209.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 210--211
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 209--210
  [][] 
  []
 
@@ -1042,10 +1042,10 @@ File: figures/PubBiPo214dZWidthvsCell.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo214dZWidthvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo214dZWidthvsCell.pdf used on input line
- 215.
+ 214.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 215--216
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 214--215
  [][] 
  []
 
@@ -1058,10 +1058,10 @@ File: figures/PubBiPo212ZRMSvsCell.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo212ZRMSvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo212ZRMSvsCell.pdf used on input line 22
-4.
+3.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 224--225
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 223--224
  [][] 
  []
 
@@ -1070,10 +1070,10 @@ File: figures/PubBiPo214ZRMSvsCell.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo214ZRMSvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo214ZRMSvsCell.pdf used on input line 22
-9.
+8.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 229--230
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 228--229
  [][] 
  []
 
@@ -1081,222 +1081,226 @@ Overfull \hbox (23.48918pt too wide) in paragraph at lines 229--230
 
  <./figures/PubBiPo212ZRMSvsCell.pdf, page is rotated 90 degrees> <./figures/Pu
 bBiPo214ZRMSvsCell.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212EvsT.pdf, id=825, 569.12625pt x 128.48pt>
-File: figures/PubBiPo212EvsT.pdf Graphic file (type pdf)
+<figures/PubBiPo212meanZvsCell.pdf, id=825, 569.12625pt x 128.48pt>
+File: figures/PubBiPo212meanZvsCell.pdf Graphic file (type pdf)
 
-<use figures/PubBiPo212EvsT.pdf>
-Package pdftex.def Info: figures/PubBiPo212EvsT.pdf used on input line 238.
+<use figures/PubBiPo212meanZvsCell.pdf>
+Package pdftex.def Info: figures/PubBiPo212meanZvsCell.pdf used on input line 2
+37.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 238--239
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 237--238
  [][] 
  []
 
-<figures/PubBiPo212EsmearvsT.pdf, id=826, 569.12625pt x 128.48pt>
-File: figures/PubBiPo212EsmearvsT.pdf Graphic file (type pdf)
+<figures/PubBiPo214meanZvsCell.pdf, id=826, 569.12625pt x 128.48pt>
+File: figures/PubBiPo214meanZvsCell.pdf Graphic file (type pdf)
 
-<use figures/PubBiPo212EsmearvsT.pdf>
-Package pdftex.def Info: figures/PubBiPo212EsmearvsT.pdf used on input line 243
-.
+<use figures/PubBiPo214meanZvsCell.pdf>
+Package pdftex.def Info: figures/PubBiPo214meanZvsCell.pdf used on input line 2
+42.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 243--244
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 242--243
  [][] 
  []
 
 [15
 
- <./figures/PubBiPo212EvsT.pdf, page is rotated 90 degrees> <./figures/PubBiPo2
-12EsmearvsT.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo214EvsT.pdf, id=919, 569.12625pt x 128.48pt>
-File: figures/PubBiPo214EvsT.pdf Graphic file (type pdf)
+ <./figures/PubBiPo212meanZvsCell.pdf, page is rotated 90 degrees> <./figures/P
+ubBiPo214meanZvsCell.pdf, page is rotated 90 degrees>]
+<figures/PubBiPo212EvsT.pdf, id=919, 569.12625pt x 128.48pt>
+File: figures/PubBiPo212EvsT.pdf Graphic file (type pdf)
 
-<use figures/PubBiPo214EvsT.pdf>
-Package pdftex.def Info: figures/PubBiPo214EvsT.pdf used on input line 250.
+<use figures/PubBiPo212EvsT.pdf>
+Package pdftex.def Info: figures/PubBiPo212EvsT.pdf used on input line 251.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 250--251
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 251--252
  [][] 
  []
 
-<figures/PubBiPo214EsmearvsT.pdf, id=920, 569.12625pt x 128.48pt>
-File: figures/PubBiPo214EsmearvsT.pdf Graphic file (type pdf)
+<figures/PubBiPo212EsmearvsT.pdf, id=920, 569.12625pt x 128.48pt>
+File: figures/PubBiPo212EsmearvsT.pdf Graphic file (type pdf)
 
-<use figures/PubBiPo214EsmearvsT.pdf>
-Package pdftex.def Info: figures/PubBiPo214EsmearvsT.pdf used on input line 255
+<use figures/PubBiPo212EsmearvsT.pdf>
+Package pdftex.def Info: figures/PubBiPo212EsmearvsT.pdf used on input line 256
 .
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 255--256
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 256--257
  [][] 
  []
 
-[16 <./figures/PubBiPo214EvsT.pdf, page is rotated 90 degrees> <./figures/PubBi
+[16
+
+ <./figures/PubBiPo212EvsT.pdf, page is rotated 90 degrees> <./figures/PubBiPo2
+12EsmearvsT.pdf, page is rotated 90 degrees>]
+<figures/PubBiPo214EvsT.pdf, id=1013, 569.12625pt x 128.48pt>
+File: figures/PubBiPo214EvsT.pdf Graphic file (type pdf)
+
+<use figures/PubBiPo214EvsT.pdf>
+Package pdftex.def Info: figures/PubBiPo214EvsT.pdf used on input line 263.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
+
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 263--264
+ [][] 
+ []
+
+<figures/PubBiPo214EsmearvsT.pdf, id=1014, 569.12625pt x 128.48pt>
+File: figures/PubBiPo214EsmearvsT.pdf Graphic file (type pdf)
+
+<use figures/PubBiPo214EsmearvsT.pdf>
+Package pdftex.def Info: figures/PubBiPo214EsmearvsT.pdf used on input line 268
+.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
+
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 268--269
+ [][] 
+ []
+
+[17 <./figures/PubBiPo214EvsT.pdf, page is rotated 90 degrees> <./figures/PubBi
 Po214EsmearvsT.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212EresvsT.pdf, id=1013, 569.12625pt x 128.48pt>
+<figures/PubBiPo212EresvsT.pdf, id=1108, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212EresvsT.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo212EresvsT.pdf>
-Package pdftex.def Info: figures/PubBiPo212EresvsT.pdf used on input line 264.
+Package pdftex.def Info: figures/PubBiPo212EresvsT.pdf used on input line 277.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 264--265
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 277--278
  [][] 
  []
 
-<figures/PubBiPo212EsmearresvsT.pdf, id=1014, 569.12625pt x 128.48pt>
+<figures/PubBiPo212EsmearresvsT.pdf, id=1109, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212EsmearresvsT.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo212EsmearresvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo212EsmearresvsT.pdf used on input line 
-269.
+282.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 269--270
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 282--283
  [][] 
  []
 
-[17 <./figures/PubBiPo212EresvsT.pdf, page is rotated 90 degrees> <./figures/Pu
+[18 <./figures/PubBiPo212EresvsT.pdf, page is rotated 90 degrees> <./figures/Pu
 bBiPo212EsmearresvsT.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo214EresvsT.pdf, id=1108, 569.12625pt x 128.48pt>
+<figures/PubBiPo214EresvsT.pdf, id=1203, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214EresvsT.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo214EresvsT.pdf>
-Package pdftex.def Info: figures/PubBiPo214EresvsT.pdf used on input line 276.
+Package pdftex.def Info: figures/PubBiPo214EresvsT.pdf used on input line 289.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 276--277
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 289--290
  [][] 
  []
 
-<figures/PubBiPo214EsmearresvsT.pdf, id=1109, 569.12625pt x 128.48pt>
+<figures/PubBiPo214EsmearresvsT.pdf, id=1204, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214EsmearresvsT.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo214EsmearresvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo214EsmearresvsT.pdf used on input line 
-281.
+294.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 281--282
- [][] 
- []
-
-[18
-
- <./figures/PubBiPo214EresvsT.pdf, page is rotated 90 degrees> <./figures/PubBi
-Po214EsmearresvsT.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212ZrmsvsT.pdf, id=1203, 569.12625pt x 128.48pt>
-File: figures/PubBiPo212ZrmsvsT.pdf Graphic file (type pdf)
-
-<use figures/PubBiPo212ZrmsvsT.pdf>
-Package pdftex.def Info: figures/PubBiPo212ZrmsvsT.pdf used on input line 290.
-(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
-
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 290--291
- [][] 
- []
-
-<figures/PubBiPo214ZrmsvsT.pdf, id=1204, 569.12625pt x 128.48pt>
-File: figures/PubBiPo214ZrmsvsT.pdf Graphic file (type pdf)
-
-<use figures/PubBiPo214ZrmsvsT.pdf>
-Package pdftex.def Info: figures/PubBiPo214ZrmsvsT.pdf used on input line 295.
-(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
-
-Overfull \hbox (23.48918pt too wide) in paragraph at lines 295--296
+Overfull \hbox (23.48918pt too wide) in paragraph at lines 294--295
  [][] 
  []
 
 [19
 
- <./figures/PubBiPo212ZrmsvsT.pdf, page is rotated 90 degrees> <./figures/PubBi
-Po214ZrmsvsT.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212ZresvsT.pdf, id=1298, 569.12625pt x 128.48pt>
-File: figures/PubBiPo212ZresvsT.pdf Graphic file (type pdf)
+ <./figures/PubBiPo214EresvsT.pdf, page is rotated 90 degrees> <./figures/PubBi
+Po214EsmearresvsT.pdf, page is rotated 90 degrees>]
+<figures/PubBiPo212ZrmsvsT.pdf, id=1298, 569.12625pt x 128.48pt>
+File: figures/PubBiPo212ZrmsvsT.pdf Graphic file (type pdf)
 
-<use figures/PubBiPo212ZresvsT.pdf>
-Package pdftex.def Info: figures/PubBiPo212ZresvsT.pdf used on input line 303.
+<use figures/PubBiPo212ZrmsvsT.pdf>
+Package pdftex.def Info: figures/PubBiPo212ZrmsvsT.pdf used on input line 303.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 303--304
  [][] 
  []
 
-<figures/PubBiPo214ZresvsT.pdf, id=1299, 569.12625pt x 128.48pt>
-File: figures/PubBiPo214ZresvsT.pdf Graphic file (type pdf)
+<figures/PubBiPo214ZrmsvsT.pdf, id=1299, 569.12625pt x 128.48pt>
+File: figures/PubBiPo214ZrmsvsT.pdf Graphic file (type pdf)
 
-<use figures/PubBiPo214ZresvsT.pdf>
-Package pdftex.def Info: figures/PubBiPo214ZresvsT.pdf used on input line 308.
+<use figures/PubBiPo214ZrmsvsT.pdf>
+Package pdftex.def Info: figures/PubBiPo214ZrmsvsT.pdf used on input line 308.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 308--309
  [][] 
  []
 
-[20 <./figures/PubBiPo212ZresvsT.pdf, page is rotated 90 degrees> <./figures/Pu
-bBiPo214ZresvsT.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212meanZvsCell.pdf, id=1392, 569.12625pt x 128.48pt>
-File: figures/PubBiPo212meanZvsCell.pdf Graphic file (type pdf)
+[20
 
-<use figures/PubBiPo212meanZvsCell.pdf>
-Package pdftex.def Info: figures/PubBiPo212meanZvsCell.pdf used on input line 3
-16.
+ <./figures/PubBiPo212ZrmsvsT.pdf, page is rotated 90 degrees> <./figures/PubBi
+Po214ZrmsvsT.pdf, page is rotated 90 degrees>]
+<figures/PubBiPo212ZresvsT.pdf, id=1392, 569.12625pt x 128.48pt>
+File: figures/PubBiPo212ZresvsT.pdf Graphic file (type pdf)
+
+<use figures/PubBiPo212ZresvsT.pdf>
+Package pdftex.def Info: figures/PubBiPo212ZresvsT.pdf used on input line 316.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 316--317
  [][] 
  []
 
-<figures/PubBiPo214meanZvsCell.pdf, id=1393, 569.12625pt x 128.48pt>
-File: figures/PubBiPo214meanZvsCell.pdf Graphic file (type pdf)
+<figures/PubBiPo214ZresvsT.pdf, id=1393, 569.12625pt x 128.48pt>
+File: figures/PubBiPo214ZresvsT.pdf Graphic file (type pdf)
 
-<use figures/PubBiPo214meanZvsCell.pdf>
-Package pdftex.def Info: figures/PubBiPo214meanZvsCell.pdf used on input line 3
-21.
+<use figures/PubBiPo214ZresvsT.pdf>
+Package pdftex.def Info: figures/PubBiPo214ZresvsT.pdf used on input line 321.
 (pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 321--322
  [][] 
  []
 
-[21 <./figures/PubBiPo212meanZvsCell.pdf, page is rotated 90 degrees> <./figure
-s/PubBiPo214meanZvsCell.pdf, page is rotated 90 degrees>]
+[21 <./figures/PubBiPo212ZresvsT.pdf, page is rotated 90 degrees> <./figures/Pu
+bBiPo214ZresvsT.pdf, page is rotated 90 degrees>]
 <figures/PubBiPo212AlphaE.pdf, id=1486, 569.12625pt x 407.5225pt>
 File: figures/PubBiPo212AlphaE.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo212AlphaE.pdf>
-Package pdftex.def Info: figures/PubBiPo212AlphaE.pdf used on input line 329.
-(pdftex.def)             Requested size: 310.04002pt x 222.01141pt.
+Package pdftex.def Info: figures/PubBiPo212AlphaE.pdf used on input line 331.
+(pdftex.def)             Requested size: 263.06166pt x 188.37048pt.
 
 <figures/PubBiPo214AlphaE.pdf, id=1487, 569.12625pt x 407.5225pt>
 File: figures/PubBiPo214AlphaE.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo214AlphaE.pdf>
-Package pdftex.def Info: figures/PubBiPo214AlphaE.pdf used on input line 334.
-(pdftex.def)             Requested size: 310.04002pt x 222.01141pt.
+Package pdftex.def Info: figures/PubBiPo214AlphaE.pdf used on input line 336.
+(pdftex.def)             Requested size: 263.06166pt x 188.37048pt.
  [22 <./figures/PubBiPo212AlphaE.pdf, page is rotated 90 degrees> <./figures/Pu
 bBiPo214AlphaE.pdf, page is rotated 90 degrees>] <figures/PubBiPo212BetaE.pdf, 
 id=1581, 569.12625pt x 407.5225pt>
 File: figures/PubBiPo212BetaE.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo212BetaE.pdf>
-Package pdftex.def Info: figures/PubBiPo212BetaE.pdf used on input line 342.
+Package pdftex.def Info: figures/PubBiPo212BetaE.pdf used on input line 345.
 (pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
 
 <figures/PubBiPo214BetaE.pdf, id=1582, 569.12625pt x 407.5225pt>
 File: figures/PubBiPo214BetaE.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo214BetaE.pdf>
-Package pdftex.def Info: figures/PubBiPo214BetaE.pdf used on input line 347.
+Package pdftex.def Info: figures/PubBiPo214BetaE.pdf used on input line 350.
 (pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
- [23 <./figures/PubBiPo212BetaE.pdf, page is rotated 90 degrees> <./figures/Pub
-BiPo214BetaE.pdf, page is rotated 90 degrees>] <figures/PubBiPo212Zdistribution
-.pdf, id=1675, 569.12625pt x 478.78876pt>
+ [23
+
+ <./figures/PubBiPo212BetaE.pdf, page is rotated 90 degrees> <./figures/PubBiPo
+214BetaE.pdf, page is rotated 90 degrees>] <figures/PubBiPo212Zdistribution.pdf
+, id=1675, 569.12625pt x 478.78876pt>
 File: figures/PubBiPo212Zdistribution.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo212Zdistribution.pdf>
 Package pdftex.def Info: figures/PubBiPo212Zdistribution.pdf used on input line
- 355.
+ 359.
 (pdftex.def)             Requested size: 281.85587pt x 237.12901pt.
 
 <figures/PubBiPo214Zdistribution.pdf, id=1676, 569.12625pt x 478.78876pt>
@@ -1304,30 +1308,32 @@ File: figures/PubBiPo214Zdistribution.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo214Zdistribution.pdf>
 Package pdftex.def Info: figures/PubBiPo214Zdistribution.pdf used on input line
- 360.
+ 364.
 (pdftex.def)             Requested size: 281.85587pt x 237.12901pt.
- [24 <./figures/PubBiPo212Zdistribution.pdf, page is rotated 90 degrees> <./fig
-ures/PubBiPo214Zdistribution.pdf, page is rotated 90 degrees>]
+ [24
+
+ <./figures/PubBiPo212Zdistribution.pdf, page is rotated 90 degrees> <./figures
+/PubBiPo214Zdistribution.pdf, page is rotated 90 degrees>]
 <figures/PubBiPo212dZ.pdf, id=1771, 569.12625pt x 478.78876pt>
 File: figures/PubBiPo212dZ.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo212dZ.pdf>
-Package pdftex.def Info: figures/PubBiPo212dZ.pdf used on input line 368.
-(pdftex.def)             Requested size: 281.85587pt x 237.12901pt.
+Package pdftex.def Info: figures/PubBiPo212dZ.pdf used on input line 372.
+(pdftex.def)             Requested size: 258.36668pt x 217.36703pt.
 
 <figures/PubBiPo214dZ.pdf, id=1772, 569.12625pt x 478.78876pt>
 File: figures/PubBiPo214dZ.pdf Graphic file (type pdf)
 
 <use figures/PubBiPo214dZ.pdf>
-Package pdftex.def Info: figures/PubBiPo214dZ.pdf used on input line 373.
-(pdftex.def)             Requested size: 281.85587pt x 237.12901pt.
+Package pdftex.def Info: figures/PubBiPo214dZ.pdf used on input line 377.
+(pdftex.def)             Requested size: 258.36668pt x 217.36703pt.
  [25 <./figures/PubBiPo212dZ.pdf, page is rotated 90 degrees> <./figures/PubBiP
 o214dZ.pdf, page is rotated 90 degrees>]
 <figures/BiPo212AlphaPSDvsE.pdf, id=1865, 569.12625pt x 407.5225pt>
 File: figures/BiPo212AlphaPSDvsE.pdf Graphic file (type pdf)
 
 <use figures/BiPo212AlphaPSDvsE.pdf>
-Package pdftex.def Info: figures/BiPo212AlphaPSDvsE.pdf used on input line 386.
+Package pdftex.def Info: figures/BiPo212AlphaPSDvsE.pdf used on input line 390.
 
 (pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
 
@@ -1335,7 +1341,7 @@ Package pdftex.def Info: figures/BiPo212AlphaPSDvsE.pdf used on input line 386.
 File: figures/BiPo214AlphaPSDvsE.pdf Graphic file (type pdf)
 
 <use figures/BiPo214AlphaPSDvsE.pdf>
-Package pdftex.def Info: figures/BiPo214AlphaPSDvsE.pdf used on input line 391.
+Package pdftex.def Info: figures/BiPo214AlphaPSDvsE.pdf used on input line 395.
 
 (pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
 
@@ -1343,14 +1349,14 @@ Package pdftex.def Info: figures/BiPo214AlphaPSDvsE.pdf used on input line 391.
 File: figures/BiPo212BetaPSDvsE.pdf Graphic file (type pdf)
 
 <use figures/BiPo212BetaPSDvsE.pdf>
-Package pdftex.def Info: figures/BiPo212BetaPSDvsE.pdf used on input line 396.
+Package pdftex.def Info: figures/BiPo212BetaPSDvsE.pdf used on input line 400.
 (pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
 
 <figures/BiPo214BetaPSDvsE.pdf, id=1868, 569.12625pt x 407.5225pt>
 File: figures/BiPo214BetaPSDvsE.pdf Graphic file (type pdf)
 
 <use figures/BiPo214BetaPSDvsE.pdf>
-Package pdftex.def Info: figures/BiPo214BetaPSDvsE.pdf used on input line 401.
+Package pdftex.def Info: figures/BiPo214BetaPSDvsE.pdf used on input line 405.
 (pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
 
 <figures/BiPo212DeltaTSpectrum.pdf, id=1869, 569.12625pt x 407.5225pt>
@@ -1358,7 +1364,7 @@ File: figures/BiPo212DeltaTSpectrum.pdf Graphic file (type pdf)
 
 <use figures/BiPo212DeltaTSpectrum.pdf>
 Package pdftex.def Info: figures/BiPo212DeltaTSpectrum.pdf used on input line 4
-06.
+10.
 (pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
 
 <figures/BiPo214DeltaTSpectrum.pdf, id=1870, 569.12625pt x 407.5225pt>
@@ -1366,7 +1372,7 @@ File: figures/BiPo214DeltaTSpectrum.pdf Graphic file (type pdf)
 
 <use figures/BiPo214DeltaTSpectrum.pdf>
 Package pdftex.def Info: figures/BiPo214DeltaTSpectrum.pdf used on input line 4
-13.
+17.
 (pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
  [26 <./figures/BiPo212AlphaPSDvsE.pdf, page is rotated 90 degrees> <./figures/
 BiPo214AlphaPSDvsE.pdf, page is rotated 90 degrees>] [27 <./figures/BiPo212Beta
@@ -1374,6 +1380,31 @@ PSDvsE.pdf, page is rotated 90 degrees> <./figures/BiPo214BetaPSDvsE.pdf, page
 is rotated 90 degrees>] [28 <./figures/BiPo212DeltaTSpectrum.pdf, page is rotat
 ed 90 degrees> <./figures/BiPo214DeltaTSpectrum.pdf, page is rotated 90 degrees
 >]
+<figures/BiPo1HeatMap.pdf, id=2142, 569.12625pt x 407.5225pt>
+File: figures/BiPo1HeatMap.pdf Graphic file (type pdf)
+
+<use figures/BiPo1HeatMap.pdf>
+Package pdftex.def Info: figures/BiPo1HeatMap.pdf used on input line 426.
+(pdftex.def)             Requested size: 375.80544pt x 269.10869pt.
+
+<figures/BiPo0HeatMap.pdf, id=2143, 569.12625pt x 407.5225pt>
+File: figures/BiPo0HeatMap.pdf Graphic file (type pdf)
+
+<use figures/BiPo0HeatMap.pdf>
+Package pdftex.def Info: figures/BiPo0HeatMap.pdf used on input line 433.
+(pdftex.def)             Requested size: 375.80544pt x 269.10869pt.
+
+
+LaTeX Warning: Text page 29 contains only floats.
+
+
+Overfull \vbox (2.78734pt too high) has occurred while \output is active []
+
+
+[29
+
+ <./figures/BiPo1HeatMap.pdf, page is rotated 90 degrees> <./figures/BiPo0HeatM
+ap.pdf, page is rotated 90 degrees>]
 No file main.bbl.
 
 FiXme Summary: Number of notes: 0,
@@ -1382,23 +1413,23 @@ FiXme Summary: Number of notes: 0,
 (FiXme)        Number of fatal errors: 0,
 (FiXme)        Total: 0.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 426.
-[29
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 446.
+[30
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 426.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 446.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 426.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 426.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 446.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 446.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 7832C0EBBD64357C7647666B586A2E6F;2349.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 426.
+(rerunfilecheck)             Checksum: 4555E81760C5F22DB75366ADEE2097BA;2349.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 446.
  ) 
 Here is how much of TeX's memory you used:
- 18927 strings out of 493029
- 346882 string characters out of 6136233
- 453573 words of memory out of 5000000
- 22074 multiletter control sequences out of 15000+600000
+ 18942 strings out of 493029
+ 347225 string characters out of 6136233
+ 454376 words of memory out of 5000000
+ 22084 multiletter control sequences out of 15000+600000
  10205 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  43i,16n,77p,10453b,451s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1411,10 +1442,10 @@ s/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
 s/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
 mti12.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on main.pdf (30 pages, 1698483 bytes).
+Output written on main.pdf (31 pages, 1728929 bytes).
 PDF statistics:
- 2205 PDF objects out of 2487 (max. 8388607)
- 1086 compressed objects within 11 object streams
- 117 named destinations out of 1000 (max. 500000)
- 459 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2301 PDF objects out of 2487 (max. 8388607)
+ 1128 compressed objects within 12 object streams
+ 120 named destinations out of 1000 (max. 500000)
+ 469 words of extra memory for PDF output out of 10000 (max. 10000000)
 

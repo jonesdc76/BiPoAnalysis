@@ -508,7 +508,10 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool useEsmear = 1, bo
     fdt2->SetRange(t_start, t_end);
     fdt2->SetLineStyle(4);
     fdt2->Draw("same");
+    gPad->SetLeftMargin(0.1);
+    gPad->SetRightMargin(0.12);
     gPad->Update();
+    hABdt[2]->GetYaxis()->SetTitleOffset(0.8);
     TPaveText *pts = new TPaveText(0.4,0.8,0.65,0.92,"NDC");
     pts->SetShadowColor(0);
     //ptt->SetBorderSize(0);
@@ -1337,7 +1340,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool useEsmear = 1, bo
     if(!fiducialize)
       pt->Draw();
 
-    cCellRate->cd(4)->SetRightMargin(0.14);
+    cCellRate->cd(4)->SetRightMargin(0.2);
     hHeat->Draw("colz");
     gPad->Update();
     hHeat->SetTitle("Efficiency Corrected BiPo Rate by Cell");
@@ -1347,9 +1350,15 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool useEsmear = 1, bo
     hHeat->GetXaxis()->SetTitleOffset(1.0);
     hHeat->GetZaxis()->SetTitle("Count Rate (/hr)");
     hHeat->GetZaxis()->SetRangeUser(hHeat->GetMaximum()*0.6,hHeat->GetMaximum());
+    hHeat->GetZaxis()->SetTitleOffset(1);
+    hHeat->GetYaxis()->SetTitleOffset(0.8);
     gPad->Update();
-    cCellRate->SaveAs(Form("/home/jonesdc/prospect/plots/BiPRatevsCell%i%s.png", alpha_type, fid.Data()));
-  
+    cCellRate->SaveAs(Form("/home/jonesdc/prospect/plots/BiPoRatevsCell%i%s.png", alpha_type, fid.Data()));
+    TCanvas *cRate = new TCanvas("cRate","cRate",0,0,800,600);
+    cRate->SetLeftMargin(0.1);
+    cRate->SetRightMargin(0.2);
+    hHeat->Draw("colz");
+    cRate->SaveAs(Form("%s/BiPo%iHeatMap%s.pdf", gSystem->Getenv("TECHNOTE"), alpha_type, fid.Data()));
     if(technote_plots){
       TFile f("BiPoPublicationPlots.root",(recreate == 1 ? "RECREATE" : "UPDATE"),"BiPoPlots");
       gStyle->SetPadRightMargin(0.05);
