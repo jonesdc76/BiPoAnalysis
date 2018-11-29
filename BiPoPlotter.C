@@ -30,8 +30,8 @@ const double n2f = 1.0/12.0;//ratio of lengths of near to far windows
 const double f2n = 12.0;//ratio of lengths of far to near windows
 const double tmin = 0.002;//start coincidence window tmin ms away from electron
 const int kNcell = ncol * nrow;
-const int ExcludeCellArr[32] = {0,1,2,3,5,6,9,10,11,12,13,18,21,23,27,31,32,34,
-				41,44,48,52,56,63,69,79,86,87,115,122,127,139};
+const int ExcludeCellArr[32] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 21, 23, 24, 27, 28, 29, 31, 32, 34, 36, 40, 41, 42, 43, 44, 46, 47, 48, 50, 52, 55, 56, 60, 63, 68, 69, 70, 73, 79, 83, 86, 87, 94, 97, 102, 107, 115, 121, 122, 126, 127, 128, 130, 133, 136, 139, 141};
+
 bool isET(int seg){
   return (seg%14 == 13 || seg%14 == 0 || seg >= 140);
 }
