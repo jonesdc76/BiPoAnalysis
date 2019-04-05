@@ -1,10 +1,11 @@
 #!/bin/bash
-IBD=0
+IBD=1
 RUNLIST=2018C_GoodRuns.txt
-DATA_DIR=/p/lscratchh/psptexp/jonesdc/data/Analyzed/
+DATA_DIR=/p/lustre2/psptexp/user/jonesdc/data/Analyzed/
 RELEASE=Phys_2018C
 ANARELEASE=Analyzed_2018C
-FILE=AD1_BiPo.root
+FILE=AD1_BiPo_DT.root
+FILE=AD1_RnPo.root
 if [ $IBD -eq 1 ];then
     FILE=AD1_Wet_Phys.root
 fi
@@ -16,6 +17,9 @@ for i in $(cat $RUNLIST);do
     if [ ! -d $dir ];then
 	mkdir -p $dir
     fi
+    echo "Copying $i"
+    #scp borax:${DATA_DIR}/${ANARELEASE}/${i}/${FILE} ${dir}/AD1_BiPo_wDT.root
     scp borax:${DATA_DIR}/${ANARELEASE}/${i}/${FILE} ${dir}/${FILE}
+    #scp oslic:${DATA_DIR}/${ANARELEASE}/${i}/${FILE} ${dir}/${FILE}
 done
 #ssh -S $SSHSOCKET -O exit jones291@borax.llnl.gov
