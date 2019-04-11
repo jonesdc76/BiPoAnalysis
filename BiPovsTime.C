@@ -7,6 +7,7 @@
 #include "TDatime.h"
 #include "TVectorD.h"
 #include "TChain.h"
+#include "TPaveText.h"
 #include "TChainElement.h"
 #include "TCollection.h"
 #include "TStyle.h"
@@ -137,8 +138,8 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   //Set boundary cut values on energy, psd, z-pos and time
   //-------------------------------------------------------
   double f2n = F2N > 12.0 ? 12.0 : F2N, n2f = 1.0/f2n;
-  double hAE = 1.0, lAE = 0.72, hApsd = 0.34, lApsd = 0.18;//alpha
-  double highBE = 4.0, lowBE = 0.0, hPpsd = 0.2, lPpsd = 0.06;//beta
+  double hAE = 1.0, lAE = 0.67, hApsd = 0.34, lApsd = 0.18;//alpha
+  double highBE = 4.0, lowBE = 0.0, hPpsd = 0.2, lPpsd = 0.05;//beta
   double t_start = 0.01, t_end = 3 * tauBiPo;//prompt window
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset;//start time of far window 
@@ -162,8 +163,40 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   //Define histos
   //-------------------------------------------
   const int NP = 500;
+  TH1D *hOnAPSD[2], *hOffAPSD[2];
+  TH1D *hOnBPSD[2], *hOffBPSD[2];
+  TH1D *hOndZ[2], *hOffdZ[2];
+  TH1D *hOnZ[2], *hOffZ[2];
+  TH1D *hOnE[2], *hOffE[2];
+  TH1D *hOndt[2], *hOffdt[2];
+  for(int i=0;i<2;++i){
+    hOnAPSD[i] = new TH1D(Form("hOnAPSD%i",i), Form("hOnAPSD%i",i), 40, lApsd, hApsd);
+    hOnAPSD[i]->Sumw2();
+    hOffAPSD[i] = new TH1D(Form("hOffAPSD%i",i), Form("hOffAPSD%i",i), 40, lApsd, hApsd);
+    hOffAPSD[i]->Sumw2();
+    hOnBPSD[i] = new TH1D(Form("hOnBPSD%i",i), Form("hOnBPSD%i",i), 40, lPpsd, hPpsd);
+    hOnBPSD[i]->Sumw2();
+    hOffBPSD[i] = new TH1D(Form("hOffBPSD%i",i), Form("hOffBPSD%i",i), 40, lPpsd, hPpsd);
+    hOffBPSD[i]->Sumw2();
+    hOndZ[i] = new TH1D(Form("hOndZ%i",i), Form("hOndZ%i",i), 40, -200, 200);
+    hOndZ[i]->Sumw2();
+    hOffdZ[i] = new TH1D(Form("hOffdZ%i",i), Form("hOffdZ%i",i),40, -200, 200);
+    hOffdZ[i]->Sumw2();
+    hOnZ[i] = new TH1D(Form("hOnZ%i",i), Form("hOnZ%i",i), 40, -900, 900);
+    hOnZ[i]->Sumw2();
+    hOffZ[i] = new TH1D(Form("hOffZ%i",i), Form("hOffZ%i",i), 40, -900, 900);
+    hOffZ[i]->Sumw2();
+    hOnE[i] = new TH1D(Form("hOnE%i",i), Form("hOnE%i",i), 40, lAE, hAE);
+    hOnE[i]->Sumw2();
+    hOffE[i] = new TH1D(Form("hOffE%i",i), Form("hOffE%i",i), 40, lAE, hAE);
+    hOffE[i]->Sumw2();
+    hOndt[i] = new TH1D(Form("hOndt%i",i), Form("hOndt%i",i), 40, t_start, t_end);
+    hOndt[i]->Sumw2();
+    hOffdt[i] = new TH1D(Form("hOffdt%i",i), Form("hOffdt%i",i), 40, t_start, t_end);
+    hOffdt[i]->Sumw2();
+  }
   TH1D *hE[NP][N], *hEsmear[NP][N], *hAPSD[NP][N], *hBPSD[NP][N];
-  TH1D *hZ[NP][N],*hZcum[N], *hdZ[NP][N];
+  TH1D *hZ[NP][N],*hZcum[N], *hdZcum[N], *hdZ[NP][N], *hdZsingle[NP][N];
   TH1D *hdt[NP][N], *hdtbkg[NP], *hdtcum[N], *hdtbkgcum;
   double l_t = 0.005, h_t = 3*tauBiPo;
   for(int i=0;i<NP;++i){
@@ -188,6 +221,10 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
       hdZ[i][j] = new TH1D(Form("hdZ%i_%i",i,j),Form("hdZ%i_%i",i,j), nBINS, -200,200);
       hdZ[i][j]->Sumw2();
  
+
+      hdZsingle[i][j] = new TH1D(Form("hdZsingle%i_%i",i,j),Form("hdZsingle%i_%i",i,j), nBINS, -200,200);
+      hdZsingle[i][j]->Sumw2();
+ 
       hdt[i][j] = new TH1D(Form("hdt%i_%i",i,j),Form("hdt%i_%i",i,j), nBINS, t_start, t_end);
       hdt[i][j]->Sumw2();
    }
@@ -203,6 +240,10 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   hZcum[0]->Sumw2();
   hZcum[1] = new TH1D(Form("hZcum1"),Form("hZcum1"), nbins, -1000, 1000);
   hZcum[1]->Sumw2();
+  hdZcum[0] = new TH1D(Form("hdZcum0"),Form("hdZcum0"), nbins, -200, 200);
+  hdZcum[0]->Sumw2();
+  hdZcum[1] = new TH1D(Form("hdZcum1"),Form("hdZcum1"), nbins, -200, 200);
+  hdZcum[1]->Sumw2();
   //-------------------------------------------
 
   
@@ -222,10 +263,10 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     effAE[i] = 0, effAPSD[i] = 0, effBPSD[i] = 0, effdZ[i] = 0;
   }
 
-  double tot_live = 0;
+  double tot_live = 0, t_on = 0, t_off = 0;
   Long64_t nEnt = Long64_t(bp->fChain->GetEntries()/10);
   cout<<nEnt<<endl;
-  bool prev_rxstat = 0;
+  bool prev_rxstat = 0, rxstat = 0;
   for(Long64_t i=0;i<bp->fChain->GetEntries();++i){
     bp->LoadTree(i);
     bp->GetEntry(i);
@@ -237,7 +278,12 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
       double ts = TString(st(st.Last('/')-10,10)).Atof();
 
       //stop when statistics accumulated and break at detector off period
-      bool rxstat = RxStat(int(ts));
+      rxstat = RxStat(int(ts));
+      if(rxstat){
+	t_on += rt - 2 * deadt;
+      }else{
+	t_off += rt - 2 * deadt;
+      }
       double rxOnScale = (rxstat ? 3 : 1);
       if(alpha_type == 1)rxOnScale = 1.0;
       bool onoffchange = (prev_rxstat != rxstat && i!=0);
@@ -276,7 +322,8 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     
     //Fill Prompt Window Plots
     //-------------------------------------------
-    double scale = 0;
+    double scale = 0, end_t = alpha_type==1 ? t_end : 3*tauBiPo;
+    vector<double> vdz;
     for(int j=0;j<bp->mult_prompt;++j){
       if( (bp->pmult_clust->at(j) != bp->pmult_clust_ioni->at(j)) )
       	continue;//throw out clusters with recoils mixed in
@@ -303,14 +350,35 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
       if(dt > t_start && dt < t_end){
 	++scale;
 	hBPSD[p][0]->Fill(bp->pPSD->at(j));
+	//if(bp->aseg==bp->pseg->at(j))
 	hdZ[p][0]->Fill(bp->az-bp->pz->at(j));
+	hdZcum[0]->Fill(bp->az-bp->pz->at(j));
+	if(dt < end_t)
+	  vdz.push_back(bp->az-bp->pz->at(j));
 	hdt[p][0]->Fill(dt);
 	hdtcum[0]->Fill(dt);
+	if(rxstat){
+	  hOnAPSD[0]->Fill(bp->aPSD);
+	  hOnBPSD[0]->Fill(bp->pPSD->at(j));
+	  hOnZ[0]->Fill(bp->az);
+	  hOndZ[0]->Fill(bp->az-bp->pz->at(j));
+	  hOnE[0]->Fill(bp->aE);
+	  hOndt[0]->Fill(dt);
+	}else{
+	  hOffAPSD[0]->Fill(bp->aPSD);
+	  hOffBPSD[0]->Fill(bp->pPSD->at(j));
+	  hOffZ[0]->Fill(bp->az);
+	  hOffdZ[0]->Fill(bp->az-bp->pz->at(j));
+	  hOffE[0]->Fill(bp->aE);
+	  hOffdt[0]->Fill(dt);
+	}
       }
     }
     hE[p][0]->Fill(bp->aE, scale);
     hEsmear[p][0]->Fill(bp->aEsmear, scale);
     hAPSD[p][0]->Fill(bp->aPSD, scale);
+    if(vdz.size()==1)//accept only single multiplicity
+      hdZsingle[p][0]->Fill(vdz.at(0));
     hZ[p][0]->Fill(bp->az, scale);
     hZcum[0]->Fill(bp->az, scale);
     //-------------------------------------------
@@ -319,6 +387,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     //Fill Far Window Plots
     //-------------------------------------------
     scale = 0;
+    vdz.clear();
     for(int j=0;j<bp->mult_far;++j){
       if( (bp->fmult_clust->at(j) != bp->fmult_clust_ioni->at(j)) )
       	continue;//throw out clusters with recoils mixed in
@@ -338,20 +407,43 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
       double dt = bp->ft->at(j) - bp->at;
       if(dt > ft_start && dt < ft_end){
 	++scale;
+	if(dt>ft_start + t_start && dt < ft_start + end_t){
+	  vdz.push_back(bp->az-bp->fz->at(j));
+	}
 	dt -= ft_start;
 	if(modular_far_window)
 	  dt = (dt/(t_end-t_start)  - int(dt/(t_end-t_start)))*(t_end-t_start);
 	else dt *= n2f;
 	dt += t_start;
-	hBPSD[p][1]->Fill(bp->fPSD->at(j), n2f);
+	//if(bp->aseg==bp->fseg->at(j))
 	hdZ[p][1]->Fill(bp->az-bp->fz->at(j), n2f);
+	hdZcum[1]->Fill(bp->az-bp->fz->at(j), n2f);
+	hBPSD[p][1]->Fill(bp->fPSD->at(j), n2f);
 	hdt[p][1]->Fill(dt, n2f);
 	hdtcum[1]->Fill(dt, n2f);
+
+	if(rxstat){
+	  hOnAPSD[1]->Fill(bp->aPSD, n2f);
+	  hOnBPSD[1]->Fill(bp->fPSD->at(j), n2f);
+	  hOnZ[1]->Fill(bp->az, n2f);
+	  hOndZ[1]->Fill(bp->az-bp->fz->at(j), n2f);
+	  hOnE[1]->Fill(bp->aE, n2f);
+	  hOndt[1]->Fill(dt, n2f);
+	}else{
+	  hOffAPSD[1]->Fill(bp->aPSD, n2f);
+	  hOffBPSD[1]->Fill(bp->fPSD->at(j), n2f);
+	  hOffZ[1]->Fill(bp->az, n2f);
+	  hOffdZ[1]->Fill(bp->az-bp->fz->at(j), n2f);
+	  hOffE[1]->Fill(bp->aE, n2f);
+	  hOffdt[1]->Fill(dt, n2f);
+	}
       }
     }
     hE[p][1]->Fill(bp->aE, n2f*scale);
     hEsmear[p][1]->Fill(bp->aEsmear, n2f*scale);
     hAPSD[p][1]->Fill(bp->aPSD, n2f*scale);
+    if(vdz.size() == 1)//accept only single multiplicity
+      hdZsingle[p][1]->Fill(vdz.at(0));
     hZ[p][1]->Fill(bp->az, n2f*scale);
     hZcum[1]->Fill(bp->az, n2f*scale);
     //-------------------------------------------
@@ -362,10 +454,6 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   cout<<endl;
   cout<<"Total live time "<<tot_live<<endl;
   TString title[3] = {"(^{214}Bi-->^{214}Po-->^{208}Pb) ","(^{212}Bi-->^{212}Po-->^{210}Pb) ","(Bi-->Po-->Pb) "};
-
-  //Set time offset to beginning of data taking Mar 5, 2018 18:36
-  //TDatime da(2018,04,17,23,15,46);
-  // gStyle->SetTimeOffset(da.Convert());
 
   //BiPo rate and efficiency plots
   TGraphErrors *grR = new TGraphErrors();
@@ -471,8 +559,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
       if(hE[i][1]->GetBinContent(j)==0 && hE[i][0]->GetBinContent(j)>0){
 	cout<<"Changing error for hE["<<j<<"][1] from "
 	    <<hE[i][1]->GetBinError(j)<<" to 1.0"<<endl;
-	hE[i][1]->SetBinError(j,n2f);
-      }
+	hE[i][1]->SetBinError(j,n2f);      }
     }
     hE[i][2] = (TH1D*)hE[i][0]->Clone(Form("hE%i_2",i));
     hE[i][2]->Add(hE[i][1], -1);
@@ -493,7 +580,8 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
       hE[i][2]->Draw("same");
       TPaveText pt(0.75,0.75,1,1,"ndc");
       gPad->Update();
-      hE[i][2]->GetYaxis()->SetRangeUser(-0.1*hE[i][0]->GetMaximum(),1.1*hE[i][0]->GetMaximum());
+      hE[i][0]->GetYaxis()->SetLimits(-0.1*hE[i][0]->GetMaximum(),1.1*hE[i][0]->GetMaximum());
+      hE[i][0]->GetYaxis()->SetRangeUser(-0.1*hE[i][0]->GetMaximum(),1.1*hE[i][0]->GetMaximum());
       pt.SetFillColor(0);
       pt.SetShadowColor(0);
       pt.AddText(Form("#chi^{2}/NDF:  %0.3f",f.GetChisquare()/double(f.GetNDF())));
@@ -586,6 +674,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   grAPSDW->SetMarkerSize(0.8);
   grAPSDW->SetLineColor(kBlue);
   grAPSDW->SetTitle(Form("%s #alpha PSD 1#sigma Width vs Time",title[alpha_type].Data()));
+  
   double psd_m = 0.25, psd_w = 0.017;
   for(int i=0;i<=p; i++){
     //Remove zero error bins which bias fits
@@ -659,7 +748,15 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   grBPSDW->SetMarkerSize(0.8);
   grBPSDW->SetLineColor(kBlue);
   grBPSDW->SetTitle(Form("%s #beta PSD 1#sigma Width vs Time",title[alpha_type].Data()));
-  psd_m = 0.135; psd_w = 0.012;
+
+  TGraph *grFOM = new TGraph();
+  grFOM->SetMarkerColor(kBlue);
+  grFOM->SetMarkerStyle(8);
+  grFOM->SetMarkerSize(0.8);
+  grFOM->SetLineColor(kBlue);
+  grFOM->SetTitle(Form("%s PSD FOM vs Time (#alpha_{PSD}-#beta_{PSD})/(#sigma_{#alpha}+#sigma_{#beta})",title[alpha_type].Data()));
+  
+  psd_m = 0.148; psd_w = 0.016;
   for(int i=0;i<=p; i++){
     //Remove zero error bins which bias fits
     for(int j=1;j<=hBPSD[i][0]->GetNbinsX();++j){
@@ -674,23 +771,36 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
 	hBPSD[i][1]->SetBinError(j,n2f);
       }
     }
-    TF1 f("f","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))",0,1); 
+    TF1 f("f","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))+[3]*exp(-pow(x-[1],2)/(2*pow([4],2)))",0,1); 
     hBPSD[i][2] = (TH1D*)hBPSD[i][0]->Clone(Form("hBPSD%i_2",i));
     hBPSD[i][2]->Add(hBPSD[i][1], -1);
-    f.SetParameters(hBPSD[i][2]->GetMaximum(), psd_m, psd_w);
-    f.SetRange(psd_m-2.5*psd_w, psd_m+2.5*psd_w);
-    hBPSD[i][2]->Fit("f", "rq");
+    f.SetParameters(hBPSD[i][2]->GetMaximum()*0.86, psd_m, psd_w,hBPSD[i][2]->GetMaximum()*0.14,2*psd_w);
+    f.SetRange(lPpsd, hPpsd);
+    if(0){
+      f.FixParameter(3,0);
+      f.FixParameter(4,1);
+      f.SetRange(psd_m-2.5*psd_w, psd_m+2.5*psd_w);
+   }
+    hBPSD[i][2]->Fit("f", "rqb");
     psd_m = f.GetParameter(1); psd_w = f.GetParameter(2);
     gPad->Update();
     if(slow) sleep(1);
     double lnsig = (f.GetParameter(1) - lPpsd)/f.GetParameter(2);
     double hnsig = (hPpsd - f.GetParameter(1))/f.GetParameter(2);
     effBPSD[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
+    effBPSD[i] = f.Integral(lPpsd, hPpsd)/f.Integral(-2,2);
     grEffBPSD->SetPoint(i,t[i],effBPSD[i]);
     grBPSD->SetPoint(i, t[i], f.GetParameter(1));
     grBPSD->SetPointError(i, 0, f.GetParError(1));
     grBPSDW->SetPoint(i, t[i], f.GetParameter(2));
     grBPSDW->SetPointError(i, 0, f.GetParError(2));
+    double x, y;
+    grAPSD->GetPoint(i, x, y);
+    double fom = y-f.GetParameter(1);
+    grAPSDW->GetPoint(i, x, y);
+    fom /= (y + f.GetParameter(2));
+    grFOM->SetPoint(i, t[i], fom);
+    //    grFOM->SetPointError(i, 0, fom);
   }
   grBPSD->Draw("ap");
   gPad->Update();
@@ -712,7 +822,13 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   grBPSDW->Fit("pol0");
   gPad->Update();
   cBPSD->SaveAs(Form("../plots/BiPoBeta%iPSDvsT%s.png", alpha_type, fid.Data()));
-
+  TCanvas *cFOM = new TCanvas("cFOM","cFOM",0,0,800,600);
+  grFOM->Draw("ap");
+  gPad->Update();
+  grFOM->GetXaxis()->SetTimeDisplay(1);
+  grFOM->GetXaxis()->SetTimeFormat("%b %d");
+  grFOM->GetXaxis()->SetTitle("Date in 2018");
+  grFOM->GetYaxis()->SetTitle("FOM");
 
   //BiPo Z plots
   TCanvas *cZ = new TCanvas("cZ","cZ",0,0,1200,600);
@@ -777,7 +893,17 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   grdZW->SetMarkerSize(0.8);
   grdZW->SetLineColor(kBlue);
   grdZW->SetTitle(Form("%s #alpha-#beta dZ Width vs Time",title[alpha_type].Data()));
-
+  gStyle->SetOptFit(1111);
+  TCanvas *cdZcum = new TCanvas("cdZcum","cdZcum",0,0,600,500);
+  TF1 *fgaus = new TF1("fgaus","[0]*exp(-pow(x,2)/(2*pow([1],2)))+[2]*exp(-pow(x,2)/(2*pow([3],2)))",0,1);
+  hdZcum[0]->Add(hdZcum[1],-1);
+  fgaus->SetRange(-200, 200);
+  fgaus->SetParameters(hdZcum[0]->GetMaximum()*0.9, 45,hdZcum[0]->GetMaximum()*0.1,90);
+  hdZcum[0]->Fit(fgaus, "r");
+  hdZcum[0]->Draw();
+  double dz_w1 = fgaus->GetParameter(1);
+  double dz_w2 = fgaus->GetParameter(3);
+  TCanvas *cdbg = new TCanvas("cdbg","cdbg",0,0,600,500);
   for(int i=0;i<=p; i++){
     //Remove zero error bins which bias fits
     for(int j=1;j<=hdZ[i][0]->GetNbinsX();++j){
@@ -788,44 +914,65 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
       }
       if(hdZ[i][1]->GetBinContent(j)==0 && hdZ[i][0]->GetBinContent(j)>0){
 	cout<<"Changing error for hdZ["<<j<<"][1] from "
-	    <<hdZ[i][1]->GetBinError(j)<<" to "<<n2f<<endl;
-	hdZ[i][1]->SetBinError(j,n2f);
+	    <<hdZ[i][1]->GetBinError(j)<<" to "<<1<<endl;
+	hdZ[i][1]->SetBinError(j, 1);
       }
     }
-    TF1 f("f","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))",0,1); 
+    fgaus->SetRange(-200, 200);
     hdZ[i][2] = (TH1D*)hdZ[i][0]->Clone(Form("hdZ%i_2",i));
+    hdZ[i][2]->SetLineColor(kRed);
+    hdZ[i][1]->SetLineColor(kMagenta);
     hdZ[i][2]->Add(hdZ[i][1], -1);
-    f.SetParameters(hdZ[i][2]->GetMaximum(), 0, 55);
-    f.SetRange(-120, 120);
-    hdZ[i][2]->Draw();
-    hdZ[i][2]->Fit("f", "rq");
-    double lnsig = (f.GetParameter(1) + 200)/f.GetParameter(2);
-    double hnsig = (200 - f.GetParameter(1))/f.GetParameter(2);
+    fgaus->SetParameters(hdZ[i][2]->GetMaximum()*0.9, dz_w1,hdZ[i][2]->GetMaximum()*0.1,dz_w2);
+    fgaus->FixParameter(3, dz_w2);
+    hdZ[i][0]->Draw();
+    hdZ[i][1]->Draw("same");
+    hdZ[i][2]->Draw("sames");
+    hdZ[i][2]->Fit(fgaus, "r");
+    gPad->Update();
+    hdZ[i][0]->GetYaxis()->SetRangeUser(-0.1*hdZ[i][0]->GetMaximum(), 1.1*hdZ[i][0]->GetMaximum());
+    double lnsig = (fgaus->GetParameter(1) + 200)/fgaus->GetParameter(2);
+    double hnsig = (200 - fgaus->GetParameter(1))/fgaus->GetParameter(2);
     effdZ[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
+    effdZ[i] = fgaus->Integral(-200,200)/fgaus->Integral(-1000,1000);
     grEffdZ->SetPoint(i,t[i],effdZ[i]);
     gPad->Update();
     if(slow) sleep(1);
-    grdZ->SetPoint(i, t[i], f.GetParameter(1));
-    grdZ->SetPointError(i, 0, f.GetParError(1));
-    grdZW->SetPoint(i, t[i], f.GetParameter(2));
-    grdZW->SetPointError(i, 0, f.GetParError(2));
+    grdZ->SetPoint(i, t[i], fgaus->GetParameter(0)/ fgaus->GetParameter(2));
+    double var = pow(fgaus->GetParError(0)/fgaus->GetParameter(0),2);
+    var += pow(fgaus->GetParError(2)/fgaus->GetParameter(2),2);
+    grdZ->SetPointError(i, 0, sqrt(var)*fgaus->GetParameter(0)/fgaus->GetParameter(2));
+    grdZW->SetPoint(i, t[i], fgaus->GetParameter(1));
+    grdZW->SetPointError(i, 0, fgaus->GetParError(1));
+    TDatime td(t[i]);
+    cdbg->SaveAs(Form("../plots/dZ%02i_%02i_%02i_%i.png", td.GetMonth(), td.GetDay(), td.GetHour(), (alpha_type == 1?212:214)));
   }
+  cdZ->cd(1);
   grdZ->Draw("ap");
   gPad->Update();
-  grdZ->GetYaxis()->SetTitle("dZ (mm)");
+  grdZ->SetTitle(Form("%s Distribution Amplitude Ratio vs Time", title[alpha_type].Data()));
+  grdZ->GetYaxis()->SetTitle("Ratio");
   grdZ->GetXaxis()->SetTimeDisplay(1);
   grdZ->GetXaxis()->SetTimeFormat("%m/%d");
   grdZ->GetXaxis()->SetTitle("Date in 2018");
   grdZ->Fit("pol0");
+  AddShade(grdZ);
+  // TPaveText *pt1 = new TPaveText(0.15,0.7,0.5,0.8,"ndc");
+  // pt1->SetFillColor(0);
+  // pt1->SetShadowColor(0);
+  // pt1->SetBorderSize(0);
+  // pt1->AddText(Form("Width of D2: %0.2f#pm%0.2f",fgaus->GetParameter(3),fgaus->GetParError(3)));
+  // pt1->Draw();
   gPad->Update();
   cdZ->cd(2);
   grdZW->Draw("ap");
   gPad->Update();
-  grdZW->GetYaxis()->SetTitle("dZ Width (MeV)");
+  grdZW->GetYaxis()->SetTitle("dZ Width (mm)");
   grdZW->GetXaxis()->SetTimeDisplay(1);
   grdZW->GetXaxis()->SetTimeFormat("%m/%d");
   grdZW->GetXaxis()->SetTitle("Date in 2018");
   grdZW->Fit("pol0");
+  AddShade(grdZW);
   gPad->Update();
   cdZ->SaveAs(Form("../plots/BiPodZ%ivsT%s.png", alpha_type, fid.Data()));
 
@@ -1171,9 +1318,6 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     gPad->Update();
     grZWpub->Write();
     c4->SaveAs(Form("%s/PubBiPo%iZrmsvsT%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), fid.Data()));
-
-
-
     f.Close();
   }
   TCanvas *cZcum = new TCanvas("cZcum","cZcum",0,0,800,600);
@@ -1245,5 +1389,138 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   printf("%7.1e   %7.1e %5.1f   %6.2f  %9.2e  %0.4f+/-%0.4f   %0.3f", t_start, t_end, f2n, lAE, ft_start, rate212, rate212err, rate212prob);
   printf("   %0.3f+/-%0.3f  %0.3f  %0.3e+/-%0.3e  %0.3f", rate214, rate214err, rate214prob, pol0th212, pol0th212err, pol0th212prob);
   printf("   %0.3e+/-%0.3e    %0.3e+/-%0.3e   %0.3e+/-%0.3e   %0.3f \n", A212, A212err, th212, th212err, A214, A214err, probdt);
+
+  //On/Off comparison
+  TCanvas *conoff = new TCanvas("conoff","conoff",0,0,1900,900);
+  gStyle->SetOptStat(0);
+  conoff->Divide(3,2);
+  conoff->cd(1)->SetGrid();
+  hOnAPSD[0]->Scale(1/t_on);
+  hOnAPSD[1]->Scale(1/t_on);
+  hOnAPSD[0]->Add(hOnAPSD[1],-1);
+  hOnAPSD[0]->SetTitle("Alpha PSD");
+  hOnAPSD[0]->SetLineColor(kRed);
+  hOnAPSD[0]->SetLineWidth(2);
+  hOnAPSD[0]->Draw();
+  gPad->Update();
+  hOnAPSD[0]->GetYaxis()->SetRangeUser(-0.2*hOnAPSD[0]->GetMaximum(),hOnAPSD[0]->GetMaximum()*1.1);
+  hOffAPSD[0]->Scale(1/t_off);
+  hOffAPSD[1]->Scale(1/t_off);
+  hOffAPSD[0]->Add(hOffAPSD[1],-1);
+  hOffAPSD[0]->SetLineWidth(2);
+  hOffAPSD[0]->SetLineColor(kBlue);
+  hOffAPSD[0]->Draw("sames");
+  hOffAPSD[1]->Add(hOffAPSD[0],hOnAPSD[0],-1,1);
+  hOffAPSD[1]->SetLineWidth(2);
+  hOffAPSD[1]->SetLineColor(kGreen+2);
+  hOffAPSD[1]->Draw("same");
+  
+  conoff->cd(2)->SetGrid();
+  hOnBPSD[0]->Scale(1/t_on);
+  hOnBPSD[1]->Scale(1/t_on);
+  hOnBPSD[0]->Add(hOnBPSD[1],-1);
+  hOnBPSD[0]->SetTitle("Beta PSD");
+  hOnBPSD[0]->SetLineColor(kRed);
+  hOnBPSD[0]->SetLineWidth(2);
+  hOnBPSD[0]->Draw();
+  gPad->Update();
+  hOnBPSD[0]->GetYaxis()->SetRangeUser(-0.2*hOnBPSD[0]->GetMaximum(),hOnBPSD[0]->GetMaximum()*1.1);
+  hOffBPSD[0]->Scale(1/t_off);
+  hOffBPSD[1]->Scale(1/t_off);
+  hOffBPSD[0]->Add(hOffBPSD[1],-1);
+  hOffBPSD[0]->SetLineWidth(2);
+  hOffBPSD[0]->SetLineColor(kBlue);
+  hOffBPSD[0]->Draw("sames");
+  hOffBPSD[1]->Add(hOffBPSD[0],hOnBPSD[0],-1,1);
+  hOffBPSD[1]->SetLineWidth(2);
+  hOffBPSD[1]->SetLineColor(kGreen+2);
+  hOffBPSD[1]->Draw("same");
+  
+  conoff->cd(3)->SetGrid();
+  hOnE[0]->Scale(1/t_on);
+  hOnE[1]->Scale(1/t_on);
+  hOnE[0]->Add(hOnE[1],-1);
+  hOnE[0]->SetTitle("Alpha E");
+  hOnE[0]->SetLineWidth(2);
+  hOnE[0]->SetLineColor(kRed);
+  hOnE[0]->Draw();
+  gPad->Update();
+  hOnE[0]->GetYaxis()->SetRangeUser(-0.2*hOnE[0]->GetMaximum(),hOnE[0]->GetMaximum()*1.1);
+  hOffE[0]->Scale(1/t_off);
+  hOffE[1]->Scale(1/t_off);
+  hOffE[0]->Add(hOffE[1],-1);
+  hOffE[0]->SetLineWidth(2);
+  hOffE[0]->SetLineColor(kBlue);
+  hOffE[0]->Draw("sames");
+  hOffE[1]->Add(hOffE[0],hOnE[0],-1,1);
+  hOffE[1]->SetLineWidth(2);
+  hOffE[1]->SetLineColor(kGreen+2);
+  hOffE[1]->Draw("same");
+  
+  conoff->cd(4)->SetGrid();
+  hOnZ[0]->Scale(1/t_on);
+  hOnZ[1]->Scale(1/t_on);
+  hOnZ[0]->Add(hOnZ[1],-1);
+  hOnZ[0]->SetTitle("Alpha Z");
+  hOnZ[0]->SetLineWidth(2);
+  hOnZ[0]->SetLineColor(kRed);
+  hOnZ[0]->Draw();
+  gPad->Update();
+  hOnZ[0]->GetYaxis()->SetRangeUser(-0.3*hOnZ[0]->GetMaximum(),hOnZ[0]->GetMaximum()*1.1);
+  hOffZ[0]->Scale(1/t_off);
+  hOffZ[1]->Scale(1/t_off);
+  hOffZ[0]->Add(hOffZ[1],-1);
+  hOffZ[0]->SetLineWidth(2);
+  hOffZ[0]->SetLineColor(kBlue);
+  hOffZ[0]->Draw("sames");
+  hOffZ[1]->Add(hOffZ[0],hOnZ[0],-1,1);
+  hOffZ[1]->SetLineWidth(2);
+  hOffZ[1]->SetLineColor(kGreen+2);
+  hOffZ[1]->Draw("same");
+  
+  conoff->cd(5)->SetGrid();
+  hOndZ[0]->Scale(1/t_on);
+  hOndZ[1]->Scale(1/t_on);
+  hOndZ[0]->Add(hOndZ[1],-1);
+  hOndZ[0]->SetTitle("Alpha-Beta dZ");
+  hOndZ[0]->SetLineWidth(2);
+  hOndZ[0]->SetLineColor(kRed);
+  hOndZ[0]->Draw();
+  gPad->Update();
+  hOndZ[0]->GetYaxis()->SetRangeUser(-0.2*hOndZ[0]->GetMaximum(),hOndZ[0]->GetMaximum()*1.1);
+  hOffdZ[0]->Scale(1/t_off);
+  hOffdZ[1]->Scale(1/t_off);
+  hOffdZ[0]->Add(hOffdZ[1],-1);
+  hOffdZ[0]->SetLineWidth(2);
+  hOffdZ[0]->SetLineColor(kBlue);
+  hOffdZ[0]->Draw("sames");
+  hOffdZ[1]->Add(hOffdZ[0],hOndZ[0],-1,1);
+  hOffdZ[1]->SetLineWidth(2);
+  hOffdZ[1]->SetLineColor(kGreen+2);
+  hOffdZ[1]->Draw("same");
+  
+  conoff->cd(6)->SetGrid();
+  hOndt[0]->Scale(1/t_on);
+  hOndt[1]->Scale(1/t_on);
+  hOndt[0]->Add(hOndt[1],-1);
+  hOndt[0]->SetTitle("Alpha-Beta dt");
+  hOndt[0]->SetLineWidth(2);
+  hOndt[0]->SetLineColor(kRed);
+  hOndt[0]->Draw();
+  gPad->Update();
+  hOndt[0]->GetYaxis()->SetRangeUser(-0.1*hOndt[0]->GetMaximum(),hOndt[0]->GetMaximum()*1.1);
+  hOffdt[0]->Scale(1/t_off);
+  hOffdt[1]->Scale(1/t_off);
+  hOffdt[0]->Add(hOffdt[1],-1);
+  hOffdt[0]->SetLineWidth(2);
+  hOffdt[0]->SetLineColor(kBlue);
+  hOffdt[0]->Draw("sames");
+  hOffdt[1]->Add(hOffdt[0],hOndt[0],-1,1);
+  hOffdt[1]->SetLineWidth(2);
+  hOffdt[1]->SetLineColor(kGreen+2);
+  hOffdt[1]->Draw("same");
+
+  cout<<"Time on: "<<t_on/3600.<<". Time off: "<<t_off/3600.0<<endl;
+  cout<<"Combined: "<<(t_on+t_off)/3600.<<" "<<tot_live<<endl;
   return hZcum[2];
 }

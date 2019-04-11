@@ -5,7 +5,7 @@ DATA_DIR=/p/lustre2/psptexp/user/jonesdc/data/Analyzed/
 RELEASE=Phys_2018C
 ANARELEASE=Analyzed_2018C
 FILE=AD1_BiPo_DT.root
-FILE=AD1_RnPo.root
+FILE=AD1_BiPo.root
 if [ $IBD -eq 1 ];then
     FILE=AD1_Wet_Phys.root
 fi
