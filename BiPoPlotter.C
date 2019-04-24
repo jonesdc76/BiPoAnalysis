@@ -29,6 +29,7 @@ const double kCellSize = 146.0;//cell cross sectional size in mm
 const double kMaxDisplacement = 550.0;//maximum displacement between alpha and beta (max pulse in prompt cluster)
 const double tauBiPo = 0.1643/log(2); 
 const double F2N = 100.0;//ratio of lengths of far to near windows
+const double MAX_DZ = 200;//maximum z-displacement between prompt and delay
 const double tmin = 0.01;//start coincidence window tmin ms away from electron
 const int kNcell = ncol * nrow;
 const int ExcludeCellArr[63] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 21, 23, 24, 27, 28, 29, 31, 32, 34, 36, 40, 41, 42, 43, 44, 46, 47, 48, 50, 52, 55, 56, 60, 63, 68, 69, 70, 73, 79, 83, 86, 87, 94, 97, 102, 107, 115, 121, 122, 126, 127, 128, 130, 133, 136, 139, 141};
@@ -112,12 +113,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   //-------------------------------------------------------
   double f2n = F2N > 12.0 ? 12.0 : F2N, n2f = 1.0/f2n;
   double hAE = 1.0, lAE = 0.72, hApsd = 0.34, lApsd = 0.18;//alpha
-  double highBE = 4.0, lowBE = 0, hPpsd = 0.2, lPpsd = 0.06;//beta
+  double highBE = 4.0, lowBE = 0, hPpsd = 0.22, lPpsd = 0.05;//beta
   double t_start = 0.01, t_end = 3 * tauBiPo;//prompt window
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset;//start time of far window 
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
-  double  ldZ = -200, hdZ = 200, fidZ = fiducialize ? 1000.0 : 1000.0;//444.0;
+  double  l_dZ = alpha_type==1 ? -MAX_DZ : -250, h_dZ = fabs(l_dZ);
+  double fidZ = fiducialize ? 1000.0 : 1000.0;//444.0;
   if(alpha_type == 1){
     t_start = 7.0e-4;
     t_end = 0.0017;
@@ -149,6 +151,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   
   //1. PSD plots 
   TH2D *hBPSDvE[N], *hAPSDvE[N], *hBPSDvZ[N], *hAPSDvZ[N];
+  TH1D *hBPSD[N], *hHamBPSD[N], *hETBPSD[N];
   TCanvas *cPSD, *cPSDBkSub;
   cout<<plots["psd"]<<endl;
   if(bool(plots["psd"] & which_plots)){
@@ -162,11 +165,15 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       hAPSDvZ[i]->Sumw2();
       hBPSDvZ[i] = new TH2D(Form("hBPSDvZ%i",i),Form("%s #beta PSD vs. Z-position", title[alpha_type].Data()),200,-1000,1000,200,lPpsd,hPpsd);
       hBPSDvZ[i]->Sumw2();
+      hHamBPSD[i] = new TH1D(Form("hHamBPSD%i",i),Form("%s #beta PSD (Ham)", title[alpha_type].Data()),200,lPpsd,hPpsd);
+      hHamBPSD[i]->Sumw2();
+      hETBPSD[i] = new TH1D(Form("hETBPSD%i",i),Form("%s #beta PSD (ET)", title[alpha_type].Data()),200,lPpsd,hPpsd);
+      hETBPSD[i]->Sumw2();
     }
   }
 
   //2. Z-position distribution plots
-  TH1D *hAZ[N], *hAdZ[N];
+  TH1D *hAZ[N], *hAdZ[N], *hHamdZ[N],  *hETdZ[N];
   TCanvas *cZ;
   TF1 *fdz = new TF1("fdz","[0]*exp(-0.5*pow(x/[1],2))", -100, 100);
   fdz->SetParName(0,"A{1}");
@@ -180,10 +187,21 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       hAZ[i]->Sumw2();
       hAZ[i]->SetMarkerColor(col[i]);
       hAZ[i]->SetLineColor(col[i]);
-      hAdZ[i] = new TH1D(Form("hAdZ%i",i),Form("%s #DeltaZ-Distribution", title[alpha_type].Data()),nBINS,-210,210);
+      
+      hAdZ[i] = new TH1D(Form("hAdZ%i",i),Form("%s #DeltaZ-Distribution", title[alpha_type].Data()),nBINS,l_dZ, h_dZ);
       hAdZ[i]->Sumw2();
       hAdZ[i]->SetMarkerColor(col[i]);
       hAdZ[i]->SetLineColor(col[i]);
+      
+      hHamdZ[i] = new TH1D(Form("hHamdZ%i",i),Form("%s #DeltaZ-Distribution (Ham)", title[alpha_type].Data()),nBINS, -250, 250);
+      hHamdZ[i]->Sumw2();
+      hHamdZ[i]->SetMarkerColor(col[i]);
+      hHamdZ[i]->SetLineColor(col[i]);
+      
+      hETdZ[i] = new TH1D(Form("hETdZ%i",i),Form("%s #DeltaZ-Distribution (ET)", title[alpha_type].Data()),nBINS, -250, 250);
+      hETdZ[i]->Sumw2();
+      hETdZ[i]->SetMarkerColor(col[i]);
+      hETdZ[i]->SetLineColor(col[i]);
     }
   }
   
@@ -212,7 +230,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   int rebin_scale = 50;
   if(alpha_type == 1) w *= rebin_scale;
   nb = int( (3*tauBiPo - 0.005) / w);
-  double l_t1 = 0.005, h_t1 = 0.005+nb*w;
+  double l_t1 = 0.005, h_t1 = l_t1+nb*w;
   TH1D *hABdt214 = new TH1D("hABdt214","hABdt214", nb, l_t1, h_t1);
   //  cout<<hABdt[0]->GetBinWidth(1)<<" "<<hABdt214->GetBinWidth(1)<<endl;
 
@@ -246,7 +264,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   w =  (t_end - t_start)/double(nBINST);
   if(alpha_type == 1) w *= rebin_scale;
   nb = int( (3*tauBiPo - 0.005) / w);
-  double l_t2 = 0.005, h_t2 = 0.005+nb*w;
+  double l_t2 = 0.005, h_t2 = l_t2+nb*w;
   if(bool(plots["by_cell"] & which_plots)){
     cout<<"Including by_cell plots"<<endl;
     for(int j=0;j<kNcell;++j){
@@ -277,7 +295,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	hCellBPSD[j][i]->SetMarkerColor(col[i]);
 	hCellBPSD[j][i]->SetLineColor(col[i]);
 
-	hCelldZ[j][i] = new TH1D(Form("hCelldZ[%i][%i]",j,i), Form("hCelldZ[%i][%i]",j,i),nBINS,-200, 200);
+	hCelldZ[j][i] = new TH1D(Form("hCelldZ[%i][%i]",j,i), Form("hCelldZ[%i][%i]",j,i),nBINS,-MAX_DZ, 200);
 	hCelldZ[j][i]->Sumw2();
 	hCelldZ[j][i]->SetMarkerColor(col[i]);
 	hCelldZ[j][i]->SetLineColor(col[i]);
@@ -342,32 +360,41 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       if(d > kMaxDisplacement){++ncut[4];//discard largely displaced prompt and delayed
 	continue;}
       double dt = bp->at - bp->pt->at(j);
-      if(dt > l_t1 && dt < h_t1){
+      if(dt > l_t1 && dt < h_t1 && dz > l_dZ && dz < h_dZ){
 	hABdt214->Fill(dt);
       }
-      if(dt > l_t2 && dt < h_t2){
+      if(dt > l_t2 && dt < h_t2 && dz > l_dZ && dz < h_dZ){
 	hCellBkgdt[bp->aseg]->Fill(dt);
       }
       if(dt > t_start && dt < t_end){
-	++nnear;
-	++scale;
-	if(bool(plots["psd"] & which_plots)){
-	  hBPSDvZ[0]->Fill(bp->pz->at(j), bp->pPSD->at(j));
-	  hBPSDvE[0]->Fill(bp->pEtot->at(j), bp->pPSD->at(j));
+	if(isET(bp->aseg)){
+	  hETdZ[0]->Fill(dz);
+	  hETBPSD[0]->Fill(bp->pPSD->at(j));
+	}else{
+	  hHamdZ[0]->Fill(dz);
+	  hHamBPSD[0]->Fill(bp->pPSD->at(j));
 	}
-	if(bool(plots["z"] & which_plots)){
-	  hAdZ[0]->Fill(bp->az-bp->pz->at(j));
-	}
-	if(bool(plots["dt"] & which_plots)){
-	  hABdt[0]->Fill(dt);
-	}
-	if(bool(plots["E"] & which_plots)){
-	  hBE[0]->Fill(bp->pEtot->at(j));
-	}
-	if(bool(plots["by_cell"] & which_plots)){
-	  hCelldt[bp->aseg][0]->Fill(dt);
-	  hCellBPSD[bp->pseg->at(j)][0]->Fill(bp->pPSD->at(j));
-	  hCelldZ[bp->aseg][0]->Fill(bp->az-bp->pz->at(j));
+	if(dz > l_dZ && dz < h_dZ){
+	  ++nnear;
+	  ++scale;
+	  if(bool(plots["psd"] & which_plots)){
+	    hBPSDvZ[0]->Fill(bp->pz->at(j), bp->pPSD->at(j));
+	    hBPSDvE[0]->Fill(bp->pEtot->at(j), bp->pPSD->at(j));
+	  }
+	  if(bool(plots["z"] & which_plots)){
+	    hAdZ[0]->Fill(bp->az-bp->pz->at(j));
+	  }
+	  if(bool(plots["dt"] & which_plots)){
+	    hABdt[0]->Fill(dt);
+	  }
+	  if(bool(plots["E"] & which_plots)){
+	    hBE[0]->Fill(bp->pEtot->at(j));
+	  }
+	  if(bool(plots["by_cell"] & which_plots)){
+	    hCelldt[bp->aseg][0]->Fill(dt);
+	    hCellBPSD[bp->pseg->at(j)][0]->Fill(bp->pPSD->at(j));
+	    hCelldZ[bp->aseg][0]->Fill(bp->az-bp->pz->at(j));
+	  }
 	}
       }else if(dt < t_start){
 	++ncut[5];
@@ -414,26 +441,35 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 
       double dt = bp->ft->at(j) - bp->at;
       if(dt > ft_start && dt < ft_end){
-	++nfar;
-	++scale;
-	dt = (dt - ft_start)*n2f + t_start;
-	if(bool(plots["psd"] & which_plots)){
-	  hBPSDvZ[1]->Fill(bp->fz->at(j), bp->fPSD->at(j), n2f);
-	  hBPSDvE[1]->Fill(bp->fEtot->at(j), bp->fPSD->at(j), n2f);
+	if(isET(bp->aseg)){
+	  hETBPSD[1]->Fill(bp->fPSD->at(j), n2f);
+	  hETdZ[1]->Fill(dz, n2f);
+	}else{
+	  hHamBPSD[1]->Fill(bp->fPSD->at(j), n2f);
+	  hHamdZ[1]->Fill(dz, n2f);
 	}
-	if(bool(plots["z"] & which_plots)){
-	  hAdZ[1]->Fill(bp->az-bp->fz->at(j), n2f);
-	}
-	if(bool(plots["dt"] & which_plots)){
-	  hABdt[1]->Fill(dt, n2f);
-	}
-	if(bool(plots["E"] & which_plots)){
-	  hBE[1]->Fill(bp->fEtot->at(j), n2f);
-	}
-	if(bool(plots["by_cell"] & which_plots)){
-	  hCelldt[bp->aseg][1]->Fill(dt, n2f);
-	  hCellBPSD[bp->fseg->at(j)][1]->Fill(bp->fPSD->at(j), n2f);
-	  hCelldZ[bp->aseg][1]->Fill(bp->az-bp->fz->at(j), n2f);
+	if(dz > l_dZ && dz < h_dZ){
+	  ++nfar;
+	  ++scale;
+	  dt = (dt - ft_start)*n2f + t_start;
+	  if(bool(plots["psd"] & which_plots)){
+	    hBPSDvZ[1]->Fill(bp->fz->at(j), bp->fPSD->at(j), n2f);
+	    hBPSDvE[1]->Fill(bp->fEtot->at(j), bp->fPSD->at(j), n2f);
+	  }
+	  if(bool(plots["z"] & which_plots)){
+	    hAdZ[1]->Fill(bp->az-bp->fz->at(j), n2f);
+	  }
+	  if(bool(plots["dt"] & which_plots)){
+	    hABdt[1]->Fill(dt, n2f);
+	  }
+	  if(bool(plots["E"] & which_plots)){
+	    hBE[1]->Fill(bp->fEtot->at(j), n2f);
+	  }
+	  if(bool(plots["by_cell"] & which_plots)){
+	    hCelldt[bp->aseg][1]->Fill(dt, n2f);
+	    hCellBPSD[bp->fseg->at(j)][1]->Fill(bp->fPSD->at(j), n2f);
+	    hCelldZ[bp->aseg][1]->Fill(bp->az-bp->fz->at(j), n2f);
+	  }
 	}
       }
     }
@@ -588,15 +624,17 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   if(bool(plots["dt"] & which_plots)){
     gStyle->SetOptStat("rmen");
     gStyle->SetOptFit(1111);
-    cdT = new TCanvas("cdT", "cdT",0,0,1400,600);
-    cdT->Divide(2,1);
+    cdT = new TCanvas("cdT", "cdT",0,0,2000,600);
+    cdT->Divide(3,1);
     cdT->cd(1);
-    hABdt[2] = (TH1D*)hABdt[0]->Clone("hABdt");
+    hABdt[0]->Scale(1/hABdt[0]->GetBinWidth(1));
+    hABdt[1]->Scale(1/hABdt[1]->GetBinWidth(1));
+    hABdt[2] = (TH1D*)hABdt[0]->Clone("hABdt2");
     hABdt[2]->Add(hABdt[1],-1);
     hABdt[0]->Draw();
     gPad->Update();
     hABdt[0]->GetXaxis()->SetTitle("#Deltat (ms)");
-    hABdt[0]->GetYaxis()->SetTitle("Counts");
+    hABdt[0]->GetYaxis()->SetTitle("Counts/ms");
     hABdt[1]->Draw("sames");
     hABdt[2]->SetMarkerColor(col[2]);;
     hABdt[2]->SetLineColor(col[2]);;
@@ -605,14 +643,15 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     hABdt[1]->Fit(fpol0);
     fdecay->SetParameters(hABdt[2]->GetMaximum(), tauBiPo, 0 );
     if(alpha_type == 1){
-      hABdt214->Scale(1/double(rebin_scale));
+      hABdt214->Scale(1/hABdt214->GetBinWidth(1));
       fdecay->ReleaseParameter(2);
-      fdecay->ReleaseParameter(3);
       fdecay->SetParameter(2, 0);
-      fdecay->FixParameter(3, fpol0->GetParameter(0));
       fdecay->FixParameter(0, 0);
+      fdecay->FixParameter(1, 1);
+      fdecay->FixParameter(3, fpol0->GetParameter(0));
       hABdt214->Fit(fdecay, "B");
       fdecay->ReleaseParameter(0);
+      fdecay->ReleaseParameter(1);
       fdecay->SetParameters(hABdt[2]->GetMaximum()*5, 0.00043, fdecay->GetParameter(2), fdecay->GetParameter(3));
       fdecay->FixParameter(2, fdecay->GetParameter(2));
       fdecay->FixParameter(3, fdecay->GetParameter(3));
@@ -649,6 +688,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     ptt->Draw();
     cdT->cd(2);
     hABdt214->Draw();
+    cdT->cd(3);
+    hABdt[1]->Draw();
     cdT->SaveAs(Form("%s/BiPo%iDeltaTSpectrum%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), fid.Data()));
     //gStyle->SetOptStat(0);
     //gStyle->SetOptFit(0);
@@ -766,6 +807,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   if(bool(plots["by_cell"] & which_plots)){
     cByCell = new TCanvas("cByCell","cByCell",0,0,1700,1000);
     cByCell->Divide(3,2);
+    cByCell->cd(1);
     TPaveText *pt = new TPaveText(0.8,0.8,0.995,0.89,"NDC");
     pt->SetShadowColor(0);
     pt->SetFillColor(0);
@@ -779,16 +821,19 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     TGraphErrors *gAEW = new TGraphErrors();
     TGraphErrors *gAE_ET = new TGraphErrors();
     TGraphErrors *gAEW_ET = new TGraphErrors();
-    TH1D* h_AE = new TH1D("h_AE","h_AE",50, lAE, hAE);
-    TH1D* hAEW = new TH1D("hAEW","hAEW",50, 0.01, 0.06);
+    double l = alpha_type == 1 ? 1.06 : 0.845;
+    double h = l + 0.5*sqrt(l);
+    l -= 0.5*sqrt(l);
+    TH1D* h_AE = new TH1D("h_AE","h_AE",50, l, h);
+    TH1D* hAEW = new TH1D("hAEW","hAEW",50, 0.03, 0.07);
 
     //Alpha smeared energy and width vs cell
     TGraphErrors *gAEsmear = new TGraphErrors();
     TGraphErrors *gAEsmearW = new TGraphErrors();
     TGraphErrors *gAEsmear_ET = new TGraphErrors();
     TGraphErrors *gAEsmearW_ET = new TGraphErrors();
-    TH1D* h_AEsmear = new TH1D("h_AEsmear","h_AEsmear",50, lAE, hAE);
-    TH1D* hAEsmearW = new TH1D("hAEsmearW","hAEsmearW",50, 0.01, 0.06);
+    TH1D* h_AEsmear = new TH1D("h_AEsmear","h_AEsmear",50, l, h);
+    TH1D* hAEsmearW = new TH1D("hAEsmearW","hAEsmearW",50, 0.03, 0.07);
      
     //Alpha energy norm
     TGraphErrors *gAdE = new TGraphErrors();
@@ -823,7 +868,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     TGraphErrors *gdZW = new TGraphErrors();
     TGraphErrors *gdZ_ET = new TGraphErrors();
     TGraphErrors *gdZW_ET = new TGraphErrors();
-    TH1D* h_dZ = new TH1D("h_dZ","h_dZ",100, -50, 50);
+    TH1D* hdZ = new TH1D("hdZ","hdZ",100, -50, 50);
     TH1D* hdZW = new TH1D("hdZW","hdZW",50, 30, 100);
 
     //Efficiency plots
@@ -862,6 +907,47 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     int nAE = 0, nApsd = 0, nBpsd = 0, ndZ = 0, nZ = 0 , nEff = 0;
     int nAE_ET = 0, nAEsmear_ET = 0, nApsd_ET = 0, nBpsd_ET = 0, ndZ_ET = 0,
       nZ_ET = 0;
+    //Beta and dz distributions appear to be composed of a main Gaussian 
+    //distribution housing most of the events and a smaller Gaussian of approx
+    //twice the width. I interpret the narrow distribution as being the majority
+    //of events when the largest pulse in the prompt cluster is the beta and is
+    //in the same cell as the alpha. The wider distribution is when the largest
+    //pulse in the prompt cluster is a gamma. This section of code tries to
+    //establish the width for the larger distributions which is then fixed as a
+    //parameter in subsequent by-cell fits. Not fixing this width allows the fit
+    //too much freedom and it sometimes goes crazy.
+    TCanvas *cfits = new TCanvas("cfits","cfits",0,0,1500,900);
+    cfits->Divide(2,2);
+    cfits->cd(1);
+    TF1 *fgaus = new TF1("fgaus","[0]*exp(-pow(x,2)/(2*pow([1],2)))+[2]*exp(-pow(x,2)/(2*pow([3],2)))",0,1);
+    hHamdZ[0]->Add(hHamdZ[1],-1);
+    fgaus->SetRange(-250, 250);
+    fgaus->SetParameters(hHamdZ[0]->GetMaximum()*0.84, 45,hHamdZ[0]->GetMaximum()*0.16,110);
+    hHamdZ[0]->Fit(fgaus, "r");
+    hHamdZ[0]->Draw();
+    cfits->cd(2);
+    double Ham_dZw = fgaus->GetParameter(3);
+    hETdZ[0]->Add(hETdZ[1],-1);
+    fgaus->SetRange(-250, 250);
+    fgaus->SetParameters(hETdZ[0]->GetMaximum()*0.84, 45,hETdZ[0]->GetMaximum()*0.16,110);
+    hETdZ[0]->Fit(fgaus, "r");
+    double ET_dZw = fgaus->GetParameter(3);
+    hETdZ[0]->Draw();
+    cfits->cd(3);
+    TF1 *fgaus2 = new TF1("fgaus2","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))+[3]*exp(-pow(x-[1],2)/(2*pow([4],2)))",0,1);
+    hHamBPSD[0]->Add(hHamBPSD[1],-1);
+    fgaus2->SetRange(lPpsd, hPpsd);
+    fgaus2->SetParameters(hHamBPSD[0]->GetMaximum()*0.9, 0.13,0.012,hHamBPSD[0]->GetMaximum()*0.13,0.024);
+    hHamBPSD[0]->Fit(fgaus2, "r");
+    hHamBPSD[0]->Draw();
+    cfits->cd(4);
+    double Ham_BPSDw = fgaus2->GetParameter(4);
+    hETBPSD[0]->Add(hETBPSD[1],-1);
+    fgaus2->SetRange(lPpsd, hPpsd);
+    fgaus2->SetParameters(hETBPSD[0]->GetMaximum()*0.9, 0.13,0.012,hETBPSD[0]->GetMaximum()*0.1,0.024);
+    hETBPSD[0]->Fit(fgaus2, "r");
+    hETBPSD[0]->Draw();
+    double ET_BPSDw = fgaus2->GetParameter(4);
     
     double guessE = alpha_type == 1 ?  1.06 : 0.84;
     double guessEerr = 0.05/sqrt(guessE);
@@ -878,7 +964,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	TF1 *f = new TF1("f","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))",
 			 guessE-2*guessEerr, guessE + 2*guessEerr);
 	f->SetParameters(hCellAE[i][2]->GetMaximum(),guessE,guessEerr);
-	f->SetRange(guessE-2*guessEerr, guessE + 2*guessEerr);
+	f->SetRange(-MAX_DZ, MAX_DZ);
 	hCellAE[i][2]->Draw();
 	gPad->Update();
 	printf("\n\nCell %i\n", i);
@@ -976,32 +1062,30 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	cByCell->cd(3);
       	hCellBPSD[i][2] = (TH1D*)hCellBPSD[i][0]->Clone(Form("hCellBPSD[%i][2]",i));
       	hCellBPSD[i][2]->Add(hCellBPSD[i][1],-1);
-	TF1 *f = new TF1("f","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))",0.11,0.2);
-      	f->SetParameters(hCellBPSD[i][2]->GetMaximum(),0.13,0.012);
-      	f->SetRange(0.13 - 2.5*0.012, 0.13 + 2.5*0.012);
+      	fgaus2->SetParameters(hCellBPSD[i][2]->GetMaximum()*0.9,0.13,0.012,hCellBPSD[i][2]->GetMaximum()*0.1,0.024);
+	fgaus2->FixParameter(4, isET(i) ? ET_BPSDw : Ham_BPSDw);
+	fgaus2->SetRange(lPpsd,hPpsd);
       	hCellBPSD[i][2]->Draw();
       	gPad->Update();
-      	hCellBPSD[i][2]->Fit(f,"rq");
-	if(f->GetParameter(2)<0){//deal with negative width
-	  f->SetParameter(2,fabs(f->GetParameter(2)));
-	  hCellBPSD[i][2]->Fit(f,"rq"); 
+      	hCellBPSD[i][2]->Fit(fgaus2,"rq");
+	if(fgaus2->GetParameter(2)<0){//deal with negative width
+	  fgaus2->SetParameter(2,fabs(fgaus2->GetParameter(2)));
+	  hCellBPSD[i][2]->Fit(fgaus2,"rq"); 
 	}
-      	gBpsd->SetPoint(nBpsd, i, f->GetParameter(1));
-      	gBpsd->SetPointError(nBpsd, 0, f->GetParError(1));
-      	gBpsdW->SetPoint(nBpsd, i, f->GetParameter(2));
-      	gBpsdW->SetPointError(nBpsd, 0, f->GetParError(2));
-      	hBpsd->Fill(f->GetParameter(1));
-      	hBpsdW->Fill(f->GetParameter(2));
-      	double lnsig = (f->GetParameter(1) - lPpsd)/f->GetParameter(2);
-      	double hnsig = (hPpsd - f->GetParameter(1))/f->GetParameter(2);
-      	effBPSD[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
+      	gBpsd->SetPoint(nBpsd, i, fgaus2->GetParameter(1));
+      	gBpsd->SetPointError(nBpsd, 0, fgaus2->GetParError(1));
+      	gBpsdW->SetPoint(nBpsd, i, fgaus2->GetParameter(2));
+      	gBpsdW->SetPointError(nBpsd, 0, fgaus2->GetParError(2));
+      	hBpsd->Fill(fgaus2->GetParameter(1));
+      	hBpsdW->Fill(fgaus2->GetParameter(2));
+      	effBPSD[i] = fgaus2->Integral(lPpsd, hPpsd)/fgaus2->Integral(-2, 2);
 	grEffBpsd->SetPoint(nBpsd, i, effBPSD[i]);
       	++nBpsd;
       	if(isET(i)){
-      	  gBpsd_ET->SetPoint(nBpsd_ET, i, f->GetParameter(1));
-      	  gBpsd_ET->SetPointError(nBpsd_ET, 0, f->GetParError(1));
-      	  gBpsdW_ET->SetPoint(nBpsd_ET, i, f->GetParameter(2));
-      	  gBpsdW_ET->SetPointError(nBpsd_ET, 0, f->GetParError(2));
+      	  gBpsd_ET->SetPoint(nBpsd_ET, i, fgaus2->GetParameter(1));
+      	  gBpsd_ET->SetPointError(nBpsd_ET, 0, fgaus2->GetParError(1));
+      	  gBpsdW_ET->SetPoint(nBpsd_ET, i, fgaus2->GetParameter(2));
+      	  gBpsdW_ET->SetPointError(nBpsd_ET, 0, fgaus2->GetParError(2));
       	  ++nBpsd_ET;
       	}
       }
@@ -1010,30 +1094,31 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	cByCell->cd(4);
       	hCelldZ[i][2] = (TH1D*)hCelldZ[i][0]->Clone(Form("hCelldZ[%i][2]",i));
       	hCelldZ[i][2]->Add(hCelldZ[i][1],-1);
-	TF1 *f = new TF1("f","[0]*exp(-pow((x-[1])/[2],2))",-100,100);
-      	f->SetParameters(hCelldZ[i][2]->GetMaximum(),0,60);
+      	fgaus->SetParameters(hCelldZ[i][2]->GetMaximum()*0.9,45,hCelldZ[i][2]->GetMaximum()*0.1,90);
+	fgaus->SetRange(l_dZ, h_dZ);
       	hCelldZ[i][2]->Draw();
       	gPad->Update();
-      	hCelldZ[i][2]->Fit(f,"rq");
-	if(f->GetParameter(2)<0){//deal with negative width
-	  f->SetParameter(2,fabs(f->GetParameter(2)));
-	  hCelldZ[i][2]->Fit(f,"rq"); 
+	fgaus->FixParameter(3, isET(i) ? ET_dZw : Ham_dZw);
+	cout<<"Cell # "<<i<<endl;
+      	hCelldZ[i][2]->Fit(fgaus,"rb");
+	if(fgaus->GetParameter(1)<0){//deal with negative width
+	  fgaus->SetParameter(1,fabs(fgaus->GetParameter(1)));
+	  hCelldZ[i][2]->Fit(fgaus,"rqb"); 
 	}
-      	gdZ->SetPoint(ndZ, i, f->GetParameter(1));
-      	gdZ->SetPointError(ndZ, 0, f->GetParError(1));
-      	gdZW->SetPoint(ndZ, i, f->GetParameter(2));
-      	gdZW->SetPointError(ndZ, 0, f->GetParError(2));
-      	h_dZ->Fill(f->GetParameter(1));
-      	hdZW->Fill(f->GetParameter(2));
-      	effdZ[i] = f->Integral(ldZ, hdZ)/f->Integral(-1000,1000);
-	if(effdZ[i]<0.95)sleep(3);
+      	gdZ->SetPoint(ndZ, i, 0);
+      	gdZ->SetPointError(ndZ, 0, 0);
+      	gdZW->SetPoint(ndZ, i, fgaus->GetParameter(1));
+      	gdZW->SetPointError(ndZ, 0, fgaus->GetParError(1));
+      	hdZ->Fill(0);
+      	hdZW->Fill(fgaus->GetParameter(1));
+      	effdZ[i] = fgaus->Integral(l_dZ, h_dZ)/fgaus->Integral(-1000,1000);
  	grEffdZ->SetPoint(ndZ, i, effdZ[i]);
      	++ndZ;
       	if(isET(i)){
-      	  gdZ_ET->SetPoint(ndZ_ET, i, f->GetParameter(1));
-      	  gdZ_ET->SetPointError(ndZ_ET, 0, f->GetParError(1));
-      	  gdZW_ET->SetPoint(ndZ_ET, i, f->GetParameter(2));
-      	  gdZW_ET->SetPointError(ndZ_ET, 0, f->GetParError(2));
+      	  gdZ_ET->SetPoint(ndZ_ET, i, fgaus->GetParameter(1));
+      	  gdZ_ET->SetPointError(ndZ_ET, 0, fgaus->GetParError(1));
+      	  gdZW_ET->SetPoint(ndZ_ET, i, fgaus->GetParameter(2));
+      	  gdZW_ET->SetPointError(ndZ_ET, 0, fgaus->GetParError(2));
       	  ++ndZ_ET;
       	}
       }
@@ -1056,8 +1141,18 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	  gAZ_ET->SetPointError(nZ_ET, 0, hCellZ[i][2]->GetRMSError());
       	  ++nZ_ET;
       	}
+	if(i==76){
+	  TCanvas *cSC = new TCanvas("cSC","cSC",0,0,700, 500);
+	  hCellZ[i][2]->Scale(1/live/hCellZ[i][2]->GetBinWidth(1));
+	  hCellZ[i][2]->Draw();
+	  gPad->Update();
+	  hCellZ[i][2]->SetTitle("Cell 76 BiPo Alpha Z-distribution");
+	  hCellZ[i][2]->GetXaxis()->SetTitle("Position (mm)");
+	  hCellZ[i][2]->GetYaxis()->SetTitle("Rate (Hz/mm)");
+	  gPad->Update();
+	}
       }
-       grEff->SetPoint(nEff,i,effAE[i]*effAPSD[i]*effBPSD[i]*effdZ[i]);
+      grEff->SetPoint(nEff, i, effAE[i]*effAPSD[i]*effBPSD[i]*effdZ[i]);
       ++nEff;
     }
 
@@ -1208,7 +1303,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gAEsmearW_ET->Draw("samep");
     pt->Draw();
     gPad->Update();
-    cCellAE->cd(4);
+    cCellAEsmear->cd(4);
     hAEsmearW->Draw();
     hAEsmearW->SetTitle(Form("^{%i}Po Smeared Alpha Energy Width By Cell",
 		       (alpha_type==1 ? 212 : 214)));
@@ -1401,9 +1496,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     pt->Draw();
     gPad->Update();
     cCelldZ->cd(2);
-    h_dZ->Draw();
-    h_dZ->SetTitle("Alpha-Beta dZ Mean vs Cell");
-    h_dZ->GetXaxis()->SetTitle("dZ (mm)");
+    hdZ->Draw();
+    hdZ->SetTitle("Alpha-Beta dZ Mean vs Cell");
+    hdZ->GetXaxis()->SetTitle("dZ (mm)");
     gPad->Update();
     cCelldZ->cd(3);
     gdZW->SetTitle("Alpha-Beta dZ Width vs Cell");
@@ -1837,7 +1932,6 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	if( find(begin(ExcludeCellArr), end(ExcludeCellArr), i)
 	    != end(ExcludeCellArr) )
 	  continue;
-      hCelldt[i][1]->Fit("fpol0");
       hCellBkgdt[i]->Scale(1/hCellBkgdt[i]->GetBinWidth(1)/live/3.6);
       hCelldt[i][0]->Scale(1/hCelldt[i][0]->GetBinWidth(1)/live/3.6);
       hCelldt[i][1]->Scale(1/hCelldt[i][1]->GetBinWidth(1)/live/3.6);
@@ -1849,15 +1943,16 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       if(alpha_type==1){
 	//model background term as A*exp(-x/0.237)+const
 	fdecay->ReleaseParameter(2);
-	fdecay->ReleaseParameter(3);
 	fdecay->FixParameter(0,0);
-	fdecay->SetParameters(0,1,0, fpol0->GetParameter(0));
+	fdecay->FixParameter(1,1);
+	fdecay->SetParameter(2,0);
 	fdecay->FixParameter(3,fpol0->GetParameter(0));
 	hCellBkgdt[i]->Fit(fdecay,"B");
 	fdecay->SetParameters(hCelldt[i][2]->GetMaximum()*5,0.00043,fdecay->GetParameter(2),fdecay->GetParameter(3));
 	fdecay->FixParameter(2, fdecay->GetParameter(2));
 	fdecay->FixParameter(3, fdecay->GetParameter(3));
 	fdecay->ReleaseParameter(0);
+	fdecay->ReleaseParameter(1);
       }
       if(alpha_type == 0){
 	fdecay->FixParameter(2, fpol0->GetParameter(0));
@@ -1896,9 +1991,79 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     cCelldt->cd(4);
     grchi->Draw("ap");
     grchi->Fit(fpol0);
+    TH1D *hEsmearNorm = new TH1D("hEsmearNorm","hEsmearNorm", 50, 0.99,1.01);
+    hEsmearNorm->SetLineColor(kBlue);
+    hEsmearNorm->SetName(Form("hEsmearvsCell%s", (char*)(alpha_type==1? "212":"214")));
+    TH1D *hEsmearNormET = new TH1D("hEsmearNormET","hEsmearNormET", 50, 0.99, 1.01);
+    hEsmearNormET->SetLineColor(kRed);
+    hEsmearNormET->SetName(Form("hEsmearETvsCell%s", (char*)(alpha_type==1? "212":"214")));
+    TH1D *hEsmearWnorm = new TH1D("hEsmearWnorm","hEsmearWnorm", 50, 0.9, 1.1);
+    hEsmearWnorm->SetLineColor(kBlue);
+    hEsmearWnorm->SetName(Form("hSigmaEsmearvsCell%s", (char*)(alpha_type==1? "212":"214")));
+    TH1D *hEsmearWnormET = new TH1D("hEsmearWnormET","hEsmearWnormET", 50, 0.9, 1.1);
+    hEsmearWnormET->SetName(Form("hSigmaEsmearETvsCellPo%s", (char*)(alpha_type==1? "212":"214")));
+    hEsmearWnormET->SetLineColor(kRed);
+    TH1D *hdZWnorm = new TH1D("hdZWnorm","hdZWnorm", 50, 0.85, 1.3);
+    hdZWnorm->SetLineColor(kBlue);
+    hdZWnorm->SetName(Form("hSigmadZvsCellPo%s", (char*)(alpha_type==1? "212":"214")));
+    TH1D *hdZWnormET = new TH1D("hdZWnormET","hdZWnormET", 50, 0.85, 1.3);
+    hdZWnormET->SetLineColor(kRed);
+    hdZWnormET->SetName(Form("hSigmadZETvsCellPo%s", (char*)(alpha_type==1? "212":"214")));
+    gAEsmear->Fit(fpol0);
+    double n1 = fpol0->GetParameter(0);
+    gAEsmearW->Fit(fpol0);
+    double n2 = fpol0->GetParameter(0);
+    gdZW->Fit(fpol0);
+    double n3 = fpol0->GetParameter(0);
+    for(int i=0;i<gdZ->GetN();++i){
+      double x, y;
+      gAEsmear->GetPoint(i,x,y);
+      if(isET(int(x))){
+	hEsmearNormET->Fill(y/n1);
+      }//else
+      hEsmearNorm->Fill(y/n1);
+      gAEsmearW->GetPoint(i,x,y);
+      if(isET(int(x))){
+	hEsmearWnormET->Fill(y/n2);
+      }//else
+      hEsmearWnorm->Fill(y/n2);
+      
+      gdZW->GetPoint(i,x,y);
+      if(isET(int(x))){
+	hdZWnormET->Fill(y/n3);
+      }//else
+      hdZWnorm->Fill(y/n3);
+    }
+    if(1){
+      TFile f("BiPoPublicationPlots.root",(recreate == 1 ? "RECREATE" : "UPDATE"),"BiPoPlots");
+      TCanvas *cStab = new TCanvas("cstab","cstab",0,0,2000,600);
+      cStab->Divide(3,1);
+      cStab->cd(1);
+      hEsmearNorm->Draw();
+      //hEsmearNormET->Draw("same");
+      gPad->Update();
+      hEsmearNorm->GetXaxis()->SetTitle("Relative Segment Energy");
+      hEsmearNorm->Write();
+      cStab->cd(2);
+      hEsmearWnorm->Draw();
+      //hEsmearWnormET->Draw("same");
+      gPad->Update();
+      hEsmearWnorm->GetXaxis()->SetTitle("Relative Segment Energy Width");
+      hEsmearWnorm->Write();
+      cStab->cd(3);
+      hdZWnorm->Draw();
+      //hdZWnormET->Draw("same");
+      gPad->Update();
+      hdZWnorm->GetXaxis()->SetTitle("Relative Segment dZ Width");
+      hdZWnorm->Write();
+      hCellZ[76][2]->SetLineColor(kRed);
+      hCellZ[76][2]->SetName(Form("hZcell76Po%s", (char*)(alpha_type==1? "212":"214")));
+      f.Close();
+    }
     
   }
 
+  
   cout<<"Alpha candidates: "<<nalpha<<endl;
   cout<<"Prompt beta candidates: "<<nnear<<endl;
   cout<<"Far beta candidates: "<<nfar<<endl;

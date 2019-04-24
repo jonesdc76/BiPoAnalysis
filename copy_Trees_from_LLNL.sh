@@ -1,5 +1,5 @@
 #!/bin/bash
-IBD=1
+IBD=0
 RUNLIST=2018C_GoodRuns.txt
 DATA_DIR=/p/lustre2/psptexp/user/jonesdc/data/Analyzed/
 RELEASE=Phys_2018C

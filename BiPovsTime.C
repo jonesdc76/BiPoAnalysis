@@ -34,6 +34,7 @@ const double kCellSize = 146.0;//cell cross sectional size in mm
 const double kMaxDisplacement = 550.0;//maximum displacement between alpha and beta (max pulse in prompt cluster)
 const double tauBiPo = 0.1643 / log(2);
 const double F2N = 100.0;//ratio of lengths of far to near windows
+const double MAX_DZ = 200;//maximum z-displacement between prompt and delay
 const int kNcell = ncol * nrow;
 const int ExcludeCellArr[63] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 21, 23, 24, 27, 28, 29, 31, 32, 34, 36, 40, 41, 42, 43, 44, 46, 47, 48, 50, 52, 55, 56, 60, 63, 68, 69, 70, 73, 79, 83, 86, 87, 94, 97, 102, 107, 115, 121, 122, 126, 127, 128, 130, 133, 136, 139, 141};
 //start and end runs of reactor on times
@@ -138,16 +139,17 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   //Set boundary cut values on energy, psd, z-pos and time
   //-------------------------------------------------------
   double f2n = F2N > 12.0 ? 12.0 : F2N, n2f = 1.0/f2n;
-  double hAE = 1.0, lAE = 0.67, hApsd = 0.34, lApsd = 0.18;//alpha
-  double highBE = 4.0, lowBE = 0.0, hPpsd = 0.2, lPpsd = 0.05;//beta
+  double hAE = 1.0, lAE = 0.67, hApsd = 0.34, lApsd = 0.17;//alpha
+  double highBE = 4.0, lowBE = 0.0, hPpsd = 0.22, lPpsd = 0.05;//beta
   double t_start = 0.01, t_end = 3 * tauBiPo;//prompt window
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset;//start time of far window 
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
+  double  l_dZ = alpha_type==1 ? -MAX_DZ : -250, h_dZ = fabs(l_dZ);
   double fidZ = fiducialize ? 1000.0 : 1000.0;//444.0;
   if(alpha_type == 1){
     t_start = 7.0e-4;
-    t_end = 0.002;
+    t_end = 0.0017;
     hAE = 1.27;
     lAE = 0.95;
     f2n = F2N, n2f = 1.0/f2n;
@@ -178,9 +180,9 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     hOnBPSD[i]->Sumw2();
     hOffBPSD[i] = new TH1D(Form("hOffBPSD%i",i), Form("hOffBPSD%i",i), 40, lPpsd, hPpsd);
     hOffBPSD[i]->Sumw2();
-    hOndZ[i] = new TH1D(Form("hOndZ%i",i), Form("hOndZ%i",i), 40, -200, 200);
+    hOndZ[i] = new TH1D(Form("hOndZ%i",i), Form("hOndZ%i",i), 40, l_dZ, h_dZ);
     hOndZ[i]->Sumw2();
-    hOffdZ[i] = new TH1D(Form("hOffdZ%i",i), Form("hOffdZ%i",i),40, -200, 200);
+    hOffdZ[i] = new TH1D(Form("hOffdZ%i",i), Form("hOffdZ%i",i),40, l_dZ, h_dZ);
     hOffdZ[i]->Sumw2();
     hOnZ[i] = new TH1D(Form("hOnZ%i",i), Form("hOnZ%i",i), 40, -900, 900);
     hOnZ[i]->Sumw2();
@@ -195,7 +197,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     hOffdt[i] = new TH1D(Form("hOffdt%i",i), Form("hOffdt%i",i), 40, t_start, t_end);
     hOffdt[i]->Sumw2();
   }
-  TH1D *hE[NP][N], *hEsmear[NP][N], *hAPSD[NP][N], *hBPSD[NP][N];
+  TH1D *hE[NP][N], *hEsmear[NP][N], *hAPSD[NP][N], *hBPSD[NP][N], *hBPSDcum[N];
   TH1D *hZ[NP][N],*hZcum[N], *hdZcum[N], *hdZ[NP][N], *hdZsingle[NP][N];
   TH1D *hdt[NP][N], *hdtbkg[NP], *hdtcum[N], *hdtbkgcum;
   double l_t = 0.005, h_t = 3*tauBiPo;
@@ -218,11 +220,11 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
       hZ[i][j] = new TH1D(Form("hZ%i_%i",i,j),Form("hZ%i_%i",i,j), 100, -1000,1000);
       hZ[i][j]->Sumw2();
 
-      hdZ[i][j] = new TH1D(Form("hdZ%i_%i",i,j),Form("hdZ%i_%i",i,j), nBINS, -200,200);
+      hdZ[i][j] = new TH1D(Form("hdZ%i_%i",i,j),Form("hdZ%i_%i",i,j), nBINS, l_dZ, h_dZ);
       hdZ[i][j]->Sumw2();
  
 
-      hdZsingle[i][j] = new TH1D(Form("hdZsingle%i_%i",i,j),Form("hdZsingle%i_%i",i,j), nBINS, -200,200);
+      hdZsingle[i][j] = new TH1D(Form("hdZsingle%i_%i",i,j),Form("hdZsingle%i_%i",i,j), nBINS,  l_dZ, h_dZ);
       hdZsingle[i][j]->Sumw2();
  
       hdt[i][j] = new TH1D(Form("hdt%i_%i",i,j),Form("hdt%i_%i",i,j), nBINS, t_start, t_end);
@@ -230,6 +232,11 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
    }
   }
   int nbins = 100;
+      
+  hBPSDcum[0] = new TH1D("hBPSDcum0","hBPSDcum0", nBINS, lPpsd, hPpsd);
+  hBPSDcum[0]->Sumw2();
+  hBPSDcum[1] = new TH1D("hBPSDcum1","hBPSDcum1", nBINS, lPpsd, hPpsd);
+  hBPSDcum[1]->Sumw2();
   hdtcum[0] = new TH1D(Form("hdtcum0"),Form("hdtcum0"), nbins, t_start, t_end);
   hdtcum[0]->Sumw2();
   hdtcum[1] = new TH1D(Form("hdtcum1"),Form("hdtcum1"), nbins, t_start, t_end);
@@ -240,9 +247,9 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   hZcum[0]->Sumw2();
   hZcum[1] = new TH1D(Form("hZcum1"),Form("hZcum1"), nbins, -1000, 1000);
   hZcum[1]->Sumw2();
-  hdZcum[0] = new TH1D(Form("hdZcum0"),Form("hdZcum0"), nbins, -200, 200);
+  hdZcum[0] = new TH1D(Form("hdZcum0"),Form("hdZcum0"), nbins, -250, 250);
   hdZcum[0]->Sumw2();
-  hdZcum[1] = new TH1D(Form("hdZcum1"),Form("hdZcum1"), nbins, -200, 200);
+  hdZcum[1] = new TH1D(Form("hdZcum1"),Form("hdZcum1"), nbins, -250, 250);
   hdZcum[1]->Sumw2();
   //-------------------------------------------
 
@@ -342,35 +349,38 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
       if(d > kMaxDisplacement)//discard largely displaced prompt and delayed
 	continue;
       double dt = bp->at - bp->pt->at(j);
-      if(dt > l_t && dt < h_t ){
+      if(dt > l_t && dt < h_t && fabs(dz) < MAX_DZ){
 	//accidentals + correlated background from Bi214 in Bi212 data
 	hdtbkgcum->Fill(dt);
 	hdtbkg[p]->Fill(dt);
       }
       if(dt > t_start && dt < t_end){
-	++scale;
-	hBPSD[p][0]->Fill(bp->pPSD->at(j));
 	//if(bp->aseg==bp->pseg->at(j))
-	hdZ[p][0]->Fill(bp->az-bp->pz->at(j));
-	hdZcum[0]->Fill(bp->az-bp->pz->at(j));
-	if(dt < end_t)
-	  vdz.push_back(bp->az-bp->pz->at(j));
-	hdt[p][0]->Fill(dt);
-	hdtcum[0]->Fill(dt);
-	if(rxstat){
-	  hOnAPSD[0]->Fill(bp->aPSD);
-	  hOnBPSD[0]->Fill(bp->pPSD->at(j));
-	  hOnZ[0]->Fill(bp->az);
-	  hOndZ[0]->Fill(bp->az-bp->pz->at(j));
-	  hOnE[0]->Fill(bp->aE);
-	  hOndt[0]->Fill(dt);
-	}else{
-	  hOffAPSD[0]->Fill(bp->aPSD);
-	  hOffBPSD[0]->Fill(bp->pPSD->at(j));
-	  hOffZ[0]->Fill(bp->az);
-	  hOffdZ[0]->Fill(bp->az-bp->pz->at(j));
-	  hOffE[0]->Fill(bp->aE);
-	  hOffdt[0]->Fill(dt);
+	hdZ[p][0]->Fill(dz);
+	hdZcum[0]->Fill(dz);
+	if(dz > l_dZ && dz < h_dZ){
+	  ++scale;
+	  hBPSD[p][0]->Fill(bp->pPSD->at(j));
+	  hBPSDcum[0]->Fill(bp->pPSD->at(j));
+	  if(dt < end_t)
+	    vdz.push_back(bp->az-bp->pz->at(j));
+	  hdt[p][0]->Fill(dt);
+	  hdtcum[0]->Fill(dt);
+	  if(rxstat){
+	    hOnAPSD[0]->Fill(bp->aPSD);
+	    hOnBPSD[0]->Fill(bp->pPSD->at(j));
+	    hOnZ[0]->Fill(bp->az);
+	    hOndZ[0]->Fill(bp->az-bp->pz->at(j));
+	    hOnE[0]->Fill(bp->aE);
+	    hOndt[0]->Fill(dt);
+	  }else{
+	    hOffAPSD[0]->Fill(bp->aPSD);
+	    hOffBPSD[0]->Fill(bp->pPSD->at(j));
+	    hOffZ[0]->Fill(bp->az);
+	    hOffdZ[0]->Fill(bp->az-bp->pz->at(j));
+	    hOffE[0]->Fill(bp->aE);
+	    hOffdt[0]->Fill(dt);
+	  }
 	}
       }
     }
@@ -406,36 +416,40 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
 	continue;
       double dt = bp->ft->at(j) - bp->at;
       if(dt > ft_start && dt < ft_end){
-	++scale;
-	if(dt>ft_start + t_start && dt < ft_start + end_t){
-	  vdz.push_back(bp->az-bp->fz->at(j));
-	}
-	dt -= ft_start;
-	if(modular_far_window)
-	  dt = (dt/(t_end-t_start)  - int(dt/(t_end-t_start)))*(t_end-t_start);
-	else dt *= n2f;
-	dt += t_start;
-	//if(bp->aseg==bp->fseg->at(j))
-	hdZ[p][1]->Fill(bp->az-bp->fz->at(j), n2f);
-	hdZcum[1]->Fill(bp->az-bp->fz->at(j), n2f);
-	hBPSD[p][1]->Fill(bp->fPSD->at(j), n2f);
-	hdt[p][1]->Fill(dt, n2f);
-	hdtcum[1]->Fill(dt, n2f);
+	//if(bp->aseg==bp->pseg->at(j))
+	hdZ[p][1]->Fill(dz, n2f);
+	hdZcum[1]->Fill(dz, n2f);
+	if(dz > l_dZ && dz < h_dZ){
+	  ++scale;
+	  if(dt>ft_start + t_start && dt < ft_start + end_t){
+	    vdz.push_back(bp->az-bp->fz->at(j));
+	  }
+	  dt -= ft_start;
+	  if(modular_far_window)
+	    dt = (dt/(t_end-t_start)  - int(dt/(t_end-t_start)))*(t_end-t_start);
+	  else dt *= n2f;
+	  dt += t_start;
+	  //if(bp->aseg==bp->fseg->at(j))
+	  hBPSD[p][1]->Fill(bp->fPSD->at(j), n2f);
+	  hBPSDcum[1]->Fill(bp->fPSD->at(j), n2f);
+	  hdt[p][1]->Fill(dt, n2f);
+	  hdtcum[1]->Fill(dt, n2f);
 
-	if(rxstat){
-	  hOnAPSD[1]->Fill(bp->aPSD, n2f);
-	  hOnBPSD[1]->Fill(bp->fPSD->at(j), n2f);
-	  hOnZ[1]->Fill(bp->az, n2f);
-	  hOndZ[1]->Fill(bp->az-bp->fz->at(j), n2f);
-	  hOnE[1]->Fill(bp->aE, n2f);
-	  hOndt[1]->Fill(dt, n2f);
-	}else{
-	  hOffAPSD[1]->Fill(bp->aPSD, n2f);
-	  hOffBPSD[1]->Fill(bp->fPSD->at(j), n2f);
-	  hOffZ[1]->Fill(bp->az, n2f);
-	  hOffdZ[1]->Fill(bp->az-bp->fz->at(j), n2f);
-	  hOffE[1]->Fill(bp->aE, n2f);
-	  hOffdt[1]->Fill(dt, n2f);
+	  if(rxstat){
+	    hOnAPSD[1]->Fill(bp->aPSD, n2f);
+	    hOnBPSD[1]->Fill(bp->fPSD->at(j), n2f);
+	    hOnZ[1]->Fill(bp->az, n2f);
+	    hOndZ[1]->Fill(bp->az-bp->fz->at(j), n2f);
+	    hOnE[1]->Fill(bp->aE, n2f);
+	    hOndt[1]->Fill(dt, n2f);
+	  }else{
+	    hOffAPSD[1]->Fill(bp->aPSD, n2f);
+	    hOffBPSD[1]->Fill(bp->fPSD->at(j), n2f);
+	    hOffZ[1]->Fill(bp->az, n2f);
+	    hOffdZ[1]->Fill(bp->az-bp->fz->at(j), n2f);
+	    hOffE[1]->Fill(bp->aE, n2f);
+	    hOffdt[1]->Fill(dt, n2f);
+	  }
 	}
       }
     }
@@ -755,8 +769,16 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   grFOM->SetMarkerSize(0.8);
   grFOM->SetLineColor(kBlue);
   grFOM->SetTitle(Form("%s PSD FOM vs Time (#alpha_{PSD}-#beta_{PSD})/(#sigma_{#alpha}+#sigma_{#beta})",title[alpha_type].Data()));
-  
+
+  TF1 *fgaus2 = new TF1("fgaus2","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))+[3]*exp(-pow(x-[1],2)/(2*pow([4],2)))",0,1); 
+  hBPSDcum[0]->Add(hBPSDcum[1],-1);
+  fgaus2->SetRange(lPpsd, hPpsd);
   psd_m = 0.148; psd_w = 0.016;
+  fgaus2->SetParameters(hBPSDcum[0]->GetMaximum()*0.9, psd_m,hBPSDcum[0]->GetMaximum()*0.1,psd_w);
+  hBPSDcum[0]->Fit(fgaus2, "r");
+  //  hBPSDcum[0]->Draw();
+  double psd_w2 = fgaus2->GetParameter(4);
+  
   for(int i=0;i<=p; i++){
     //Remove zero error bins which bias fits
     for(int j=1;j<=hBPSD[i][0]->GetNbinsX();++j){
@@ -771,36 +793,27 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
 	hBPSD[i][1]->SetBinError(j,n2f);
       }
     }
-    TF1 f("f","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))+[3]*exp(-pow(x-[1],2)/(2*pow([4],2)))",0,1); 
     hBPSD[i][2] = (TH1D*)hBPSD[i][0]->Clone(Form("hBPSD%i_2",i));
     hBPSD[i][2]->Add(hBPSD[i][1], -1);
-    f.SetParameters(hBPSD[i][2]->GetMaximum()*0.86, psd_m, psd_w,hBPSD[i][2]->GetMaximum()*0.14,2*psd_w);
-    f.SetRange(lPpsd, hPpsd);
-    if(0){
-      f.FixParameter(3,0);
-      f.FixParameter(4,1);
-      f.SetRange(psd_m-2.5*psd_w, psd_m+2.5*psd_w);
-   }
-    hBPSD[i][2]->Fit("f", "rqb");
-    psd_m = f.GetParameter(1); psd_w = f.GetParameter(2);
+    fgaus2->SetParameters(hBPSD[i][2]->GetMaximum()*0.86, psd_m, psd_w,hBPSD[i][2]->GetMaximum()*0.14, psd_w2);
+    fgaus2->SetRange(lPpsd, hPpsd);
+    fgaus2->FixParameter(4, psd_w2);
+    hBPSD[i][2]->Fit(fgaus2, "rb");
+    psd_m = fgaus2->GetParameter(1); psd_w = fgaus2->GetParameter(2);
     gPad->Update();
     if(slow) sleep(1);
-    double lnsig = (f.GetParameter(1) - lPpsd)/f.GetParameter(2);
-    double hnsig = (hPpsd - f.GetParameter(1))/f.GetParameter(2);
-    effBPSD[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
-    effBPSD[i] = f.Integral(lPpsd, hPpsd)/f.Integral(-2,2);
+    effBPSD[i] = fgaus2->Integral(lPpsd, hPpsd)/fgaus2->Integral(-2,2);
     grEffBPSD->SetPoint(i,t[i],effBPSD[i]);
-    grBPSD->SetPoint(i, t[i], f.GetParameter(1));
-    grBPSD->SetPointError(i, 0, f.GetParError(1));
-    grBPSDW->SetPoint(i, t[i], f.GetParameter(2));
-    grBPSDW->SetPointError(i, 0, f.GetParError(2));
+    grBPSD->SetPoint(i, t[i], fgaus2->GetParameter(1));
+    grBPSD->SetPointError(i, 0, fgaus2->GetParError(1));
+    grBPSDW->SetPoint(i, t[i], fgaus2->GetParameter(2));
+    grBPSDW->SetPointError(i, 0, fgaus2->GetParError(2));
     double x, y;
     grAPSD->GetPoint(i, x, y);
-    double fom = y-f.GetParameter(1);
+    double fom = y-fgaus2->GetParameter(1);
     grAPSDW->GetPoint(i, x, y);
-    fom /= (y + f.GetParameter(2));
+    fom /= (y + fgaus2->GetParameter(2));
     grFOM->SetPoint(i, t[i], fom);
-    //    grFOM->SetPointError(i, 0, fom);
   }
   grBPSD->Draw("ap");
   gPad->Update();
@@ -897,7 +910,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   TCanvas *cdZcum = new TCanvas("cdZcum","cdZcum",0,0,600,500);
   TF1 *fgaus = new TF1("fgaus","[0]*exp(-pow(x,2)/(2*pow([1],2)))+[2]*exp(-pow(x,2)/(2*pow([3],2)))",0,1);
   hdZcum[0]->Add(hdZcum[1],-1);
-  fgaus->SetRange(-200, 200);
+  fgaus->SetRange(-250, 250);
   fgaus->SetParameters(hdZcum[0]->GetMaximum()*0.9, 45,hdZcum[0]->GetMaximum()*0.1,90);
   hdZcum[0]->Fit(fgaus, "r");
   hdZcum[0]->Draw();
@@ -918,7 +931,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
 	hdZ[i][1]->SetBinError(j, 1);
       }
     }
-    fgaus->SetRange(-200, 200);
+    fgaus->SetRange(l_dZ, h_dZ);
     hdZ[i][2] = (TH1D*)hdZ[i][0]->Clone(Form("hdZ%i_2",i));
     hdZ[i][2]->SetLineColor(kRed);
     hdZ[i][1]->SetLineColor(kMagenta);
@@ -928,17 +941,14 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     hdZ[i][0]->Draw();
     hdZ[i][1]->Draw("same");
     hdZ[i][2]->Draw("sames");
-    hdZ[i][2]->Fit(fgaus, "r");
+    hdZ[i][2]->Fit(fgaus, "rb");
     gPad->Update();
     hdZ[i][0]->GetYaxis()->SetRangeUser(-0.1*hdZ[i][0]->GetMaximum(), 1.1*hdZ[i][0]->GetMaximum());
-    double lnsig = (fgaus->GetParameter(1) + 200)/fgaus->GetParameter(2);
-    double hnsig = (200 - fgaus->GetParameter(1))/fgaus->GetParameter(2);
-    effdZ[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
-    effdZ[i] = fgaus->Integral(-200,200)/fgaus->Integral(-1000,1000);
-    grEffdZ->SetPoint(i,t[i],effdZ[i]);
+    effdZ[i] = fgaus->Integral(l_dZ, h_dZ)/fgaus->Integral(-1000,1000);
+    grEffdZ->SetPoint(i, t[i], effdZ[i]);
     gPad->Update();
     if(slow) sleep(1);
-    grdZ->SetPoint(i, t[i], fgaus->GetParameter(0)/ fgaus->GetParameter(2));
+    grdZ->SetPoint(i, t[i], fgaus->GetParameter(0)/fgaus->GetParameter(2));
     double var = pow(fgaus->GetParError(0)/fgaus->GetParameter(0),2);
     var += pow(fgaus->GetParError(2)/fgaus->GetParameter(2),2);
     grdZ->SetPointError(i, 0, sqrt(var)*fgaus->GetParameter(0)/fgaus->GetParameter(2));
@@ -983,6 +993,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   cR->cd(1);
   for(int i=0;i<grR->GetN();++i){
     double x, y, effx, eff = effAE[i]*effAPSD[i]*effBPSD[i]*effdZ[i];
+    cout<<effAE[i]<<" "<<effAPSD[i]<<" "<<effBPSD[i]<<" "<<effdZ[i]<<endl;
     grR->GetPoint(i,x,y);
     y /= eff;
     grR->SetPoint(i, x, y);
@@ -1065,10 +1076,12 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
       fdecay->SetParameters(0, 1, 0, fpol0->GetParameter(0));
       fdecay->FixParameter(3, fpol0->GetParameter(0));
       fdecay->FixParameter(0,0);
+      fdecay->FixParameter(1,1);
       hdtbkg[i]->Fit(fdecay,"B");
       grR2->SetPoint(i,t[i], fdecay->GetParameter(2)*tau);
       grR2->SetPointError(i,0, fdecay->GetParError(2)*tau);
       fdecay->ReleaseParameter(0);
+      fdecay->ReleaseParameter(1);
       fdecay->SetParameter(0, hdt[i][2]->GetMaximum()*5);
       fdecay->SetParameter(1, 0.00043);
       fdecay->FixParameter(2, fdecay->GetParameter(2));
@@ -1204,7 +1217,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     
     TCanvas *c2 = new TCanvas("c2","c2",0,0,1200,300);
     TGraphErrors *grEWpub = new TGraphErrors();
-    grEWpub->SetName(Form("grsigmaEvsTPo%i", (alpha_type == 1 ? 212 : 214)));
+    grEWpub->SetName(Form("grSigmaEvsTPo%i", (alpha_type == 1 ? 212 : 214)));
     grEWpub->SetTitle(Form("Po%i #alpha Energy 1#sigma Width vs Time", (alpha_type == 1 ? 212 : 214)));
     grEWpub->SetMarkerStyle(kCircle);
     grEWpub->SetMarkerSize(0.8);
@@ -1233,7 +1246,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     
     TCanvas *c2smear = new TCanvas("c2smear","c2smear",0,0,1200,300);
     TGraphErrors *grEWsmearpub = new TGraphErrors();
-    grEWsmearpub->SetName(Form("grsigmaEsmearvsTPo%i", (alpha_type == 1 ? 212 : 214)));
+    grEWsmearpub->SetName(Form("grSigmaEsmearvsTPo%i", (alpha_type == 1 ? 212 : 214)));
     grEWsmearpub->SetTitle(Form("Po%i #alpha Smeared Energy 1#sigma Width vs Time", (alpha_type == 1 ? 212 : 214)));
     grEWsmearpub->SetMarkerStyle(kCircle);
     grEWsmearpub->SetMarkerSize(0.8);
@@ -1262,7 +1275,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     
     TCanvas *c3 = new TCanvas("c3","c3",0,0,1200,300);
     TGraphErrors *grdZWpub = new TGraphErrors();
-    grdZWpub->SetName(Form("grsigmadZvsTPo%i", (alpha_type == 1 ? 212 : 214)));
+    grdZWpub->SetName(Form("grSigmadZvsTPo%i", (alpha_type == 1 ? 212 : 214)));
     grdZWpub->SetTitle(Form("Po%i #DeltaZ 1#sigma Width vs Time", (alpha_type == 1 ? 212 : 214)));
     grdZWpub->SetMarkerStyle(kCircle);
     grdZWpub->SetMarkerSize(0.8);
