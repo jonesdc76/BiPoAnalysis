@@ -5,7 +5,7 @@
 #include <fstream>
 #include <string>
 
-int makeIBDClassFromRunlist(const char *fname="NuFact18_GoodRuns_RxStatus.txt", const char* passname = "", const char* release = "Analyzed_20180717"){
+int makeIBDClassFromRunlist(const char *fname="2018C_GoodRuns_RxStatus.txt", const char* passname = "", const char* release = "Analyzed_2018C"){
   std::ifstream file;
   file.open(fname, std::ifstream::in);
   if(!(file.is_open()&&file.good())){

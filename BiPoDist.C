@@ -26,6 +26,8 @@
 using namespace std;
 
 int BiPoDist(){
+  const double n2f = 1/12.0;
+  const double tauBiPo = 0.1643/log(2); 
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(1111);
   BP *bp = new BP();
@@ -44,11 +46,11 @@ int BiPoDist(){
   hfz->Sumw2();
   hfz->SetLineColor(kRed);
   hfz->SetLineWidth(2);
-  TH1D *hpdz = new TH1D("hpdz","Alpha-Beta position difference",100,-400,400);
+  TH1D *hpdz = new TH1D("hpdz","Alpha-Beta position difference",100,-300,300);
   hpdz->Sumw2();
   hpdz->SetLineColor(kBlue);
   hpdz->SetLineWidth(2);
-  TH1D *hfdz = new TH1D("hfdz","Alpha-Beta position difference",100,-400,400);
+  TH1D *hfdz = new TH1D("hfdz","Alpha-Beta position difference",100,-300,300);
   hfdz->Sumw2();
   hfdz->SetLineColor(kRed);
   hfdz->SetLineWidth(2);
@@ -66,9 +68,9 @@ int BiPoDist(){
   TH2D *hf2 = new TH2D("hf2","BiPo Beta Heat Map",14,0,14,11,0,11);
   //Set boundary cut values on energy, psd, z-pos and time
   //-------------------------------------------------------
-  double hAE = 0.98, lAE = 0.73, hApsd = 0.32, lApsd = 0.2;//alpha
-  double highBE = 4.0, lowBE = 0, hPpsd = 0.26, lPpsd = 0;//beta
-  
+  double hAE = 0.98, lAE = 0.73, hApsd = 0.34, lApsd = 0.17;//alpha
+  double highBE = 4.0, lowBE = 0, hPpsd = 0.22, lPpsd = 0.05;//beta
+  double t_start = 7.0e-4, t_end = 3 * tauBiPo;
   for(int i=0;i<ch->GetEntries();++i){
     bp->GetEntry(i);
     if(i%5000000==0)cout<<"Entry "<<i<<" of "<<ch->GetEntries()<<endl; 
@@ -83,7 +85,9 @@ int BiPoDist(){
       	continue;//throw out clusters with recoils mixed in
       if(bp->pEtot->at(j) < lowBE || bp->pEtot->at(j) > highBE)
 	continue;//optional beta energy cut used for special studies
-      if(bp->mult_prompt > 0){
+      if(bp->mult_prompt == 0)continue;
+      double dt = bp->at-bp->pt->at(j);
+      if(dt > t_start && dt < t_end){
 	int ax = bp->aseg%14;
 	int ay = bp->aseg/14;
 	int x = bp->pseg->at(j)%14;
@@ -93,13 +97,11 @@ int BiPoDist(){
 	double dz = bp->az - bp->pz->at(j);
 	double d = sqrt(dx*dx+dy*dy+dz*dz);
 	hp->Fill(d);
-	if(d>1870 && d<1930){
-	  hap2->Fill(ax,ay);
-	  hp2->Fill(x,y);
-	  hpdt->Fill(bp->at-bp->pt->at(j));
-	  hpz->Fill(bp->pz->at(j));
-	  hpdz->Fill(bp->az-bp->pz->at(j));
-	}
+	hap2->Fill(ax,ay);
+	hp2->Fill(x,y);
+	hpdt->Fill(dt);
+	hpz->Fill(bp->pz->at(j));
+	hpdz->Fill(bp->az-bp->pz->at(j));
       }
     }
     for(int j=0;j<bp->mult_far;++j){
@@ -107,7 +109,10 @@ int BiPoDist(){
       	continue;//throw out clusters with recoils mixed in
       if(bp->fEtot->at(j) < lowBE || bp->fEtot->at(j) > highBE)
 	continue;//optional beta energy cut used for special studies
-      if(bp->mult_far > 0){
+      if(bp->mult_far == 0)continue;
+      double dt = (bp->ft->at(j)-bp->at)-10.0*tauBiPo;
+      dt *= n2f;
+      if(dt>0 && dt < t_end - t_start){
 	int ax = bp->aseg%14;
 	int ay = bp->aseg/14;
 	int x = bp->fseg->at(j)%14;
@@ -116,19 +121,15 @@ int BiPoDist(){
 	double dy = int((bp->aseg - bp->fseg->at(j))/14)*146.0;
 	double dz = bp->az - bp->fz->at(j);
 	double d = sqrt(dx*dx+dy*dy+dz*dz);
-	hf->Fill(d);
-	if(d>1870 && d<1930){
-	  haf2->Fill(ax,ay);
-	  hf2->Fill(x,y);
-	  double dt = (bp->ft->at(j)-bp->at)-10.0*0.1643/log(2);
-	  hfdt->Fill(dt/12.0);
-	  hfz->Fill(bp->fz->at(j));
-	  hfdz->Fill(bp->az-bp->fz->at(j));
-	}
+	hf->Fill(d, n2f);
+	haf2->Fill(ax,ay, n2f);
+	hf2->Fill(x,y, n2f);
+	hfdt->Fill(dt, n2f);
+	hfz->Fill(bp->fz->at(j), n2f);
+	hfdz->Fill(bp->az-bp->fz->at(j), n2f);
       }
     }
   }
-  hf->Scale(1/12.);
   TCanvas *c = new TCanvas("c","c",0,0,1600,1000);
   c->Divide(2,2);
   c->cd(1);
@@ -136,10 +137,12 @@ int BiPoDist(){
   hf->Draw("same");
   gPad->Update();
   TCanvas *ctn = new TCanvas("ctn","ctn",0,0,1000,500);
+  ctn->SetRightMargin(0.06);
+  ctn->SetLeftMargin(0.13);
   ctn->Divide(2,1);
   ctn->cd(1);
-  hp->Draw();
-  hf->Draw("same");
+  hp->Draw("hist");
+  hf->Draw("hist same");
   gPad->Update();
   hp->GetXaxis()->SetTitle("Prompt/Delay displacement (mm)");
   hp->GetYaxis()->SetTitle("Counts");
@@ -152,25 +155,23 @@ int BiPoDist(){
   hs->SetLineColor(kMagenta);
   hs->SetMarkerColor(kMagenta);
   hs->SetLineWidth(2);
-  hs->Draw("simple");
+  hs->Draw("hist");
   hs->GetXaxis()->SetTitle("Prompt/Delay displacement (mm)");
   hs->GetYaxis()->SetTitle("Counts");
-  TLine *tl = new TLine(700,0.0,700,5.e5);
+  TLine *tl = new TLine(550,0.0,550,hs->GetMaximum());
   tl->SetLineColor(kBlack);
   tl->SetLineWidth(2);
   tl->SetLineStyle(9);
   ctn->cd(2);  
-  hs->Draw();
+  hs->Draw("hist");
   tl->Draw();
   gPad->Update();
   ctn->SaveAs(Form("%s/distance_cut.pdf",gSystem->Getenv("TECHNOTE")));
   c->cd(3);
-  haf2->Scale(1/12.0);
   hap2->Add(haf2,-1);
   hap2->Draw("colz");
   
   c->cd(4);
-  hf2->Scale(1/12.0);
   hp2->Add(hf2,-1);
   hp2->Draw("colz");
 
@@ -178,7 +179,6 @@ int BiPoDist(){
   c1->Divide(2,2);
   c1->cd(1);
   hpz->Draw();
-  hfz->Scale(1/12.0);
   TH1D *hsz = (TH1D*)hpz->Clone("hsz");
   hsz->Add(hfz,-1);
   hsz->SetLineColor(kMagenta);
@@ -187,7 +187,6 @@ int BiPoDist(){
   hsz->Draw("same");
   c1->cd(2);
   hpdz->Draw();
-  hfdz->Scale(1/12.0);
   TH1D *hsdz = (TH1D*)hpdz->Clone("hsdz");
   hsdz->Add(hfdz,-1);
   hsdz->SetLineColor(kMagenta);
@@ -197,7 +196,6 @@ int BiPoDist(){
   hsdz->Draw("same");
   c1->cd(3);
   hpdt->Draw();
-  hfdt->Scale(1/12.0);
   TH1D *hsdt = (TH1D*)hpdt->Clone("hsdt");
   hsdt->Add(hfdt,-1);
   hsdt->SetLineColor(kMagenta);

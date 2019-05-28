@@ -2,8 +2,8 @@
 IBD=0
 RUNLIST=2018C_GoodRuns.txt
 DATA_DIR=/p/lustre2/psptexp/user/jonesdc/data/Analyzed/
-RELEASE=Phys_2018C
-ANARELEASE=Analyzed_2018C
+RELEASE=Phys_2019B
+ANARELEASE=Analyzed_2019B
 FILE=AD1_BiPo_DT.root
 FILE=AD1_BiPo.root
 if [ $IBD -eq 1 ];then

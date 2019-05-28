@@ -29,10 +29,20 @@ const double kCellSize = 146.0;//cell cross sectional size in mm
 const double kMaxDisplacement = 550.0;//maximum displacement between alpha and beta (max pulse in prompt cluster)
 const double tauBiPo = 0.1643/log(2); 
 const double F2N = 100.0;//ratio of lengths of far to near windows
-const double MAX_DZ = 200;//maximum z-displacement between prompt and delay
+const double MAX_DZ = 250;//maximum z-displacement between prompt and delay
 const double tmin = 0.01;//start coincidence window tmin ms away from electron
 const int kNcell = ncol * nrow;
 const int ExcludeCellArr[63] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 21, 23, 24, 27, 28, 29, 31, 32, 34, 36, 40, 41, 42, 43, 44, 46, 47, 48, 50, 52, 55, 56, 60, 63, 68, 69, 70, 73, 79, 83, 86, 87, 94, 97, 102, 107, 115, 121, 122, 126, 127, 128, 130, 133, 136, 139, 141};
+
+TH1D* Projection(TGraph *gr, const char* name, const char* title, int nbins, double lbin, double hbin){
+  TH1D *h = new TH1D(name,title,nbins,lbin,hbin);
+  for(int i=0;i<gr->GetN();++i){
+    double x, y;
+    gr->GetPoint(i,x,y);
+    h->Fill(y);
+  }
+  return h;
+}
 
 bool isET(int seg){
   return (seg%14 == 13 || seg%14 == 0 || seg >= 140);
@@ -64,7 +74,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   //alpha_type = 0, strictly Bi214-->Po214-->Pb210
   //alpha_type = 1, strictly Bi212-->Po212-->Pb208
   //alpha_type = 2, include both
-  int nBINST = alpha_type == 1 ? 15 : 40;
+  int nBINST = alpha_type == 1 ? 15 : nBINS;
   bool technote_plots = 1;
   int nnear = 0, nfar = 0, nalpha = 0;
   gStyle->SetOptStat(0);
@@ -112,13 +122,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   //Set boundary cut values on energy, psd, z-pos and time
   //-------------------------------------------------------
   double f2n = F2N > 12.0 ? 12.0 : F2N, n2f = 1.0/f2n;
-  double hAE = 1.0, lAE = 0.72, hApsd = 0.34, lApsd = 0.18;//alpha
+  double hAE = 1.0, lAE = 0.72, hApsd = 0.34, lApsd = 0.17;//alpha
   double highBE = 4.0, lowBE = 0, hPpsd = 0.22, lPpsd = 0.05;//beta
   double t_start = 0.01, t_end = 3 * tauBiPo;//prompt window
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset;//start time of far window 
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
-  double  l_dZ = alpha_type==1 ? -MAX_DZ : -250, h_dZ = fabs(l_dZ);
+  double  l_dZ = alpha_type==1 ? -200 : -MAX_DZ, h_dZ = fabs(l_dZ);
   double fidZ = fiducialize ? 1000.0 : 1000.0;//444.0;
   if(alpha_type == 1){
     t_start = 7.0e-4;
@@ -188,17 +198,17 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       hAZ[i]->SetMarkerColor(col[i]);
       hAZ[i]->SetLineColor(col[i]);
       
-      hAdZ[i] = new TH1D(Form("hAdZ%i",i),Form("%s #DeltaZ-Distribution", title[alpha_type].Data()),nBINS,l_dZ, h_dZ);
+      hAdZ[i] = new TH1D(Form("hAdZ%i",i),Form("%s #DeltaZ-Distribution", title[alpha_type].Data()),nBINS, l_dZ, h_dZ);
       hAdZ[i]->Sumw2();
       hAdZ[i]->SetMarkerColor(col[i]);
       hAdZ[i]->SetLineColor(col[i]);
       
-      hHamdZ[i] = new TH1D(Form("hHamdZ%i",i),Form("%s #DeltaZ-Distribution (Ham)", title[alpha_type].Data()),nBINS, -250, 250);
+      hHamdZ[i] = new TH1D(Form("hHamdZ%i",i),Form("%s #DeltaZ-Distribution (Ham)", title[alpha_type].Data()),nBINS, l_dZ, h_dZ);
       hHamdZ[i]->Sumw2();
       hHamdZ[i]->SetMarkerColor(col[i]);
       hHamdZ[i]->SetLineColor(col[i]);
       
-      hETdZ[i] = new TH1D(Form("hETdZ%i",i),Form("%s #DeltaZ-Distribution (ET)", title[alpha_type].Data()),nBINS, -250, 250);
+      hETdZ[i] = new TH1D(Form("hETdZ%i",i),Form("%s #DeltaZ-Distribution (ET)", title[alpha_type].Data()),nBINS, l_dZ, h_dZ);
       hETdZ[i]->Sumw2();
       hETdZ[i]->SetMarkerColor(col[i]);
       hETdZ[i]->SetLineColor(col[i]);
@@ -229,8 +239,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   double w = (t_end-t_start)/double(nb);
   int rebin_scale = 50;
   if(alpha_type == 1) w *= rebin_scale;
-  nb = int( (3*tauBiPo - 0.005) / w);
-  double l_t1 = 0.005, h_t1 = l_t1+nb*w;
+  double l_t1 = 0.005;
+  nb = int( (3*tauBiPo - l_t1) / w);
+  double h_t1 = l_t1+nb*w;
   TH1D *hABdt214 = new TH1D("hABdt214","hABdt214", nb, l_t1, h_t1);
   //  cout<<hABdt[0]->GetBinWidth(1)<<" "<<hABdt214->GetBinWidth(1)<<endl;
 
@@ -250,7 +261,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       h_AEsmear[i]->SetMarkerColor(col[i]);
       h_AEsmear[i]->SetLineColor(col[i]);
      
-      hBE[i] = new TH1D(Form("hBE%i",i),Form("%s #beta Energy Distribution", title[alpha_type].Data()),nBINS,0,(alpha_type == 1 ? 3.5 : highBE));
+      hBE[i] = new TH1D(Form("hBE%i",i),Form("%s #beta Energy Distribution", title[alpha_type].Data()),100,0,(alpha_type == 1 ? 3.5 : highBE));
       hBE[i]->Sumw2();
       hBE[i]->SetMarkerColor(col[i]);
       hBE[i]->SetLineColor(col[i]);
@@ -259,7 +270,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 
 
   //5. By cell plots
-  TH1D *hCellAE[kNcell][N], *hCellAEsmear[kNcell][N], *hCelldt[kNcell][N], *hCellBkgdt[kNcell], *hCellAPSD[kNcell][N], *hCellBPSD[kNcell][N], *hCelldZ[kNcell][N], *hCellZ[kNcell][N];
+  TH1D *hCellAE[kNcell][N], *hCellAEsmear[kNcell][N], *hCellBE[kNcell][N], *hCelldt[kNcell][N], *hCellBkgdt[kNcell], *hCellAPSD[kNcell][N], *hCellBPSD[kNcell][N], *hCelldZ[kNcell][N], *hCellZ[kNcell][N];
   TCanvas *cCellAE, *cCellAdE, *cCellAEsmear, *cCellAdEsmear, *cCellApsd, *cCellBpsd,  *cCelldZ,  *cCellZ, *cCellRate;
   w =  (t_end - t_start)/double(nBINST);
   if(alpha_type == 1) w *= rebin_scale;
@@ -280,6 +291,11 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	hCellAEsmear[j][i]->SetMarkerColor(col[i]);
 	hCellAEsmear[j][i]->SetLineColor(col[i]);
 	
+	hCellBE[j][i] = new TH1D(Form("hCellBE[%i][%i]",j,i), Form("hCellBE[%i][%i]",j,i), 50, lowBE, highBE);
+	hCellBE[j][i]->Sumw2();
+	hCellBE[j][i]->SetMarkerColor(col[i]);
+	hCellBE[j][i]->SetLineColor(col[i]);
+	
 	hCelldt[j][i] = new TH1D(Form("hCelldt[%i][%i]",j,i), Form("hCelldt[%i][%i]",j,i),nBINST, t_start, t_end);
 	hCelldt[j][i]->Sumw2();
 	hCelldt[j][i]->SetMarkerColor(col[i]);
@@ -295,7 +311,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	hCellBPSD[j][i]->SetMarkerColor(col[i]);
 	hCellBPSD[j][i]->SetLineColor(col[i]);
 
-	hCelldZ[j][i] = new TH1D(Form("hCelldZ[%i][%i]",j,i), Form("hCelldZ[%i][%i]",j,i),nBINS,-MAX_DZ, 200);
+	hCelldZ[j][i] = new TH1D(Form("hCelldZ[%i][%i]",j,i), Form("hCelldZ[%i][%i]",j,i),nBINS, l_dZ, h_dZ);
 	hCelldZ[j][i]->Sumw2();
 	hCelldZ[j][i]->SetMarkerColor(col[i]);
 	hCelldZ[j][i]->SetLineColor(col[i]);
@@ -331,8 +347,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     //Apply alpha cuts
     //-------------------------------------------
     if(!(abs(bp->az)<1000))continue;//alpha position
-    if(bp->aE<lAE || bp->aE > hAE)continue;//alpha energy
-    if(bp->aPSD<lApsd || bp->aPSD > hApsd)continue;//alpha PSD
+    if(bp->aE < lAE || bp->aE > hAE)continue;//alpha energy
+    if(bp->aPSD < lApsd || bp->aPSD > hApsd)continue;//alpha PSD
     if(fiducialize)
       if( isET(bp->aseg) || fabs(bp->az) > fidZ)//exclude volume at cell ends
     	continue;//alpha fiducial
@@ -356,17 +372,20 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       double dx = kCellSize*((bp->aseg - bp->pseg->at(j))%ncol);
       double dy = int((bp->aseg - bp->pseg->at(j))/ncol)*kCellSize;
       double dz = bp->az - bp->pz->at(j);
+      if(dz < l_dZ || dz > h_dZ)continue;
       double d = sqrt(dx*dx+dy*dy+dz*dz);
       if(d > kMaxDisplacement){++ncut[4];//discard largely displaced prompt and delayed
 	continue;}
       double dt = bp->at - bp->pt->at(j);
-      if(dt > l_t1 && dt < h_t1 && dz > l_dZ && dz < h_dZ){
+      if(dt > l_t1 && dt < h_t1){
 	hABdt214->Fill(dt);
       }
-      if(dt > l_t2 && dt < h_t2 && dz > l_dZ && dz < h_dZ){
+      if(dt > l_t2 && dt < h_t2){
 	hCellBkgdt[bp->aseg]->Fill(dt);
       }
       if(dt > t_start && dt < t_end){
+	++nnear;
+	++scale;
 	if(isET(bp->aseg)){
 	  hETdZ[0]->Fill(dz);
 	  hETBPSD[0]->Fill(bp->pPSD->at(j));
@@ -374,27 +393,24 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	  hHamdZ[0]->Fill(dz);
 	  hHamBPSD[0]->Fill(bp->pPSD->at(j));
 	}
-	if(dz > l_dZ && dz < h_dZ){
-	  ++nnear;
-	  ++scale;
-	  if(bool(plots["psd"] & which_plots)){
-	    hBPSDvZ[0]->Fill(bp->pz->at(j), bp->pPSD->at(j));
-	    hBPSDvE[0]->Fill(bp->pEtot->at(j), bp->pPSD->at(j));
-	  }
-	  if(bool(plots["z"] & which_plots)){
-	    hAdZ[0]->Fill(bp->az-bp->pz->at(j));
-	  }
-	  if(bool(plots["dt"] & which_plots)){
-	    hABdt[0]->Fill(dt);
-	  }
-	  if(bool(plots["E"] & which_plots)){
-	    hBE[0]->Fill(bp->pEtot->at(j));
-	  }
-	  if(bool(plots["by_cell"] & which_plots)){
-	    hCelldt[bp->aseg][0]->Fill(dt);
-	    hCellBPSD[bp->pseg->at(j)][0]->Fill(bp->pPSD->at(j));
-	    hCelldZ[bp->aseg][0]->Fill(bp->az-bp->pz->at(j));
-	  }
+	if(bool(plots["psd"] & which_plots)){
+	  hBPSDvZ[0]->Fill(bp->pz->at(j), bp->pPSD->at(j));
+	  hBPSDvE[0]->Fill(bp->pEtot->at(j), bp->pPSD->at(j));
+	}
+	if(bool(plots["z"] & which_plots)){
+	  hAdZ[0]->Fill(bp->az-bp->pz->at(j));
+	}
+	if(bool(plots["dt"] & which_plots)){
+	  hABdt[0]->Fill(dt);
+	}
+	if(bool(plots["E"] & which_plots)){
+	  hBE[0]->Fill(bp->pEtot->at(j));
+	  hCellBE[bp->aseg][0]->Fill(bp->pE->at(j));
+	}
+	if(bool(plots["by_cell"] & which_plots)){
+	  hCelldt[bp->aseg][0]->Fill(dt);
+	  hCellBPSD[bp->pseg->at(j)][0]->Fill(bp->pPSD->at(j));
+	  hCelldZ[bp->aseg][0]->Fill(bp->az-bp->pz->at(j));
 	}
       }else if(dt < t_start){
 	++ncut[5];
@@ -435,12 +451,15 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       double dx = kCellSize*((bp->aseg - bp->fseg->at(j))%ncol);
       double dy = int((bp->aseg - bp->fseg->at(j))/ncol)*kCellSize;
       double dz = bp->az - bp->fz->at(j);
+      if(dz < l_dZ || dz > h_dZ)continue;
       double d = sqrt(dx*dx+dy*dy+dz*dz);
       if(d > kMaxDisplacement)//discard largely displaced prompt and delayed
 	continue;
-
+      
       double dt = bp->ft->at(j) - bp->at;
       if(dt > ft_start && dt < ft_end){
+	++nfar;
+	++scale;
 	if(isET(bp->aseg)){
 	  hETBPSD[1]->Fill(bp->fPSD->at(j), n2f);
 	  hETdZ[1]->Fill(dz, n2f);
@@ -448,28 +467,25 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	  hHamBPSD[1]->Fill(bp->fPSD->at(j), n2f);
 	  hHamdZ[1]->Fill(dz, n2f);
 	}
-	if(dz > l_dZ && dz < h_dZ){
-	  ++nfar;
-	  ++scale;
-	  dt = (dt - ft_start)*n2f + t_start;
-	  if(bool(plots["psd"] & which_plots)){
-	    hBPSDvZ[1]->Fill(bp->fz->at(j), bp->fPSD->at(j), n2f);
-	    hBPSDvE[1]->Fill(bp->fEtot->at(j), bp->fPSD->at(j), n2f);
-	  }
-	  if(bool(plots["z"] & which_plots)){
-	    hAdZ[1]->Fill(bp->az-bp->fz->at(j), n2f);
-	  }
-	  if(bool(plots["dt"] & which_plots)){
-	    hABdt[1]->Fill(dt, n2f);
-	  }
-	  if(bool(plots["E"] & which_plots)){
-	    hBE[1]->Fill(bp->fEtot->at(j), n2f);
-	  }
-	  if(bool(plots["by_cell"] & which_plots)){
-	    hCelldt[bp->aseg][1]->Fill(dt, n2f);
-	    hCellBPSD[bp->fseg->at(j)][1]->Fill(bp->fPSD->at(j), n2f);
-	    hCelldZ[bp->aseg][1]->Fill(bp->az-bp->fz->at(j), n2f);
-	  }
+	dt = (dt - ft_start)*n2f + t_start;
+	if(bool(plots["psd"] & which_plots)){
+	  hBPSDvZ[1]->Fill(bp->fz->at(j), bp->fPSD->at(j), n2f);
+	  hBPSDvE[1]->Fill(bp->fEtot->at(j), bp->fPSD->at(j), n2f);
+	}
+	if(bool(plots["z"] & which_plots)){
+	  hAdZ[1]->Fill(bp->az-bp->fz->at(j), n2f);
+	}
+	if(bool(plots["dt"] & which_plots)){
+	  hABdt[1]->Fill(dt, n2f);
+	}
+	if(bool(plots["E"] & which_plots)){
+	  hBE[1]->Fill(bp->fEtot->at(j), n2f);
+	  hCellBE[bp->aseg][1]->Fill(bp->fE->at(j), n2f);
+	}
+	if(bool(plots["by_cell"] & which_plots)){
+	  hCelldt[bp->aseg][1]->Fill(dt, n2f);
+	  hCellBPSD[bp->fseg->at(j)][1]->Fill(bp->fPSD->at(j), n2f);
+	  hCelldZ[bp->aseg][1]->Fill(bp->az-bp->fz->at(j), n2f);
 	}
       }
     }
@@ -592,7 +608,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gPad->Update();
     cZ->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iZposition%s.pdf", (alpha_type == 1 ? 212:214),fid.Data()));
     if(technote_plots){    
-       //plot 12 from technote
+       //technote plot
        TCanvas *c12 = new TCanvas("c12","c12",0,0,800,700);
        hAZ[2]->SetMarkerColor(kBlue);
        hAZ[2]->SetLineColor(kBlue);
@@ -603,7 +619,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        hAZ[2]->GetYaxis()->SetTitleOffset(1);
        gPad->Update();
        c12->SaveAs(Form("%s/PubBiPo%iZdistribution%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214),fid.Data()));
-       //plot 13 from technote
+       //technote plot
        TCanvas *c13 = new TCanvas("c13","c13",0,0,800,700);
        hAdZ[2]->SetMarkerColor(kBlue);
        hAdZ[2]->SetLineColor(kBlue);
@@ -635,11 +651,14 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gPad->Update();
     hABdt[0]->GetXaxis()->SetTitle("#Deltat (ms)");
     hABdt[0]->GetYaxis()->SetTitle("Counts/ms");
+    hABdt[0]->GetYaxis()->SetRangeUser(0, 1.1*hABdt[0]->GetMaximum());
     hABdt[1]->Draw("sames");
     hABdt[2]->SetMarkerColor(col[2]);;
     hABdt[2]->SetLineColor(col[2]);;
     hABdt[2]->Draw("sames");
     TF1 *fpol0 = new TF1("fpol0","pol0",0,1);
+    fpol0->SetLineColor(kMagenta);
+    fpol0->SetLineWidth(1);
     hABdt[1]->Fit(fpol0);
     fdecay->SetParameters(hABdt[2]->GetMaximum(), tauBiPo, 0 );
     if(alpha_type == 1){
@@ -658,6 +677,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     }
     if(alpha_type == 0)
       fdecay->FixParameter(2, fpol0->GetParameter(0));
+    fdecay->SetLineColor(kBlue);
+    fdecay->SetLineWidth(1);
     hABdt[0]->Fit(fdecay, "RB");
     TF1* fdt2 = (TF1*)fdecay->Clone("fdt2");
     fdt2->SetRange(t_start, t_end);
@@ -673,7 +694,10 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     pts->SetFillColor(0);
     pts->AddText(Form("#chi^{2}/NDF:  %0.2f",fdecay->GetChisquare()/fdecay->GetNDF()));
     pts->AddText(Form("Probability:  %0.3f",fdecay->GetProb()));
-    pts->AddText(Form("#tau:  %0.4f #pm %0.4f #mus",fdecay->GetParameter(1)*1000,fdecay->GetParError(1)*1000));
+    if(alpha_type==1)
+      pts->AddText(Form("t_{1/2}:  %0.4f #pm %0.4f #mus",fdecay->GetParameter(1)*1000*log(2),fdecay->GetParError(1)*1000*log(2)));
+    else
+      pts->AddText(Form("t_{1/2}:  %0.1f #pm %0.1f #mus",fdecay->GetParameter(1)*1000*log(2),fdecay->GetParError(1)*1000*log(2)));
     pts->Draw();
     TPaveText *ptt = new TPaveText(0.7,0.78,0.899,0.92,"NDC");
     ptt->SetShadowColor(0);
@@ -691,6 +715,17 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     cdT->cd(3);
     hABdt[1]->Draw();
     cdT->SaveAs(Form("%s/BiPo%iDeltaTSpectrum%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), fid.Data()));
+    if(technote_plots){
+      TCanvas *cdT2 = new TCanvas("cdT2", "cdT2",0,0,800,600);
+      hABdt[0]->Draw();
+      cdT2->SetRightMargin(0.1);
+      hABdt[1]->Draw("sames");
+      hABdt[2]->Draw("sames");
+      pts->Draw();
+      ptt->Draw();
+      cdT2->SaveAs(Form("%s/BiPo%iDeltaTSpectrum%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), fid.Data()));
+    }
+
     //gStyle->SetOptStat(0);
     //gStyle->SetOptFit(0);
   }
@@ -739,10 +774,51 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     hBE[0]->GetXaxis()->SetTitle("Total Energy (MeV)");
     hBE[2] = (TH1D*)hBE[0]->Clone("hBE[2]");
     hBE[2]->Add(hBE[1],-1);
-    hBE[2]->SetMarkerColor(col[2]);;
-    hBE[2]->SetLineColor(col[2]);;
+    hBE[2]->SetMarkerColor(col[2]);
+    hBE[2]->SetLineColor(col[2]);
     hBE[2]->Draw("same");
     cE->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iEspectra%s.png", (alpha_type == 1 ? 212:214), fid.Data()));
+    TH1D *hsim = new TH1D();
+    TH1D *hsim76 = new TH1D();
+    if(alpha_type == 0){
+      TCanvas *csim = new TCanvas("csim","csim",0,0,1500,500);
+      csim->Divide(2,1);
+      csim->cd(1);
+      TFile *fsim = new TFile("SimPo214BetaSpectrum.root");
+      hsim = (TH1D*)fsim->Get("hSimBetaBi214");
+      hsim->SetLineColor(kGreen+2);
+      hsim->SetLineWidth(2);
+      hBE[2]->Scale(1/live/3.6);
+      hsim->Scale(hBE[2]->Integral(13,100, "width")/hsim->Integral(13,100,"width"));
+      hBE[2]->GetXaxis()->SetTitle("AD Full Detector Po214 #beta Energy Spectrum");
+      hBE[2]->GetXaxis()->SetTitle("#beta Energy (MeV)");
+      hBE[2]->GetYaxis()->SetTitle("Total Rate (mHz/MeV)");
+      hBE[2]->SetLineColor(kBlue);
+      hBE[2]->SetLineWidth(2);
+      hBE[2]->Draw();
+      hsim->Draw("sames");
+      gPad->Update();
+      csim->cd(2);
+      hCellBE[76][0]->Scale(1/hCellBE[76][0]->GetBinWidth(1)/live/3.6);
+      hCellBE[76][1]->Scale(1/hCellBE[76][1]->GetBinWidth(1)/live/3.6);
+      hCellBE[76][2] = (TH1D*) hCellBE[76][0]->Clone("hCellBE[76][2]");
+      hCellBE[76][2]->Add(hCellBE[76][1],-1);
+      hsim76 = (TH1D*)fsim->Get("hCell76SimBetaBi214");
+      hsim76->SetLineWidth(2);
+      hsim76->SetLineColor(kGreen+2);
+      hsim76->Scale(hCellBE[76][2]->Integral(1,hCellBE[76][2]->GetNbinsX())/hsim76->Integral(1,hsim->GetNbinsX())/hsim->GetBinWidth(1)*hCellBE[76][2]->GetBinWidth(1));
+      hCellBE[76][2]->Draw();
+      gPad->Update();
+      hCellBE[76][2]->SetTitle("Segment 76 Single Cell Po214 #beta Energy Spectrum");
+      hCellBE[76][2]->GetXaxis()->SetTitle("#beta Energy (MeV)");
+      hCellBE[76][2]->GetYaxis()->SetTitle("Rate (mHz/MeV)");
+      hsim76->Draw("same");
+      gPad->Update();
+      csim->SaveAs(Form("/home/jonesdc/prospect/plots/Bi214BetaEspectrumSimCompare.pdf"));
+      if(technote_plots)
+	csim->SaveAs(Form("%s/PubBi%iBetaEsimCompare%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214),fid.Data()));
+      //fsim->Close();
+    }
     cEsmear = new TCanvas("cEsmear","cEsmear",0,0,800,600);
     h_AEsmear[0]->Scale(1/h_AEsmear[0]->GetBinWidth(1));
     h_AEsmear[1]->Scale(1/h_AEsmear[1]->GetBinWidth(1));
@@ -907,15 +983,13 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     int nAE = 0, nApsd = 0, nBpsd = 0, ndZ = 0, nZ = 0 , nEff = 0;
     int nAE_ET = 0, nAEsmear_ET = 0, nApsd_ET = 0, nBpsd_ET = 0, ndZ_ET = 0,
       nZ_ET = 0;
-    //Beta and dz distributions appear to be composed of a main Gaussian 
-    //distribution housing most of the events and a smaller Gaussian of approx
-    //twice the width. I interpret the narrow distribution as being the majority
-    //of events when the largest pulse in the prompt cluster is the beta and is
-    //in the same cell as the alpha. The wider distribution is when the largest
-    //pulse in the prompt cluster is a gamma. This section of code tries to
-    //establish the width for the larger distributions which is then fixed as a
-    //parameter in subsequent by-cell fits. Not fixing this width allows the fit
-    //too much freedom and it sometimes goes crazy.
+    //Beta dz distributions are 3D distributions of betas and gammas traveling
+    //isotropically with exp(-t/l) distributions convoluted with energy res-
+    //olution noise. The distribution is not Gaussian but can be approximately
+    //modeled as two Gaussians. The following section of code tries establishes
+    //the width for the larger distribution which is then fixed as a parameter
+    //in subsequent by-cell fits. Not fixing this width allows the fit too much
+    //freedom and it sometimes goes crazy.
     TCanvas *cfits = new TCanvas("cfits","cfits",0,0,1500,900);
     cfits->Divide(2,2);
     cfits->cd(1);
@@ -983,7 +1057,6 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	double hnsig = (hAE - f->GetParameter(1))/f->GetParameter(2);
 	effAE[i] = (erf(lnsig/sqrt(2)) + erf(hnsig/sqrt(2)))/2.0;
 	grEffAE->SetPoint(nAE, i, effAE[i]);
-	++nAE;
 	if(isET(i)){
 	  gAE_ET->SetPoint(nAE_ET, i, f->GetParameter(1));
 	  gAE_ET->SetPointError(nAE_ET, 0, f->GetParError(1));
@@ -1022,6 +1095,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	  gAEsmearW_ET->SetPointError(nAE_ET, 0, f->GetParError(2));
 	  ++nAEsmear_ET;
 	}
+	++nAE;
       }
       
       if(hCellAPSD[i][0]->GetEntries()>0){//Alpha PSD
@@ -1143,14 +1217,21 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	}
 	if(i==76){
 	  TCanvas *cSC = new TCanvas("cSC","cSC",0,0,700, 500);
-	  hCellZ[i][2]->Scale(1/live/hCellZ[i][2]->GetBinWidth(1));
+	  hCellZ[i][2]->Scale(1/live/hCellZ[i][2]->GetBinWidth(1)/3.6);
 	  hCellZ[i][2]->Draw();
 	  gPad->Update();
 	  hCellZ[i][2]->SetTitle("Cell 76 BiPo Alpha Z-distribution");
 	  hCellZ[i][2]->GetXaxis()->SetTitle("Position (mm)");
-	  hCellZ[i][2]->GetYaxis()->SetTitle("Rate (Hz/mm)");
+	  hCellZ[i][2]->GetYaxis()->SetTitle("Rate (mHz/mm)");
 	  gPad->Update();
 	}
+      }
+      if(hCellBE[i][0]->GetEntries()>0){//Beta E
+	cByCell->cd(6);
+	hCellBE[i][2] = (TH1D*)hCellBE[i][0]->Clone(Form("hCellBE[%i][2]",i));
+	hCellBE[i][2]->Add(hCellBE[i][1],-1);
+	hCellBE[i][2]->Draw();
+	gPad->Update();
       }
       grEff->SetPoint(nEff, i, effAE[i]*effAPSD[i]*effBPSD[i]*effdZ[i]);
       ++nEff;
@@ -1724,11 +1805,11 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       gStyle->SetPadLeftMargin(0.08);
       gStyle->SetOptStat(0);
       bool normalize = 1;//create plots normalized to average value
-      //plot 1 from technote
+      //technote plot
       TCanvas *c0 = new TCanvas("c0","c0",0,0,1200,300);
-      TGraphErrors *gAE1 = new TGraphErrors();
-      gAE1->SetName(Form("grEvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
-      gAE1->SetTitle(Form("Po-%i #alpha Energy vs. Cell", (alpha_type == 1 ? 212 : 214)));
+      TGraphErrors *gAEnorm = new TGraphErrors();
+      gAEnorm->SetName(Form("grEvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
+      gAEnorm->SetTitle(Form("Po-%i #alpha Energy vs. Cell", (alpha_type == 1 ? 212 : 214)));
       TF1 fE("fE","pol0",0,1);
       gAE->Fit("fE");
       printf("***AE\nChiSquare/NDF: %0.5f/%i\nFit: %0.5f$\\pm$%0.5f\n",fE.GetChisquare(), fE.GetNDF(), fE.GetParameter(0), fE.GetParError(0));
@@ -1736,163 +1817,250 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       if(!normalize)norm = 1.0;
       for(int i=0;i<gAE->GetN();++i){
 	gAE->GetPoint(i, x, y);
-	gAE1->SetPoint(i, x, y/norm);
-	gAE1->SetPointError(i, 0, gAE->GetErrorY(i)/norm);
+	gAEnorm->SetPoint(i, x, y/norm);
+	gAEnorm->SetPointError(i, 0, gAE->GetErrorY(i)/norm);
       }
-      gAE1->SetMarkerColor(kBlue);
-      gAE1->SetLineColor(kBlue);
-      gAE1->SetMarkerStyle(kCircle);
-      gAE1->SetMarkerSize(0.8);
-      gAE1->Draw("ap");
-      gAE1->GetXaxis()->SetTitle("Segment Number");
-      gAE1->GetYaxis()->SetTitle("E_{#alpha}/#LTE_{#alpha}#GT");
-      if(!normalize)gAE1->GetYaxis()->SetTitle("E_{#alpha} (MeV)");
-      gAE1->GetYaxis()->SetTitleOffset(0.4);
-      gAE1->GetXaxis()->SetTitleOffset(0.7);
-      gAE1->GetYaxis()->SetTitleSize(0.07);
-      gAE1->GetXaxis()->SetTitleSize(0.07);
+      gAEnorm->SetMarkerColor(kBlue);
+      gAEnorm->SetLineColor(kBlue);
+      gAEnorm->SetMarkerStyle(kCircle);
+      gAEnorm->SetMarkerSize(0.8);
+      gAEnorm->Draw("ap");
+      gAEnorm->GetXaxis()->SetTitle("Segment Number");
+      gAEnorm->GetYaxis()->SetTitle("E_{#alpha}/#LTE_{#alpha}#GT");
+      if(!normalize)gAEnorm->GetYaxis()->SetTitle("E_{#alpha} (MeV)");
+      gAEnorm->GetYaxis()->SetTitleOffset(0.4);
+      gAEnorm->GetXaxis()->SetTitleOffset(0.7);
+      gAEnorm->GetYaxis()->SetTitleSize(0.07);
+      gAEnorm->GetXaxis()->SetTitleSize(0.07);
       gPad->Update();
-      gAE1->Write();
+      gAEnorm->Write();
       c0->SaveAs(Form("%s/PubBiPo%iEvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
-      
-      //plot 2 from technote
+      TH1D *hAEnorm = Projection(gAEnorm,"", Form("%s;%s",gAEnorm->GetTitle(),gAEnorm->GetYaxis()->GetTitle()), 50, 0.99,1.01);
+      hAEnorm->SetLineColor(kBlue);
+      hAEnorm->SetName(Form("hAEnorm%s", (char*)(alpha_type==1? "212":"214")));
+      hAEnorm->Write();
+       
+      //technote plot
       bool sigma_at_1MeV = 0;
       TCanvas *c1 = new TCanvas("c1","c1",0,0,1200,300);
-      TGraphErrors *gAEW1 = new TGraphErrors();
-      gAEW1->SetName(Form("grE_resvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
-      gAEW1->SetTitle(Form("Po-%i #alpha Energy Resolution vs. Cell", (alpha_type == 1 ? 212 : 214)));
+      TGraphErrors *gAEWnorm = new TGraphErrors();
+      gAEWnorm->SetName(Form("grE_resvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
+      gAEWnorm->SetTitle(Form("Po-%i #alpha Energy Resolution vs. Cell", (alpha_type == 1 ? 212 : 214)));
+      
+      if(sigma_at_1MeV){
+	norm = sqrt(norm);
+      }else{
+	gAEW->Fit("fE");
+	norm = fE.GetParameter(0);
+	if(!normalize)norm = 1.0;
+      }
+      for(int i=0;i<gAEW->GetN();++i){
+	gAEW->GetPoint(i, x, y);
+	gAEWnorm->SetPoint(i, x, y/norm);
+	gAEWnorm->SetPointError(i, 0, gAEW->GetErrorY(i)/norm);
+      }
+      gAEWnorm->SetMarkerColor(kBlue);
+      gAEWnorm->SetLineColor(kBlue);
+      gAEWnorm->SetMarkerStyle(kCircle);
+      gAEWnorm->SetMarkerSize(0.8);
+      gAEWnorm->Draw("ap");
+      //gAEWnorm->GetXaxis()->SetMaxDigits(4);
+      gAEWnorm->GetXaxis()->SetTitle("Segment Number");
+      gAEWnorm->GetYaxis()->SetTitleOffset(0.4);
+      gAEWnorm->GetXaxis()->SetTitleOffset(0.7);
+      gAEWnorm->GetYaxis()->SetTitleSize(0.07);
+      gAEWnorm->GetXaxis()->SetTitleSize(0.07);
+      if(sigma_at_1MeV)
+	gAEWnorm->GetYaxis()->SetTitle("#sigma_{E}/#sqrt{#LTE_{#alpha}#GT}");
+      else{
+	gAEWnorm->GetYaxis()->SetTitle("#sigma_{E}/#LT#sigma_{E}#GT");
+	if(!normalize)gAEWnorm->GetYaxis()->SetTitle("#sigma_{E} (MeV)");
+      }
+      gPad->Update();
+      gAEWnorm->Write();
+      c1->SaveAs(Form("%s/PubBiPo%iEresvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214),fid.Data()));
+      TH1D *hAEWnorm = Projection(gAEWnorm,"", Form("%s;%s",gAEWnorm->GetTitle(),gAEWnorm->GetYaxis()->GetTitle()), 50, 0.85, 1.15);
+      hAEWnorm->SetLineColor(kBlue);
+      hAEWnorm->SetName(Form("hAEWnorm%s", (char*)(alpha_type==1? "212":"214")));
+      hAEWnorm->Write();
+       
+      //technote plot
+      TCanvas *c0sm = new TCanvas("c0sm","c0sm",0,0,1200,300);
+      TGraphErrors *gAEsmearNorm = new TGraphErrors();
+      gAEsmearNorm->SetName(Form("grEsmearvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
+      gAEsmearNorm->SetTitle(Form("Po-%i Smeared #alpha Energy vs. Cell", (alpha_type == 1 ? 212 : 214)));
+      gAEsmear->Fit("fE");
+      printf("***AEsmear\nChiSquare/NDF: %0.5f/%i\nFit: %0.5f$\\pm$%0.5f\n",fE.GetChisquare(), fE.GetNDF(), fE.GetParameter(0), fE.GetParError(0));
+      norm = fE.GetParameter(0);
+      if(!normalize)norm = 1.0;
+      for(int i=0;i<gAEsmear->GetN();++i){
+	gAEsmear->GetPoint(i, x, y);
+	gAEsmearNorm->SetPoint(i, x, y/norm);
+	gAEsmearNorm->SetPointError(i, 0, gAEsmear->GetErrorY(i)/norm);
+      }
+      gAEsmearNorm->SetMarkerColor(kBlue);
+      gAEsmearNorm->SetLineColor(kBlue);
+      gAEsmearNorm->SetMarkerStyle(kCircle);
+      gAEsmearNorm->SetMarkerSize(0.8);
+      gAEsmearNorm->Draw("ap");
+      gAEsmearNorm->GetXaxis()->SetTitle("Segment Number");
+      gAEsmearNorm->GetYaxis()->SetTitle("Smeared E_{#alpha}/#LTE_{#alpha}#GT");
+      if(!normalize)gAEsmearNorm->GetYaxis()->SetTitle("(Smeared) E_{#alpha} (MeV)");
+      gAEsmearNorm->GetYaxis()->SetTitleOffset(0.4);
+      gAEsmearNorm->GetXaxis()->SetTitleOffset(0.7);
+      gAEsmearNorm->GetYaxis()->SetTitleSize(0.07);
+      gAEsmearNorm->GetXaxis()->SetTitleSize(0.07);
+      gPad->Update();
+      gAEsmearNorm->Write();
+      c0sm->SaveAs(Form("%s/PubBiPo%iEsmearvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
+      TH1D *hAEsmearNorm = Projection(gAEsmearNorm,"hAEsmearNorm", Form("%s;%s",gAEsmearNorm->GetTitle(),gAEsmearNorm->GetYaxis()->GetTitle()), 50, 0.99,1.01);
+      hAEsmearNorm->Write();
+      TCanvas *c1sm = new TCanvas("c1sm","c1sm",0,0,1200,300);
+      TGraphErrors *gAEsmearWnorm = new TGraphErrors();
+      gAEsmearWnorm->SetName(Form("grEsmear_resvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
+      gAEsmearWnorm->SetTitle(Form("Po-%i #alpha Energy Resolution vs. Cell", (alpha_type == 1 ? 212 : 214)));
       
        if(sigma_at_1MeV){
 	norm = sqrt(norm);
        }else{
-	gAEW->Fit("fE");
+	gAEsmearW->Fit("fE");
 	norm = fE.GetParameter(0);
 	if(!normalize)norm = 1.0;
        }
-       for(int i=0;i<gAEW->GetN();++i){
-	 gAEW->GetPoint(i, x, y);
-	 gAEW1->SetPoint(i, x, y/norm);
-	 gAEW1->SetPointError(i, 0, gAEW->GetErrorY(i)/norm);
+       for(int i=0;i<gAEsmearW->GetN();++i){
+	 gAEsmearW->GetPoint(i, x, y);
+	 gAEsmearWnorm->SetPoint(i, x, y/norm);
+	 gAEsmearWnorm->SetPointError(i, 0, gAEsmearW->GetErrorY(i)/norm);
        }
-       gAEW1->SetMarkerColor(kBlue);
-       gAEW1->SetLineColor(kBlue);
-       gAEW1->SetMarkerStyle(kCircle);
-       gAEW1->SetMarkerSize(0.8);
-       gAEW1->Draw("ap");
-       //gAEW1->GetXaxis()->SetMaxDigits(4);
-       gAEW1->GetXaxis()->SetTitle("Segment Number");
-       gAEW1->GetYaxis()->SetTitleOffset(0.4);
-       gAEW1->GetXaxis()->SetTitleOffset(0.7);
-       gAEW1->GetYaxis()->SetTitleSize(0.07);
-       gAEW1->GetXaxis()->SetTitleSize(0.07);
+       gAEsmearWnorm->SetMarkerColor(kBlue);
+       gAEsmearWnorm->SetLineColor(kBlue);
+       gAEsmearWnorm->SetMarkerStyle(kCircle);
+       gAEsmearWnorm->SetMarkerSize(0.8);
+       gAEsmearWnorm->Draw("ap");
+       //gAEsmearWnorm->GetXaxis()->SetMaxDigits(4);
+       gAEsmearWnorm->GetXaxis()->SetTitle("Segment Number");
+       gAEsmearWnorm->GetYaxis()->SetTitleOffset(0.4);
+       gAEsmearWnorm->GetXaxis()->SetTitleOffset(0.7);
+       gAEsmearWnorm->GetYaxis()->SetTitleSize(0.07);
+       gAEsmearWnorm->GetXaxis()->SetTitleSize(0.07);
        if(sigma_at_1MeV)
-	 gAEW1->GetYaxis()->SetTitle("#sigma_{E}/#sqrt{#LTE_{#alpha}#GT}");
+	 gAEsmearWnorm->GetYaxis()->SetTitle("#sigma_{Esmear}/#sqrt{#LTE_{#alpha}#GT}");
        else{
-	 gAEW1->GetYaxis()->SetTitle("#sigma_{E}/#LT#sigma_{E}#GT");
-	 if(!normalize)gAEW1->GetYaxis()->SetTitle("#sigma_{E} (MeV)");
+	 gAEsmearWnorm->GetYaxis()->SetTitle("#sigma_{Esmear}/#LT#sigma_{Esmear}#GT");
+	 if(!normalize)gAEsmearWnorm->GetYaxis()->SetTitle("#sigma_{Esmear} (MeV)");
        }
        gPad->Update();
-       gAEW1->Write();
-       c1->SaveAs(Form("%s/PubBiPo%iEresvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214),fid.Data()));
+       gAEsmearWnorm->Write();
+       c1sm->SaveAs(Form("%s/PubBiPo%iEsmearresvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214),fid.Data()));
+       TH1D *hAEsmearWnorm = Projection(gAEsmearWnorm,"", Form("%s;%s",gAEsmearWnorm->GetTitle(),gAEsmearWnorm->GetYaxis()->GetTitle()), 50, 0.85,1.1);
+       hAEsmearWnorm->SetLineColor(kBlue);
+       hAEsmearWnorm->SetName(Form("hSigmaAEsmearNorm%s", (char*)(alpha_type==1? "212":"214")));
+       hAEsmearWnorm->Write();
        
-      //plot 3 from technote
+       //technote plot
        TCanvas *c2 = new TCanvas("c2","c2",0,0,1200,300);
-       TGraphErrors *gdZW1 = new TGraphErrors();
-       gdZW1->SetName(Form("grsigmadZvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
-       gdZW1->SetTitle(Form("Po-%i #DeltaZ 1-#sigma Width vs. Cell", (alpha_type == 1 ? 212 : 214)));
+       TGraphErrors *gdZWnorm = new TGraphErrors();
+       gdZWnorm->SetName(Form("grsigmadZvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
+       gdZWnorm->SetTitle(Form("Po-%i #DeltaZ 1-#sigma Width vs. Cell", (alpha_type == 1 ? 212 : 214)));
        gdZW->Fit("fE");
        norm = fE.GetParameter(0);
        if(!normalize)norm = 1.0;
        for(int i=0;i<gdZW->GetN();++i){
 	 gdZW->GetPoint(i, x, y);
-	 gdZW1->SetPoint(i, x, y/norm);
-	 gdZW1->SetPointError(i, 0, gdZW->GetErrorY(i)/norm);
+	 gdZWnorm->SetPoint(i, x, y/norm);
+	 gdZWnorm->SetPointError(i, 0, gdZW->GetErrorY(i)/norm);
        }
-       gdZW1->SetMarkerColor(kBlue);
-       gdZW1->SetLineColor(kBlue);
-       gdZW1->SetMarkerStyle(kCircle);
-       gdZW1->SetMarkerSize(0.8);
-       gdZW1->Draw("ap");
-       gdZW1->GetYaxis()->SetTitleOffset(0.4);
-       gdZW1->GetXaxis()->SetTitleOffset(0.7);
-       gdZW1->GetYaxis()->SetTitleSize(0.07);
-       gdZW1->GetXaxis()->SetTitleSize(0.07);
-       gdZW1->GetXaxis()->SetTitle("Segment Number");
-       gdZW1->GetYaxis()->SetTitle("#sigma_{Z}/#LT#sigma_{Z}#GT");
-       if(!normalize) gdZW1->GetYaxis()->SetTitle("#sigma_{Z} (mm)");
+       gdZWnorm->SetMarkerColor(kBlue);
+       gdZWnorm->SetLineColor(kBlue);
+       gdZWnorm->SetMarkerStyle(kCircle);
+       gdZWnorm->SetMarkerSize(0.8);
+       gdZWnorm->Draw("ap");
+       gdZWnorm->GetYaxis()->SetTitleOffset(0.4);
+       gdZWnorm->GetXaxis()->SetTitleOffset(0.7);
+       gdZWnorm->GetYaxis()->SetTitleSize(0.07);
+       gdZWnorm->GetXaxis()->SetTitleSize(0.07);
+       gdZWnorm->GetXaxis()->SetTitle("Segment Number");
+       gdZWnorm->GetYaxis()->SetTitle("#sigma_{Z}/#LT#sigma_{Z}#GT");
+       if(!normalize) gdZWnorm->GetYaxis()->SetTitle("#sigma_{Z} (mm)");
        gPad->Update();
-       gdZW1->Write();
+       gdZWnorm->Write();
        c2->SaveAs(Form("%s/PubBiPo%idZWidthvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
+       TH1D *hdZWnorm = Projection(gdZWnorm,"", Form("%s;%s",gdZWnorm->GetTitle(),gdZWnorm->GetYaxis()->GetTitle()), 50, 0.85,1.3);
+       hdZWnorm->SetLineColor(kBlue);
+       hdZWnorm->SetName(Form("hSigmadZnorm%s", (char*)(alpha_type==1? "212":"214")));
+       hdZWnorm->Write();
 
-       //plot 4 from technote
+       //technote plot
        TCanvas *c3 = new TCanvas("c3","c3",0,0,1200,300);
-       TGraphErrors *gAZW1 = new TGraphErrors();
-       gAZW1->SetName(Form("grZRMSvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
-       gAZW1->SetTitle(Form("Po-%i Z-distribution RMS Width vs. Cell", (alpha_type == 1 ? 212 : 214)));
+       TGraphErrors *gAZWnorm = new TGraphErrors();
+       gAZWnorm->SetName(Form("grZRMSvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
+       gAZWnorm->SetTitle(Form("Po-%i Z-distribution RMS Width vs. Cell", (alpha_type == 1 ? 212 : 214)));
        gAZW->Fit("fE");
        norm = fE.GetParameter(0);
        if(!normalize)norm = 1.0;
        for(int i=0;i<gAZW->GetN();++i){
 	 gAZW->GetPoint(i, x, y);
-	 gAZW1->SetPoint(i, x, y/norm);
-	 gAZW1->SetPointError(i, 0, gAZW->GetErrorY(i)/norm);
+	 gAZWnorm->SetPoint(i, x, y/norm);
+	 gAZWnorm->SetPointError(i, 0, gAZW->GetErrorY(i)/norm);
        }
-       gAZW1->SetMarkerColor(kBlue);
-       gAZW1->SetLineColor(kBlue);
-       gAZW1->SetMarkerStyle(kCircle);
-       gAZW1->SetMarkerSize(0.8);
-       gAZW1->Draw("ap");
-       gAZW1->GetYaxis()->SetTitleOffset(0.4);
-       gAZW1->GetXaxis()->SetTitleOffset(0.7);
-       gAZW1->GetYaxis()->SetTitleSize(0.07);
-       gAZW1->GetXaxis()->SetTitleSize(0.07);
-       gAZW1->GetXaxis()->SetTitle("Segment Number");
-       gAZW1->GetYaxis()->SetTitle("Z_{RMS}/#LT Z_{RMS}#GT");
-       if(!normalize) gAZW1->GetYaxis()->SetTitle("Z_{RMS} (mm)");
+       gAZWnorm->SetMarkerColor(kBlue);
+       gAZWnorm->SetLineColor(kBlue);
+       gAZWnorm->SetMarkerStyle(kCircle);
+       gAZWnorm->SetMarkerSize(0.8);
+       gAZWnorm->Draw("ap");
+       gAZWnorm->GetYaxis()->SetTitleOffset(0.4);
+       gAZWnorm->GetXaxis()->SetTitleOffset(0.7);
+       gAZWnorm->GetYaxis()->SetTitleSize(0.07);
+       gAZWnorm->GetXaxis()->SetTitleSize(0.07);
+       gAZWnorm->GetXaxis()->SetTitle("Segment Number");
+       gAZWnorm->GetYaxis()->SetTitle("Z_{RMS}/#LT Z_{RMS}#GT");
+       if(!normalize) gAZWnorm->GetYaxis()->SetTitle("Z_{RMS} (mm)");
        gPad->Update();
-       gAZW1->Write();
+       gAZWnorm->Write();
        c3->SaveAs(Form("%s/PubBiPo%iZRMSvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
 
-       //plot 9 from technote
+       //technote plot
        TCanvas *c4 = new TCanvas("c4","c4",0,0,1200,300);
-       TGraphErrors *gAZ1 = new TGraphErrors();
-       gAZ1->SetName(Form("grZvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
-       gAZ1->SetTitle(Form("Po-%i Mean of Z-distribution vs. Cell", (alpha_type == 1 ? 212 : 214)));
+       TGraphErrors *gAZnorm = new TGraphErrors();
+       gAZnorm->SetName(Form("grZvsCellPo%i", (alpha_type == 1 ? 212 : 214)));
+       gAZnorm->SetTitle(Form("Po-%i Mean of Z-distribution vs. Cell", (alpha_type == 1 ? 212 : 214)));
        gAZ->Fit("fE");
        norm = fE.GetParameter(0);
        normalize = 0;
        if(!normalize) norm = 1.0;
        for(int i=0;i<gAZ->GetN();++i){
 	 gAZ->GetPoint(i, x, y);
-	 gAZ1->SetPoint(i, x, y/norm);
-	 gAZ1->SetPointError(i, 0, gAZ->GetErrorY(i)/norm);
+	 gAZnorm->SetPoint(i, x, y/norm);
+	 gAZnorm->SetPointError(i, 0, gAZ->GetErrorY(i)/norm);
        }
-       gAZ1->SetMarkerColor(kBlue);
-       gAZ1->SetLineColor(kBlue);
-       gAZ1->SetMarkerStyle(kCircle);
-       gAZ1->SetMarkerSize(0.8);
-       gAZ1->Draw("ap");
-       gAZ1->GetYaxis()->SetTitleOffset(0.4);
-       gAZ1->GetXaxis()->SetTitleOffset(0.7);
-       gAZ1->GetYaxis()->SetTitleSize(0.07);
-       gAZ1->GetXaxis()->SetTitleSize(0.07);
-       gAZ1->GetXaxis()->SetTitle("Segment Number");
-       gAZ1->GetYaxis()->SetTitle("Mean Z/#LT Mean Z#GT");
-       if(!normalize) gAZ1->GetYaxis()->SetTitle("Mean Z (mm)");
+       gAZnorm->SetMarkerColor(kBlue);
+       gAZnorm->SetLineColor(kBlue);
+       gAZnorm->SetMarkerStyle(kCircle);
+       gAZnorm->SetMarkerSize(0.8);
+       gAZnorm->Draw("ap");
+       gAZnorm->GetYaxis()->SetTitleOffset(0.4);
+       gAZnorm->GetXaxis()->SetTitleOffset(0.7);
+       gAZnorm->GetYaxis()->SetTitleSize(0.07);
+       gAZnorm->GetXaxis()->SetTitleSize(0.07);
+       gAZnorm->GetXaxis()->SetTitle("Segment Number");
+       gAZnorm->GetYaxis()->SetTitle("Mean Z/#LT Mean Z#GT");
+       if(!normalize) gAZnorm->GetYaxis()->SetTitle("Mean Z (mm)");
        gPad->Update();
-       gAZ1->Write();
+       gAZnorm->Write();
        c4->SaveAs(Form("%s/PubBiPo%imeanZvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
-
+       TH1D *hAZnorm = Projection(gAZnorm,"", Form("%s;%s",gAZnorm->GetTitle(),gAZnorm->GetYaxis()->GetTitle()), 50, -20,20);
+       hAZnorm->SetLineColor(kBlue);
+       hAZnorm->SetName(Form("hAZnorm%s", (char*)(alpha_type==1? "212":"214")));
+       hAZnorm->Write();
+       hCellZ[76][2]->SetLineColor(kBlue);
+       hCellZ[76][2]->SetName(Form("hZcell76Po%s", (char*)(alpha_type==1? "212":"214")));
+       hCellZ[76][2]->Write();
        f.Close();
 
     }
 
     //Rate and half-life info from dt distribution
     gStyle->SetOptFit(1111);
-    TCanvas *cCelldt = new TCanvas("cCelldt","cCelldt",0,0,1400,1000);
-    cCelldt->Divide(2,2);
-    cCelldt->cd(1);
-    cCelldt->SetLeftMargin(0.12);
     //BiPo rate from dt plot vs cell
     TGraphErrors *grR1 = new TGraphErrors();
     grR1->SetMarkerColor(kBlue);
@@ -1927,6 +2095,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     grth->GetXaxis()->SetTitle("Cell Number");
     TF1 *fpol0 = new TF1("fpol0","pol0",0,1);
     npt=0;
+    TCanvas *ctmp = new TCanvas("ctmp","ctmp",0,0,800,600);
     for(int i=0;i<kNcell;++i){
       if(exclude_cells)
 	if( find(begin(ExcludeCellArr), end(ExcludeCellArr), i)
@@ -1963,6 +2132,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       double err = sqrt(cov[0][0]*pow(fdecay->GetParameter(1),2)+cov[1][1]*pow(fdecay->GetParameter(0),2)+2*cov[0][1]*fdecay->GetParameter(0)*fdecay->GetParameter(1))/eff;
       double rate = fdecay->GetParameter(0)*fdecay->GetParameter(1)/eff;
       hCelldt[i][0]->Draw();
+      hCelldt[i][1]->SetLineColor(kMagenta);
+      hCelldt[i][1]->Draw("sames");
+      ctmp->SaveAs(Form("../plots/Cell%idt.png",i));
       grR1->SetPoint(npt,i, rate);
       grR1->SetPointError(npt,0, err);
       if(alpha_type == 1){
@@ -1977,93 +2149,33 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       ++npt;
       
     }
-    cCelldt->cd(1);
+    TCanvas *cRatedt = new TCanvas("cRatedt","cRatedt",0,0,1500,600);
+    cRatedt->SetLeftMargin(0.12);
+    cRatedt->Divide(2,1);
+    cRatedt->cd(1);
     grR1->Draw("ap");
     grR1->Fit(fpol0);
     if(alpha_type==1){
-      cCelldt->cd(2);
+      cRatedt->cd(2);
       grR2->Draw("ap");
       grR2->Fit(fpol0);
     }
-    cCelldt->cd(3);
+    TCanvas *cCelldt = new TCanvas("cCelldt","cCelldt",0,0,1500,600);
+    cCelldt->Divide(2,1);
+    cCelldt->cd(1);
+    gPad->SetLeftMargin(0.12);
+    gPad->SetRightMargin(0.06);
     grth->Draw("ap");
     grth->Fit(fpol0);
-    cCelldt->cd(4);
+    cCelldt->cd(2);
+    gPad->SetLeftMargin(0.12);
+    gPad->SetRightMargin(0.06);
     grchi->Draw("ap");
-    grchi->Fit(fpol0);
-    TH1D *hEsmearNorm = new TH1D("hEsmearNorm","hEsmearNorm", 50, 0.99,1.01);
-    hEsmearNorm->SetLineColor(kBlue);
-    hEsmearNorm->SetName(Form("hEsmearvsCell%s", (char*)(alpha_type==1? "212":"214")));
-    TH1D *hEsmearNormET = new TH1D("hEsmearNormET","hEsmearNormET", 50, 0.99, 1.01);
-    hEsmearNormET->SetLineColor(kRed);
-    hEsmearNormET->SetName(Form("hEsmearETvsCell%s", (char*)(alpha_type==1? "212":"214")));
-    TH1D *hEsmearWnorm = new TH1D("hEsmearWnorm","hEsmearWnorm", 50, 0.9, 1.1);
-    hEsmearWnorm->SetLineColor(kBlue);
-    hEsmearWnorm->SetName(Form("hSigmaEsmearvsCell%s", (char*)(alpha_type==1? "212":"214")));
-    TH1D *hEsmearWnormET = new TH1D("hEsmearWnormET","hEsmearWnormET", 50, 0.9, 1.1);
-    hEsmearWnormET->SetName(Form("hSigmaEsmearETvsCellPo%s", (char*)(alpha_type==1? "212":"214")));
-    hEsmearWnormET->SetLineColor(kRed);
-    TH1D *hdZWnorm = new TH1D("hdZWnorm","hdZWnorm", 50, 0.85, 1.3);
-    hdZWnorm->SetLineColor(kBlue);
-    hdZWnorm->SetName(Form("hSigmadZvsCellPo%s", (char*)(alpha_type==1? "212":"214")));
-    TH1D *hdZWnormET = new TH1D("hdZWnormET","hdZWnormET", 50, 0.85, 1.3);
-    hdZWnormET->SetLineColor(kRed);
-    hdZWnormET->SetName(Form("hSigmadZETvsCellPo%s", (char*)(alpha_type==1? "212":"214")));
-    gAEsmear->Fit(fpol0);
-    double n1 = fpol0->GetParameter(0);
-    gAEsmearW->Fit(fpol0);
-    double n2 = fpol0->GetParameter(0);
-    gdZW->Fit(fpol0);
-    double n3 = fpol0->GetParameter(0);
-    for(int i=0;i<gdZ->GetN();++i){
-      double x, y;
-      gAEsmear->GetPoint(i,x,y);
-      if(isET(int(x))){
-	hEsmearNormET->Fill(y/n1);
-      }//else
-      hEsmearNorm->Fill(y/n1);
-      gAEsmearW->GetPoint(i,x,y);
-      if(isET(int(x))){
-	hEsmearWnormET->Fill(y/n2);
-      }//else
-      hEsmearWnorm->Fill(y/n2);
-      
-      gdZW->GetPoint(i,x,y);
-      if(isET(int(x))){
-	hdZWnormET->Fill(y/n3);
-      }//else
-      hdZWnorm->Fill(y/n3);
-    }
-    if(1){
-      TFile f("BiPoPublicationPlots.root",(recreate == 1 ? "RECREATE" : "UPDATE"),"BiPoPlots");
-      TCanvas *cStab = new TCanvas("cstab","cstab",0,0,2000,600);
-      cStab->Divide(3,1);
-      cStab->cd(1);
-      hEsmearNorm->Draw();
-      //hEsmearNormET->Draw("same");
-      gPad->Update();
-      hEsmearNorm->GetXaxis()->SetTitle("Relative Segment Energy");
-      hEsmearNorm->Write();
-      cStab->cd(2);
-      hEsmearWnorm->Draw();
-      //hEsmearWnormET->Draw("same");
-      gPad->Update();
-      hEsmearWnorm->GetXaxis()->SetTitle("Relative Segment Energy Width");
-      hEsmearWnorm->Write();
-      cStab->cd(3);
-      hdZWnorm->Draw();
-      //hdZWnormET->Draw("same");
-      gPad->Update();
-      hdZWnorm->GetXaxis()->SetTitle("Relative Segment dZ Width");
-      hdZWnorm->Write();
-      hCellZ[76][2]->SetLineColor(kRed);
-      hCellZ[76][2]->SetName(Form("hZcell76Po%s", (char*)(alpha_type==1? "212":"214")));
-      f.Close();
-    }
+    cCelldt->SaveAs(Form("%s/BiPo%idTvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214),fid.Data()));
     
   }
 
-  
+  printf("hABdt %i  %i\n", (int)hABdt[0]->GetEntries(), (int)hABdt[1]->GetEntries());
   cout<<"Alpha candidates: "<<nalpha<<endl;
   cout<<"Prompt beta candidates: "<<nnear<<endl;
   cout<<"Far beta candidates: "<<nfar<<endl;
