@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-int makeBiPoClassFromRunlist(const char *fname="2018C_GoodRuns.txt", const char* TFilename = "AD1_BiPo.root", const char* release = "Analyzed_2018C"){
+int makeBiPoClassFromRunlist(const char *fname="2019B_GoodRuns.txt", const char* TFilename = "AD1_BiPo.root", const char* release = "Analyzed_2019B"){
   std::ifstream file;
   file.open(fname, std::ifstream::in);
   if(!(file.is_open()&&file.good())){

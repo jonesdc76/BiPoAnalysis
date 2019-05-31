@@ -20,6 +20,7 @@ int getRunStats(){
   TString month[12] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
   TString week[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
   TString data[N] = {"WetCommissioning", "180316_Background",  "180417_Background","180420_Background","180501_ReactorOn","180525_Background","180531_Calibration","180605_Background","180612_ReactorOn","180706_Background","180724_Production","180830_Production" };
+  int nfile = 0;
   while((element = (TChainElement*)next())){
     st = TString(element->GetTitle());
     if(st.Contains(data[n]) && first_of_dataset){
@@ -40,6 +41,10 @@ int getRunStats(){
     }
     TFile *file = TFile::Open(st);
     tl = ((TVectorD*)file->Get("runtime"))->Norm1();
+    ++nfile;
+    if(tl==0){
+    cout<<nfile<<" file missing. "<<st.Data()<<" runtime: "<<tl/3600.0<<endl;
+    }
     tlive += tl;
     if(first){
       first = 0;
@@ -57,6 +62,7 @@ int getRunStats(){
   printf(" and %s %s %i, %i %02i:%02i}\n", week[t->tm_wday].Data(), month[t->tm_mon].Data(), t->tm_mday, t->tm_year+1900, t->tm_hour, t->tm_min);
   printf("End time of last file: %s", asctime(localtime(&ts)));
   cout<<"Total hours of data: "<<tlive/3600.0<<"\n";
+  cout<<"Total number of files: "<<nfile<<"\n";
   
   return 0;
 }

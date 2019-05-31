@@ -128,7 +128,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset;//start time of far window 
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
-  double  l_dZ = alpha_type==1 ? -200 : -MAX_DZ, h_dZ = fabs(l_dZ);
+  double  l_dZ = -MAX_DZ, h_dZ = fabs(l_dZ);
   double fidZ = fiducialize ? 1000.0 : 1000.0;//444.0;
   if(alpha_type == 1){
     t_start = 7.0e-4;
@@ -832,9 +832,14 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     h_AEsmear[2]->Add(h_AEsmear[1],-1);
     h_AEsmear[2]->SetMarkerColor(col[2]);
     h_AEsmear[2]->SetLineColor(col[2]);
-    fg1.SetParameters(h_AEsmear[2]->GetMaximum(), guessE, guessEerr);
-    h_AEsmear[2]->Fit("fg1", "r");
-    fg2.SetParameters(fg1.GetParameter(0),fg1.GetParameter(1),fg1.GetParameter(2));
+    TF1 fg1sm("fg1sm","gaus",guessE-2*guessEerr, guessE+2*guessEerr);
+    fg1sm.SetLineWidth(2);
+    TF1 fg2sm("fg2sm","gaus",0,3);
+    fg2sm.SetLineStyle(7);
+    fg2sm.SetLineWidth(1);
+    fg1sm.SetParameters(h_AEsmear[2]->GetMaximum(), guessE, guessEerr);
+    h_AEsmear[2]->Fit("fg1sm", "r");
+    fg2sm.SetParameters(fg1sm.GetParameter(0),fg1sm.GetParameter(1),fg1sm.GetParameter(2));
     h_AEsmear[2]->Draw("sames");
     gPad->Update();
     cEsmear->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iEsmearSpectrum%s.png", (alpha_type == 1 ? 212:214), fid.Data()));
@@ -845,18 +850,25 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        h_AE[2]->SetLineColor(kBlue);
        h_AE[2]->SetTitle(Form("Po-%i Alpha Energy Distribution", (alpha_type==1 ? 212 : 214)));
        h_AE[2]->Draw();
+       fg1.SetLineColor(kBlue);
+       fg2.SetLineColor(kBlue);
        fg1.Draw("same");
        fg2.Draw("same");
+       h_AEsmear[2]->SetLineColor(kRed);
+       h_AEsmear[2]->Draw("same");
+       fg1sm.SetLineColor(kRed);
+       fg2sm.SetLineColor(kRed);
+       fg1sm.Draw("same");
+       fg2sm.Draw("same");
        gPad->Update();
        h_AE[2]->GetXaxis()->SetTitle(Form("E_{#alpha} (MeV)"));
        gPad->Update();
        c10->SaveAs(Form("%s/PubBiPo%iAlphaE%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214),fid.Data()));
        TCanvas *c10smear = new TCanvas("c10smear","c10smear",0,0,800,600);
-       h_AEsmear[2]->SetLineColor(kBlue);
        h_AEsmear[2]->SetTitle(Form("Po-%i Smeared Alpha Energy Distribution", (alpha_type==1 ? 212 : 214)));
        h_AEsmear[2]->Draw();
-       fg1.Draw("same");
-       fg2.Draw("same");
+       fg1sm.Draw("same");
+       fg2sm.Draw("same");
        gPad->Update();
        h_AEsmear[2]->GetXaxis()->SetTitle(Form("Smeared E_{#alpha} (MeV)"));
        gPad->Update();
@@ -986,9 +998,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     //Beta dz distributions are 3D distributions of betas and gammas traveling
     //isotropically with exp(-t/l) distributions convoluted with energy res-
     //olution noise. The distribution is not Gaussian but can be approximately
-    //modeled as two Gaussians. The following section of code tries establishes
-    //the width for the larger distribution which is then fixed as a parameter
-    //in subsequent by-cell fits. Not fixing this width allows the fit too much
+    //modeled as two Gaussians. The following section of code establishes the
+    //width for the larger distribution which is then fixed as a parameter in
+    //subsequent by-cell fits. Not fixing this width allows the fit too much
     //freedom and it sometimes goes crazy.
     TCanvas *cfits = new TCanvas("cfits","cfits",0,0,1500,900);
     cfits->Divide(2,2);
@@ -1004,27 +1016,32 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     hETdZ[0]->Add(hETdZ[1],-1);
     fgaus->SetRange(-250, 250);
     fgaus->SetParameters(hETdZ[0]->GetMaximum()*0.84, 45,hETdZ[0]->GetMaximum()*0.16,110);
+    if(alpha_type==1)
+      fgaus->SetParameters(hETdZ[0]->GetMaximum()*0.9, 42,hETdZ[0]->GetMaximum()*0.1,92);
     hETdZ[0]->Fit(fgaus, "r");
     double ET_dZw = fgaus->GetParameter(3);
     hETdZ[0]->Draw();
     cfits->cd(3);
     TF1 *fgaus2 = new TF1("fgaus2","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))+[3]*exp(-pow(x-[1],2)/(2*pow([4],2)))",0,1);
     hHamBPSD[0]->Add(hHamBPSD[1],-1);
-    fgaus2->SetRange(lPpsd, hPpsd);
-    fgaus2->SetParameters(hHamBPSD[0]->GetMaximum()*0.9, 0.13,0.012,hHamBPSD[0]->GetMaximum()*0.13,0.024);
+    fgaus2->SetRange(0.7, 0.2);
+    fgaus2->SetParameters(hHamBPSD[0]->GetMaximum()*0.87, 0.13,0.013,hHamBPSD[0]->GetMaximum()*0.13,0.027);
     hHamBPSD[0]->Fit(fgaus2, "r");
+    fgaus2->SetRange(fgaus2->GetParameter(1)-4*fgaus2->GetParameter(2),
+		     fgaus2->GetParameter(1)+4*fgaus2->GetParameter(2));
     hHamBPSD[0]->Draw();
     cfits->cd(4);
     double Ham_BPSDw = fgaus2->GetParameter(4);
     hETBPSD[0]->Add(hETBPSD[1],-1);
-    fgaus2->SetRange(lPpsd, hPpsd);
-    fgaus2->SetParameters(hETBPSD[0]->GetMaximum()*0.9, 0.13,0.012,hETBPSD[0]->GetMaximum()*0.1,0.024);
+    fgaus2->SetParameters(hETBPSD[0]->GetMaximum()*0.87, 0.13,0.013,hETBPSD[0]->GetMaximum()*0.13,0.027);
     hETBPSD[0]->Fit(fgaus2, "r");
     hETBPSD[0]->Draw();
     double ET_BPSDw = fgaus2->GetParameter(4);
     
     double guessE = alpha_type == 1 ?  1.06 : 0.84;
     double guessEerr = 0.05/sqrt(guessE);
+    double rangeZ = 0;
+    bool first = 1;
     for(int i=0;i<kNcell;++i){
       //sleep(1);
       if(exclude_cells)
@@ -1134,11 +1151,18 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       
       if(hCellBPSD[i][0]->GetEntries()>0){//beta PSD
       	cByCell->cd(3);
+	for(int j=0;j<hCellBPSD[i][2]->GetNbinsX();++j){
+	  if(hCellBPSD[i][0]->GetBinContent(j)==0 &&
+	     hCellBPSD[i][1]->GetBinContent(j)>0){
+	    hCellBPSD[i][0]->SetBinError(j,1);
+	    cout<<"Changing hCellBPSD["<<i<<"] bin "<<j<<" error from 0 to 1"
+		<<endl;
+	  }
+	}
       	hCellBPSD[i][2] = (TH1D*)hCellBPSD[i][0]->Clone(Form("hCellBPSD[%i][2]",i));
       	hCellBPSD[i][2]->Add(hCellBPSD[i][1],-1);
-      	fgaus2->SetParameters(hCellBPSD[i][2]->GetMaximum()*0.9,0.13,0.012,hCellBPSD[i][2]->GetMaximum()*0.1,0.024);
+      	fgaus2->SetParameters(hCellBPSD[i][2]->GetMaximum()*0.87,0.13,0.013,hCellBPSD[i][2]->GetMaximum()*0.13,0.027);
 	fgaus2->FixParameter(4, isET(i) ? ET_BPSDw : Ham_BPSDw);
-	fgaus2->SetRange(lPpsd,hPpsd);
       	hCellBPSD[i][2]->Draw();
       	gPad->Update();
       	hCellBPSD[i][2]->Fit(fgaus2,"rq");
@@ -1166,15 +1190,29 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       
       if(hCelldZ[i][0]->GetEntries()>0){//dZ
       	cByCell->cd(4);
+	for(int j=0;j<hCelldZ[i][2]->GetNbinsX();++j){
+	  if(hCelldZ[i][0]->GetBinContent(j)==0 &&
+	     hCelldZ[i][1]->GetBinContent(j)>0){
+	    hCelldZ[i][0]->SetBinError(j,1);
+	    cout<<"Changing hCelldZ["<<i<<"] bin "<<j<<" error from 0 to 1"
+	      <<endl;
+	  }
+	}
       	hCelldZ[i][2] = (TH1D*)hCelldZ[i][0]->Clone(Form("hCelldZ[%i][2]",i));
       	hCelldZ[i][2]->Add(hCelldZ[i][1],-1);
-      	fgaus->SetParameters(hCelldZ[i][2]->GetMaximum()*0.9,45,hCelldZ[i][2]->GetMaximum()*0.1,90);
-	fgaus->SetRange(l_dZ, h_dZ);
+	rangeZ = 4*fgaus->GetParameter(1);
+      	fgaus->SetParameters(hCelldZ[i][2]->GetMaximum()*0.9,42,hCelldZ[i][2]->GetMaximum()*0.1, 100);
+	fgaus->SetRange(-rangeZ, rangeZ);
       	hCelldZ[i][2]->Draw();
       	gPad->Update();
 	fgaus->FixParameter(3, isET(i) ? ET_dZw : Ham_dZw);
 	cout<<"Cell # "<<i<<endl;
       	hCelldZ[i][2]->Fit(fgaus,"rb");
+	if(first){
+	  rangeZ = 4*fgaus->GetParameter(1);
+	  hCelldZ[i][2]->Fit(fgaus,"rb");
+	  first = false;
+	}
 	if(fgaus->GetParameter(1)<0){//deal with negative width
 	  fgaus->SetParameter(1,fabs(fgaus->GetParameter(1)));
 	  hCelldZ[i][2]->Fit(fgaus,"rqb"); 
@@ -1186,6 +1224,9 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       	hdZ->Fill(0);
       	hdZW->Fill(fgaus->GetParameter(1));
       	effdZ[i] = fgaus->Integral(l_dZ, h_dZ)/fgaus->Integral(-1000,1000);
+	if(effdZ[i]>1)
+	  cout<<"OOPS: ";
+	cout<<fgaus->GetParameter(0)<<" "<<fgaus->GetParameter(1)<<" "<<fgaus->GetParameter(2)<<" "<<fgaus->GetParameter(3)<<" "<<endl;
  	grEffdZ->SetPoint(ndZ, i, effdZ[i]);
      	++ndZ;
       	if(isET(i)){
@@ -1905,7 +1946,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       gAEsmearNorm->Draw("ap");
       gAEsmearNorm->GetXaxis()->SetTitle("Segment Number");
       gAEsmearNorm->GetYaxis()->SetTitle("Smeared E_{#alpha}/#LTE_{#alpha}#GT");
-      if(!normalize)gAEsmearNorm->GetYaxis()->SetTitle("(Smeared) E_{#alpha} (MeV)");
+      if(!normalize)
+	gAEsmearNorm->GetYaxis()->SetTitle("(Smeared) E_{#alpha} (MeV)");
       gAEsmearNorm->GetYaxis()->SetTitleOffset(0.4);
       gAEsmearNorm->GetXaxis()->SetTitleOffset(0.7);
       gAEsmearNorm->GetYaxis()->SetTitleSize(0.07);
@@ -1913,7 +1955,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       gPad->Update();
       gAEsmearNorm->Write();
       c0sm->SaveAs(Form("%s/PubBiPo%iEsmearvsCell%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212 : 214), fid.Data()));
-      TH1D *hAEsmearNorm = Projection(gAEsmearNorm,"hAEsmearNorm", Form("%s;%s",gAEsmearNorm->GetTitle(),gAEsmearNorm->GetYaxis()->GetTitle()), 50, 0.99,1.01);
+      TH1D *hAEsmearNorm = Projection(gAEsmearNorm,"", Form("%s;%s",gAEsmearNorm->GetTitle(),gAEsmearNorm->GetYaxis()->GetTitle()), 50, 0.99,1.01);
+      hAEsmearNorm->SetName(Form("hAEsmearNorm%s", (char*)(alpha_type==1? "212":"214")));
       hAEsmearNorm->Write();
       TCanvas *c1sm = new TCanvas("c1sm","c1sm",0,0,1200,300);
       TGraphErrors *gAEsmearWnorm = new TGraphErrors();

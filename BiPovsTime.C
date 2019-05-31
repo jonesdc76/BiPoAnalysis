@@ -147,7 +147,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset;//start time of far window 
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
-  double  l_dZ = alpha_type==1 ? -200 : -MAX_DZ, h_dZ = fabs(l_dZ);
+  double  l_dZ = -MAX_DZ, h_dZ = fabs(l_dZ);
   double fidZ = fiducialize ? 1000.0 : 1000.0;//444.0;
   if(alpha_type == 1){
     t_start = 7.0e-4;
@@ -780,8 +780,8 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     }
     hBPSD[i][2] = (TH1D*)hBPSD[i][0]->Clone(Form("hBPSD%i_2",i));
     hBPSD[i][2]->Add(hBPSD[i][1], -1);
+    fgaus2->SetRange(psd_m-4*psd_w, psd_m+4*psd_w);
     fgaus2->SetParameters(hBPSD[i][2]->GetMaximum()*0.86, psd_m, psd_w,hBPSD[i][2]->GetMaximum()*0.14, psd_w2);
-    fgaus2->SetRange(lPpsd, hPpsd);
     fgaus2->FixParameter(4, psd_w2);
     hBPSD[i][2]->Fit(fgaus2, "rb");
     psd_m = fgaus2->GetParameter(1); psd_w = fgaus2->GetParameter(2);
