@@ -86,7 +86,7 @@ int BiPodtFitRange(int alpha_type = 1){
   double ft_offset = 10 * tauBiPo;//far window time offset
   double ft_start = ft_offset;//start time of far window 
   double ft_end = ft_start + f2n * (t_end - t_start);//far window
-  double  l_dZ = alpha_type==1 ? -200 : -MAX_DZ, h_dZ = fabs(l_dZ);
+  double  l_dZ = -MAX_DZ, h_dZ = fabs(l_dZ);
   double l_t = 0.005, h_t = 3*tauBiPo;
   if(alpha_type == 1){
     t_start = 7.0e-4;

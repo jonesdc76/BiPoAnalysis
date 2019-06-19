@@ -772,7 +772,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     gPad->Update();
     hBE[0]->GetYaxis()->SetTitle("Counts/MeV");
     hBE[0]->GetXaxis()->SetTitle("Total Energy (MeV)");
-    hBE[2] = (TH1D*)hBE[0]->Clone("hBE[2]");
+    hBE[2] = (TH1D*)hBE[0]->Clone(Form("hBE[2]_%i",alpha_type==1?212:214));
     hBE[2]->Add(hBE[1],-1);
     hBE[2]->SetMarkerColor(col[2]);
     hBE[2]->SetLineColor(col[2]);
@@ -1269,7 +1269,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       }
       if(hCellBE[i][0]->GetEntries()>0){//Beta E
 	cByCell->cd(6);
-	hCellBE[i][2] = (TH1D*)hCellBE[i][0]->Clone(Form("hCellBE[%i][2]",i));
+	hCellBE[i][2] = (TH1D*)hCellBE[i][0]->Clone(Form("hCellBE[%i][2]_%i",i,alpha_type==1?212:214));
 	hCellBE[i][2]->Add(hCellBE[i][1],-1);
 	hCellBE[i][2]->Draw();
 	gPad->Update();
@@ -2098,6 +2098,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
        hCellZ[76][2]->SetLineColor(kBlue);
        hCellZ[76][2]->SetName(Form("hZcell76Po%s", (char*)(alpha_type==1? "212":"214")));
        hCellZ[76][2]->Write();
+       hBE[2]->Write();
+       hCellBE[76][2]->Write();
        f.Close();
 
     }

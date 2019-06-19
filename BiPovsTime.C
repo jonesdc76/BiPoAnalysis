@@ -367,14 +367,14 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
 	  hOnBPSD[0]->Fill(bp->pPSD->at(j));
 	  hOnZ[0]->Fill(bp->az);
 	  hOndZ[0]->Fill(bp->az-bp->pz->at(j));
-	  hOnE[0]->Fill(bp->aE);
+	  hOnE[0]->Fill(bp->aEsmear);
 	  hOndt[0]->Fill(dt);
 	}else{
 	  hOffAPSD[0]->Fill(bp->aPSD);
 	  hOffBPSD[0]->Fill(bp->pPSD->at(j));
 	  hOffZ[0]->Fill(bp->az);
 	  hOffdZ[0]->Fill(bp->az-bp->pz->at(j));
-	  hOffE[0]->Fill(bp->aE);
+	  hOffE[0]->Fill(bp->aEsmear);
 	  hOffdt[0]->Fill(dt);
 	}
       }
@@ -428,14 +428,14 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
 	  hOnBPSD[1]->Fill(bp->fPSD->at(j), n2f);
 	  hOnZ[1]->Fill(bp->az, n2f);
 	  hOndZ[1]->Fill(bp->az-bp->fz->at(j), n2f);
-	  hOnE[1]->Fill(bp->aE, n2f);
+	  hOnE[1]->Fill(bp->aEsmear, n2f);
 	  hOndt[1]->Fill(dt, n2f);
 	}else{
 	  hOffAPSD[1]->Fill(bp->aPSD, n2f);
 	  hOffBPSD[1]->Fill(bp->fPSD->at(j), n2f);
 	  hOffZ[1]->Fill(bp->az, n2f);
 	  hOffdZ[1]->Fill(bp->az-bp->fz->at(j), n2f);
-	  hOffE[1]->Fill(bp->aE, n2f);
+	  hOffE[1]->Fill(bp->aEsmear, n2f);
 	  hOffdt[1]->Fill(dt, n2f);
 	}
       }
@@ -558,14 +558,15 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
       if(hE[i][1]->GetBinContent(j)==0 && hE[i][0]->GetBinContent(j)>0){
 	cout<<"Changing error for hE["<<j<<"][1] from "
 	    <<hE[i][1]->GetBinError(j)<<" to 1.0"<<endl;
-	hE[i][1]->SetBinError(j,n2f);      }
+	hE[i][1]->SetBinError(j,n2f);
+      }
     }
     hE[i][2] = (TH1D*)hE[i][0]->Clone(Form("hE%i_2",i));
     hE[i][2]->Add(hE[i][1], -1);
     hEsmear[i][2] = (TH1D*)hEsmear[i][0]->Clone(Form("hEsmear%i_2",i));
     hEsmear[i][2]->Add(hEsmear[i][1], -1);
     f.SetParameters(hE[i][2]->GetMaximum(), guess, guessErr);
-    f.SetRange(guess-2*guessErr, guess+2*guessErr);
+    f.SetRange(guess-2.0*guessErr, guess+2.0*guessErr);
     hE[i][2]->Fit("f", "r");
     
     //Update guess for changing parameters
@@ -1142,7 +1143,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   double rate214 = fpol0->GetParameter(0);
   double rate214err = fpol0->GetParError(0);
   double rate214prob = fpol0->GetProb();
- 
+  double normEsmear=1, normEsmearSigma=1, normZrms=1;
   if(1){
     TFile f("BiPoPublicationPlots.root",(recreate == 1 ? "RECREATE" : "UPDATE"),"BiPoPlots");
     gStyle->SetPadRightMargin(0.05);
@@ -1188,6 +1189,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     grEsmearpub->SetLineColor(kBlue);
     grEsmear->Fit("fp0");
     norm = fp0.GetParameter(0);
+    normEsmear = norm;
     for(int i=0;i<grEsmear->GetN();++i){
       grEsmear->GetPoint(i, x, y);
       grEsmearpub->SetPoint(i, x, y/norm);
@@ -1246,6 +1248,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     grEWsmearpub->SetLineColor(kBlue);
     grEWsmear->Fit("fp0");
     norm = fp0.GetParameter(0);
+    normEsmearSigma = norm;
     for(int i=0;i<grEW->GetN();++i){
       grEWsmear->GetPoint(i, x, y);
       grEWsmearpub->SetPoint(i, x, y/norm);
@@ -1305,6 +1308,7 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
     grZWpub->SetLineColor(kBlue);
     grZW->Fit("fp0");
     norm = fp0.GetParameter(0);
+    normZrms = norm;
     for(int i=0;i<grZW->GetN();++i){
       grZW->GetPoint(i, x, y);
       grZWpub->SetPoint(i, x, y/norm);
@@ -1483,23 +1487,35 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   hOffBPSD[1]->Draw("same");
   
   conoff->cd(3)->SetGrid();
+  guess = alpha_type == 1 ? 1.064 : 0.845;
+  guessErr = 0.055*sqrt(guess);
+  TF1 fOn("fOn","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))", 0, 1);
+  fOn.SetRange(guess-2.0*guessErr, guess+2.0*guessErr);
   hOnE[0]->Scale(1/t_on);
   hOnE[1]->Scale(1/t_on);
   hOnE[0]->Add(hOnE[1],-1);
-  hOnE[0]->SetTitle("Alpha E");
+  hOnE[0]->SetTitle("Alpha Esmear");
   hOnE[0]->SetLineWidth(2);
   hOnE[0]->SetLineColor(kRed);
+  fOn.SetParameters(hOnE[0]->GetMaximum(),guess,guessErr);
+  fOn.SetLineColor(kRed);
   hOnE[0]->Draw();
+  hOnE[0]->Fit("fOn", "r");
   gPad->Update();
   hOnE[0]->GetYaxis()->SetRangeUser(-0.2*hOnE[0]->GetMaximum(),hOnE[0]->GetMaximum()*1.1);
   hOffE[0]->Scale(1/t_off);
   hOffE[1]->Scale(1/t_off);
   hOffE[0]->Add(hOffE[1],-1);
+  TF1 fOff("fOff","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))", 0, 1);
+  fOff.SetRange(guess-2.0*guessErr, guess+2.0*guessErr);
+  fOff.SetParameters(hOffE[0]->GetMaximum(),guess,guessErr);
   hOffE[0]->SetLineWidth(2);
   hOffE[0]->SetLineColor(kBlue);
   hOffE[0]->Draw("sames");
   hOffE[1]->Add(hOffE[0],hOnE[0],-1,1);
   hOffE[1]->SetLineWidth(2);
+  fOff.SetLineColor(kBlue);
+  hOffE[0]->Fit("fOff","r");
   hOffE[1]->SetLineColor(kGreen+2);
   hOffE[1]->Draw("same");
   
@@ -1565,6 +1581,14 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   hOffdt[1]->SetLineWidth(2);
   hOffdt[1]->SetLineColor(kGreen+2);
   hOffdt[1]->Draw("same");
+  double diff = 1 - (fOn.GetParameter(1)/normEsmear + fOff.GetParameter(1)/normEsmear)/2.0;
+  double diffs = 1 - (fOn.GetParameter(2)/normEsmearSigma + fOff.GetParameter(2)/normEsmearSigma)/2.0;
+  printf("Po-%i Normalized Reactor ON Esmear %f +/- %f, sigma %f +/- %f\n",alpha_type == 1 ? 212:214,fOn.GetParameter(1)/normEsmear+diff,fOn.GetParError(1)/normEsmear, fOn.GetParameter(2)/normEsmearSigma+diffs, fOn.GetParError(2)/normEsmearSigma);
+  printf("Po-%i Normalized Reactor OFF Esmear %f +/- %f, sigma %f +/- %f\n",alpha_type == 1 ? 212:214,fOff.GetParameter(1)/normEsmear+diff,fOff.GetParError(1)/normEsmear, fOff.GetParameter(2)/normEsmearSigma+diffs, fOff.GetParError(2)/normEsmearSigma);
+  diff = 1 - (hOnZ[0]->GetRMS()/normZrms + hOffZ[0]->GetRMS()/normZrms)/2.0;
+  printf("Po-%i Normalized Reactor ON Z RMS %f +/- %f\n",alpha_type == 1 ? 212:214,hOnZ[0]->GetRMS()/normZrms+diff,hOnZ[0]->GetRMSError()/normZrms);
+  printf("Po-%i Normalized Reactor OFF Z RMS %f +/- %f\n",alpha_type == 1 ? 212:214,hOffZ[0]->GetRMS()/normZrms+diff,hOffZ[0]->GetRMSError()/normZrms);
+
   printf("hdtcum %i  %i\n", (int)hdtcum[0]->GetEntries(),(int) hdtcum[1]->GetEntries());
   cout<<"Prompt beta candidates: "<<nnear<<endl;
   cout<<"Far beta candidates: "<<nfar<<endl;

@@ -1,304 +1,230 @@
-{
-   
-   TH1D *hBEoB2cB__2 = new TH1D("hBEoB2cB__2","(^{214}Bi-->^{214}Po-->^{210}Pb)  #beta Energy Distribution",100,0,4);
-   hBEoB2cB__2->SetBinContent(3,107397.9);
-   hBEoB2cB__2->SetBinContent(4,247618.7);
-   hBEoB2cB__2->SetBinContent(5,362495.8);
-   hBEoB2cB__2->SetBinContent(6,444043.7);
-   hBEoB2cB__2->SetBinContent(7,546927.1);
-   hBEoB2cB__2->SetBinContent(8,566033.3);
-   hBEoB2cB__2->SetBinContent(9,587260.4);
-   hBEoB2cB__2->SetBinContent(10,638414.6);
-   hBEoB2cB__2->SetBinContent(11,682650);
-   hBEoB2cB__2->SetBinContent(12,718097.9);
-   hBEoB2cB__2->SetBinContent(13,754454.2);
-   hBEoB2cB__2->SetBinContent(14,773331.3);
-   hBEoB2cB__2->SetBinContent(15,815981.3);
-   hBEoB2cB__2->SetBinContent(16,825600);
-   hBEoB2cB__2->SetBinContent(17,848543.8);
-   hBEoB2cB__2->SetBinContent(18,863108.3);
-   hBEoB2cB__2->SetBinContent(19,851162.5);
-   hBEoB2cB__2->SetBinContent(20,872545.8);
-   hBEoB2cB__2->SetBinContent(21,885295.8);
-   hBEoB2cB__2->SetBinContent(22,898602.1);
-   hBEoB2cB__2->SetBinContent(23,895287.5);
-   hBEoB2cB__2->SetBinContent(24,890897.9);
-   hBEoB2cB__2->SetBinContent(25,898245.8);
-   hBEoB2cB__2->SetBinContent(26,924056.3);
-   hBEoB2cB__2->SetBinContent(27,913385.4);
-   hBEoB2cB__2->SetBinContent(28,931787.5);
-   hBEoB2cB__2->SetBinContent(29,942006.2);
-   hBEoB2cB__2->SetBinContent(30,946014.6);
-   hBEoB2cB__2->SetBinContent(31,959689.6);
-   hBEoB2cB__2->SetBinContent(32,960545.8);
-   hBEoB2cB__2->SetBinContent(33,984462.5);
-   hBEoB2cB__2->SetBinContent(34,970914.6);
-   hBEoB2cB__2->SetBinContent(35,992460.4);
-   hBEoB2cB__2->SetBinContent(36,1004227);
-   hBEoB2cB__2->SetBinContent(37,1042296);
-   hBEoB2cB__2->SetBinContent(38,1050327);
-   hBEoB2cB__2->SetBinContent(39,1062077);
-   hBEoB2cB__2->SetBinContent(40,1097719);
-   hBEoB2cB__2->SetBinContent(41,1101850);
-   hBEoB2cB__2->SetBinContent(42,1120621);
-   hBEoB2cB__2->SetBinContent(43,1121765);
-   hBEoB2cB__2->SetBinContent(44,1119223);
-   hBEoB2cB__2->SetBinContent(45,1127965);
-   hBEoB2cB__2->SetBinContent(46,1116810);
-   hBEoB2cB__2->SetBinContent(47,1084856);
-   hBEoB2cB__2->SetBinContent(48,1074913);
-   hBEoB2cB__2->SetBinContent(49,1053521);
-   hBEoB2cB__2->SetBinContent(50,1028340);
-   hBEoB2cB__2->SetBinContent(51,1005256);
-   hBEoB2cB__2->SetBinContent(52,977931.3);
-   hBEoB2cB__2->SetBinContent(53,932272.9);
-   hBEoB2cB__2->SetBinContent(54,892854.2);
-   hBEoB2cB__2->SetBinContent(55,879000);
-   hBEoB2cB__2->SetBinContent(56,824127.1);
-   hBEoB2cB__2->SetBinContent(57,788312.5);
-   hBEoB2cB__2->SetBinContent(58,728189.6);
-   hBEoB2cB__2->SetBinContent(59,694941.7);
-   hBEoB2cB__2->SetBinContent(60,644566.7);
-   hBEoB2cB__2->SetBinContent(61,581439.6);
-   hBEoB2cB__2->SetBinContent(62,542206.3);
-   hBEoB2cB__2->SetBinContent(63,479908.3);
-   hBEoB2cB__2->SetBinContent(64,439708.3);
-   hBEoB2cB__2->SetBinContent(65,393918.8);
-   hBEoB2cB__2->SetBinContent(66,348506.3);
-   hBEoB2cB__2->SetBinContent(67,310281.3);
-   hBEoB2cB__2->SetBinContent(68,252875);
-   hBEoB2cB__2->SetBinContent(69,222614.6);
-   hBEoB2cB__2->SetBinContent(70,181593.8);
-   hBEoB2cB__2->SetBinContent(71,151522.9);
-   hBEoB2cB__2->SetBinContent(72,127931.3);
-   hBEoB2cB__2->SetBinContent(73,99925);
-   hBEoB2cB__2->SetBinContent(74,71854.17);
-   hBEoB2cB__2->SetBinContent(75,52312.5);
-   hBEoB2cB__2->SetBinContent(76,36152.08);
-   hBEoB2cB__2->SetBinContent(77,34116.67);
-   hBEoB2cB__2->SetBinContent(78,17572.92);
-   hBEoB2cB__2->SetBinContent(79,12270.83);
-   hBEoB2cB__2->SetBinContent(80,14179.17);
-   hBEoB2cB__2->SetBinContent(81,11122.92);
-   hBEoB2cB__2->SetBinContent(82,1620.833);
-   hBEoB2cB__2->SetBinContent(83,2883.333);
-   hBEoB2cB__2->SetBinContent(84,-1600);
-   hBEoB2cB__2->SetBinContent(85,-302.0833);
-   hBEoB2cB__2->SetBinContent(86,7818.75);
-   hBEoB2cB__2->SetBinContent(87,-4058.333);
-   hBEoB2cB__2->SetBinContent(88,-2981.25);
-   hBEoB2cB__2->SetBinContent(89,-1127.083);
-   hBEoB2cB__2->SetBinContent(90,2654.167);
-   hBEoB2cB__2->SetBinContent(91,-1102.083);
-   hBEoB2cB__2->SetBinContent(92,731.25);
-   hBEoB2cB__2->SetBinContent(93,-1225);
-   hBEoB2cB__2->SetBinContent(94,3712.5);
-   hBEoB2cB__2->SetBinContent(95,1885.417);
-   hBEoB2cB__2->SetBinContent(96,-3254.167);
-   hBEoB2cB__2->SetBinContent(97,-2552.083);
-   hBEoB2cB__2->SetBinContent(98,5900);
-   hBEoB2cB__2->SetBinContent(99,264.5833);
-   hBEoB2cB__2->SetBinContent(100,-2685.417);
-   hBEoB2cB__2->SetBinError(3,11753.11);
-   hBEoB2cB__2->SetBinError(4,13145.36);
-   hBEoB2cB__2->SetBinError(5,13337.13);
-   hBEoB2cB__2->SetBinError(6,13724.54);
-   hBEoB2cB__2->SetBinError(7,13798.33);
-   hBEoB2cB__2->SetBinError(8,13553.56);
-   hBEoB2cB__2->SetBinError(9,13170.39);
-   hBEoB2cB__2->SetBinError(10,12727.47);
-   hBEoB2cB__2->SetBinError(11,12246.87);
-   hBEoB2cB__2->SetBinError(12,11767.21);
-   hBEoB2cB__2->SetBinError(13,11372.64);
-   hBEoB2cB__2->SetBinError(14,11013.9);
-   hBEoB2cB__2->SetBinError(15,10750.89);
-   hBEoB2cB__2->SetBinError(16,10481.73);
-   hBEoB2cB__2->SetBinError(17,10266.69);
-   hBEoB2cB__2->SetBinError(18,10059.88);
-   hBEoB2cB__2->SetBinError(19,9850.215);
-   hBEoB2cB__2->SetBinError(20,9683.042);
-   hBEoB2cB__2->SetBinError(21,9506.473);
-   hBEoB2cB__2->SetBinError(22,9334.554);
-   hBEoB2cB__2->SetBinError(23,9169.831);
-   hBEoB2cB__2->SetBinError(24,9015.823);
-   hBEoB2cB__2->SetBinError(25,8882.45);
-   hBEoB2cB__2->SetBinError(26,8800.378);
-   hBEoB2cB__2->SetBinError(27,8668.122);
-   hBEoB2cB__2->SetBinError(28,8581.586);
-   hBEoB2cB__2->SetBinError(29,8486.002);
-   hBEoB2cB__2->SetBinError(30,8390.18);
-   hBEoB2cB__2->SetBinError(31,8316.05);
-   hBEoB2cB__2->SetBinError(32,8225.153);
-   hBEoB2cB__2->SetBinError(33,8162.202);
-   hBEoB2cB__2->SetBinError(34,8046.309);
-   hBEoB2cB__2->SetBinError(35,7971.733);
-   hBEoB2cB__2->SetBinError(36,7894.268);
-   hBEoB2cB__2->SetBinError(37,7868.92);
-   hBEoB2cB__2->SetBinError(38,7801.659);
-   hBEoB2cB__2->SetBinError(39,7755.824);
-   hBEoB2cB__2->SetBinError(40,7760.595);
-   hBEoB2cB__2->SetBinError(41,7706.984);
-   hBEoB2cB__2->SetBinError(42,7673.45);
-   hBEoB2cB__2->SetBinError(43,7620.523);
-   hBEoB2cB__2->SetBinError(44,7560.572);
-   hBEoB2cB__2->SetBinError(45,7516.702);
-   hBEoB2cB__2->SetBinError(46,7445.215);
-   hBEoB2cB__2->SetBinError(47,7348.015);
-   hBEoB2cB__2->SetBinError(48,7289.481);
-   hBEoB2cB__2->SetBinError(49,7223.083);
-   hBEoB2cB__2->SetBinError(50,7138.811);
-   hBEoB2cB__2->SetBinError(51,7072.013);
-   hBEoB2cB__2->SetBinError(52,6989.049);
-   hBEoB2cB__2->SetBinError(53,6875.383);
-   hBEoB2cB__2->SetBinError(54,6769.454);
-   hBEoB2cB__2->SetBinError(55,6700.218);
-   hBEoB2cB__2->SetBinError(56,6563.607);
-   hBEoB2cB__2->SetBinError(57,6460.842);
-   hBEoB2cB__2->SetBinError(58,6319.548);
-   hBEoB2cB__2->SetBinError(59,6234.729);
-   hBEoB2cB__2->SetBinError(60,6120.08);
-   hBEoB2cB__2->SetBinError(61,5982.015);
-   hBEoB2cB__2->SetBinError(62,5874.928);
-   hBEoB2cB__2->SetBinError(63,5714.6);
-   hBEoB2cB__2->SetBinError(64,5580.06);
-   hBEoB2cB__2->SetBinError(65,5415.517);
-   hBEoB2cB__2->SetBinError(66,5240.769);
-   hBEoB2cB__2->SetBinError(67,5086.142);
-   hBEoB2cB__2->SetBinError(68,4882.489);
-   hBEoB2cB__2->SetBinError(69,4744.22);
-   hBEoB2cB__2->SetBinError(70,4600.483);
-   hBEoB2cB__2->SetBinError(71,4476.019);
-   hBEoB2cB__2->SetBinError(72,4377.254);
-   hBEoB2cB__2->SetBinError(73,4261.266);
-   hBEoB2cB__2->SetBinError(74,4150.539);
-   hBEoB2cB__2->SetBinError(75,4062.253);
-   hBEoB2cB__2->SetBinError(76,3984.481);
-   hBEoB2cB__2->SetBinError(77,3944.969);
-   hBEoB2cB__2->SetBinError(78,3868.005);
-   hBEoB2cB__2->SetBinError(79,3818.439);
-   hBEoB2cB__2->SetBinError(80,3796.488);
-   hBEoB2cB__2->SetBinError(81,3762.757);
-   hBEoB2cB__2->SetBinError(82,3704.201);
-   hBEoB2cB__2->SetBinError(83,3680.004);
-   hBEoB2cB__2->SetBinError(84,3647.274);
-   hBEoB2cB__2->SetBinError(85,3624.182);
-   hBEoB2cB__2->SetBinError(86,3617.076);
-   hBEoB2cB__2->SetBinError(87,3563.76);
-   hBEoB2cB__2->SetBinError(88,3528.502);
-   hBEoB2cB__2->SetBinError(89,3514.591);
-   hBEoB2cB__2->SetBinError(90,3495.211);
-   hBEoB2cB__2->SetBinError(91,3456.403);
-   hBEoB2cB__2->SetBinError(92,3453.303);
-   hBEoB2cB__2->SetBinError(93,3410.393);
-   hBEoB2cB__2->SetBinError(94,3415.433);
-   hBEoB2cB__2->SetBinError(95,3381.326);
-   hBEoB2cB__2->SetBinError(96,3346.789);
-   hBEoB2cB__2->SetBinError(97,3330.244);
-   hBEoB2cB__2->SetBinError(98,3332.987);
-   hBEoB2cB__2->SetBinError(99,3291.628);
-   hBEoB2cB__2->SetBinError(100,3260.427);
-   hBEoB2cB__2->SetEntries(523601.6);
-   hBEoB2cB__2->SetStats(0);
-
-   hBEoB2cB__2->SetLineColor(kRed);
-   hBEoB2cB__2->SetLineWidth(2);
-
-   hBEoB2cB__2->SetMarkerColor(kRed);
-   hBEoB2cB__2->GetXaxis()->SetTitle("Total Energy (MeV)");
-   hBEoB2cB__2->GetXaxis()->SetNdivisions(506);
-   hBEoB2cB__2->GetXaxis()->SetLabelFont(42);
-   hBEoB2cB__2->GetXaxis()->SetLabelOffset(0.003);
-   hBEoB2cB__2->GetXaxis()->SetLabelSize(0.05);
-   hBEoB2cB__2->GetXaxis()->SetTitleSize(0.05);
-   hBEoB2cB__2->GetXaxis()->SetTitleOffset(1.1);
-   hBEoB2cB__2->GetXaxis()->SetTitleFont(42);
-   hBEoB2cB__2->GetYaxis()->SetTitle("Counts/MeV");
-   hBEoB2cB__2->GetYaxis()->SetNdivisions(506);
-   hBEoB2cB__2->GetYaxis()->SetLabelFont(42);
-   hBEoB2cB__2->GetYaxis()->SetLabelOffset(0.003);
-   hBEoB2cB__2->GetYaxis()->SetLabelSize(0.05);
-   hBEoB2cB__2->GetYaxis()->SetTitleSize(0.05);
-   hBEoB2cB__2->GetYaxis()->SetTitleOffset(1.2);
-   hBEoB2cB__2->GetYaxis()->SetTitleFont(42);
-   hBEoB2cB__2->GetZaxis()->SetNdivisions(506);
-   hBEoB2cB__2->GetZaxis()->SetLabelFont(42);
-   hBEoB2cB__2->GetZaxis()->SetLabelOffset(0.003);
-   hBEoB2cB__2->GetZaxis()->SetLabelSize(0.05);
-   hBEoB2cB__2->GetZaxis()->SetTitleSize(0.05);
-   hBEoB2cB__2->GetZaxis()->SetTitleOffset(1.25);
-   hBEoB2cB__2->GetZaxis()->SetTitleFont(42);
-  TChain *ch = new TChain("BiPoTreePlugin/BiPo");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00002_ts1535668872/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00007_ts1532458155/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00029_ts1531001022/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00153_ts1524805310/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00207_ts1533190571/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00229_ts1531726448/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00407_ts1533922623/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00607_ts1534653798/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00017_ts1528042157/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00029_ts1521397911/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00047_ts1525540854/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00150_ts1528793338/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00180_ts1536646302/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00226_ts1522127350/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00252_ts1526279641/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00525_ts1537916144/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s002_f00027_ts1529535013/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s002_f00227_ts1530267973/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s004_f00142_ts1527027684/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s020_f00010_ts1520661436/AD1_BiPo.root");
-
-  TCanvas *c = new TCanvas("c","c",0,0,2000,500);
-  c->Divide(3,1);
+#include "TChain.h"
+#include "TGraph.h"
+#include "TF1.h"
+#include "TH1D.h"
+#include "TFile.h"
+#include "BPsim.C"
+#include <iostream>
+double GetChiSq(int lbin, int hbin, TH1D *h, TH1D *hsim){
+  double chsq = 0, ndf=0;
+  for(int i=lbin;i<=hbin;++i){
+    double x = h->GetBinContent(i);
+    double xs = hsim->GetBinContent(i);
+    if(x!=0){
+      double xe = h->GetBinError(i);
+      double xse = hsim->GetBinError(i);
+      chsq += pow(x-xs, 2) / (xe*xe+xse*xse);
+      ++ndf;
+    }else{
+      cout<<"Bin "<<i<<" not included in minimization. "<<x<<" "<<xs<<endl;
+    }
+  }
+  return chsq/ndf;
+}
+int SimComp(){
+  const int lBIN = 11, hBIN = 100;
+  BPsim *bps = new BPsim();
+  TChain *ch = bps->chain;
+  gStyle->SetPadLeftMargin(0.11);
+  gStyle->SetPadRightMargin(0.15);
+  TCanvas *c1 = new TCanvas("c1","c1",0,0,850,600);
   gStyle->SetOptStat(0);
-  c->cd(1);
+  c1->cd(1)->SetGrid();
   TF1 *f = new TF1("f","pol0",0.48,4);
   TGraph *gr = new TGraph();
-  const int N=20;
-  TH1F *hres[N], *h[N];
-  float scale = 1.004;
-  double res = 1e100;
-  int minidx = 0;
-  hBEoB2cB__2->Sumw2();
-  hBEoB2cB__2->Scale(1/hBEoB2cB__2->GetBinWidth(1));
-  hBEoB2cB__2->Scale(1/hBEoB2cB__2->Integral(12,100));
-  TH1F *hminres;
-  for(int i=0;i<N;++i){
-    ch->Draw(Form("pEtot*%f>>h%i(100,0,4)",scale,i));
-    h[i] = (TH1F*)gDirectory->Get(Form("h%i",i));
+  const int N=40;
+  TH1D *h[N*3];
+  const double SCALE = 0.996;
+  double scale = 1, norm = SCALE, step1 = 0.0001, step2 = 0.00025;
+  double res = 1e100, res2 = 1e100, min_scale, min_norm, min_norm2;
+  int minidx = 0, minidx2 = 0;
+  TFile *file = new TFile("BiPoPublicationPlots.root");
+  TH1D *hBE = (TH1D*)file->Get("hBE[2]_214");
+  TH1D *hBE76 = (TH1D*)file->Get("hCellBE[76][2]_214");
+  hBE->Sumw2();
+  hBE->Scale(1/hBE->Integral(lBIN,hBIN));
+  TH1D *hminres, *hminres2;
+  TH2D *h2d = new TH2D("","",N*3,scale,scale+3*N*step1,N,norm,norm+N*step2);
+  for(int i=0;i<N*3;++i){
+    ch->Draw(Form("pEtot*%f>>h%i(100,0,4)",scale,i),"","goff");
+    h[i] = (TH1D*)gDirectory->Get(Form("h%i",i));
     h[i]->Sumw2();
-    h[i]->Scale(1/h[i]->GetBinWidth(1));
-    h[i]->Scale(1/h[i]->Integral(12,100));
-    hres[i] = (TH1F*)h[i]->Clone(Form("hres%i",i));
-    hres[i]->Add(hBEoB2cB__2,-1);
-    hres[i]->Fit(f,"r");
-    if(fabs(f->GetParameter(0))<fabs(res)){
-      res = f->GetParameter(0);
-      hminres = (TH1F*)hres[i]->Clone("hminres");
-      for(int j=0;j<hminres->GetNbinsX();++j){
-	hminres->SetBinContent(j,hminres->GetBinContent(j)/h[i]->GetBinContent(j));
-	hminres->SetBinError(j,sqrt(pow(hminres->GetBinError(j)/hminres->GetBinContent(j),2)+pow(h[i]->GetBinError(j)/h[i]->GetBinContent(j),2))*hminres->GetBinContent(j));
+    h[i]->SetLineWidth(2);
+    h[i]->Scale(1/h[i]->Integral(lBIN,hBIN));
+    norm = SCALE;
+    for(int k=0;k<N;++k){
+      TH1D *hx = (TH1D*)h[i]->Clone("hx");
+      hx->Scale(norm);
+      double chsq = GetChiSq(lBIN,hBIN,hBE,hx);
+      if(chsq < res){
+	min_norm = norm;
+	min_scale = scale;
+	minidx = i;
+	hminres = (TH1D*)hBE->Clone("hRes");
+	hminres->Add(hx, -1);
+	//hminres->Divide(hx);
+	res = chsq;
       }
-      minidx = i;
+      if(scale == 1.0 && chsq < res2){
+	min_norm2 = norm;
+	minidx2 = i;
+	hminres2 = (TH1D*)hBE->Clone("hRes");
+	hminres2->Add(hx, -1);
+	//hres->Divide(hx);
+	res2 = chsq;
+      }
+      h2d->Fill(scale+0.0000001,norm+0.0000001, chsq);
+      norm += step2;
+      cout<<norm<<" "<<scale<<" "<<chsq<<endl;
     }
-    gr->SetPoint(i, scale, f->GetParameter(0));
-    scale += 0.0005;
+    scale += step1;
   }
-  gr->SetMarkerStyle(8);
-  gr->Draw("ap");
-  gr->SetTitle("Average Residual vs Simulation Scale Factor");
-  gr->GetXaxis()->SetTitle("Residual");
-  gr->GetYaxis()->SetTitle("Scale Factor");
-  c->cd(2);
-  hBEoB2cB__2->Draw();
+  h2d->Draw("colz");
+  h2d->SetTitle("#chi^{2} vs. Relative Normalization and Energy Scale;Energy Scale;Spectrum Normalization(a.u.);#chi^{2}/bin");
+  gPad->Update();
+  h2d->GetYaxis()->SetTitleOffset(1.4);
+
+  TCanvas *c2 = new TCanvas("c2","c2",0,0,1600,600);
+  TPad *pad1 = new TPad("pad1", "pad1", 0, 0.3, 0.5, 1.0);
+  pad1->SetRightMargin(0.05);
+  pad1->SetBottomMargin(0); // Upper and lower plot are joined
+  pad1->Draw();             // Draw the upper pad: pad1
+  pad1->cd();               // pad1 becomes the current pad
+  pad1->SetGridx();
+
+  TPaveText *pt = new TPaveText(0.66,0.8,0.94,0.89,"ndc");
+  pt->SetFillColor(0);
+  pt->SetShadowColor(0);
+  pt->SetBorderSize(0);
+  pt->AddText("Simulation scaled to data");
+  pt->AddText(Form("Energy scale factor: %0.4f", min_scale));
+  h[minidx]->Draw();
+  pt->Draw();
+  h[minidx]->SetTitle("Scaled Bi-214 #beta Spectrum;Energy (Mev);Rate (mHz/MeV)");
   h[minidx]->SetLineColor(kGreen+2);
-  h[minidx]->SetLineWidth(2);
-  h[minidx]->Draw("sames");
-  hres[minidx]->Draw("sames");
-  c->cd(3);
-  hres[minidx]->SetLineColor(kBlack);
-  hres[minidx]->SetLineWidth(2);
-  hres[minidx]->Draw();
-  cout<<minidx<<endl;
+  h[minidx]->GetYaxis()->SetLimits(-0.001,0.024);
+  h[minidx]->GetYaxis()->SetRangeUser(-0.001,0.024);
+  hBE->SetLineColor(kBlue);
+  hBE->Draw("same");
+  h[minidx]->GetYaxis()->SetTitleSize(0.04);
+  h[minidx]->GetYaxis()->SetTitleOffset(1.1);
+  h[minidx]->GetYaxis()->SetLabelSize(0.0);
+  gPad->Update();
+  TGaxis *axis = new TGaxis(0,0.00,0,0.022,0.00,0.022,510,"");
+  axis->SetLabelFont(43); 
+  axis->SetLabelSize(15);
+  axis->Draw();
+
+  c2->cd();          // Go back to the main canvas before defining pad2
+  TPad *pad2 = new TPad("pad2", "pad2", 0, 0.005, 0.5, 0.3);
+  pad2->SetRightMargin(0.05);
+  pad2->SetTopMargin(0);
+  pad2->SetGridx();
+  TLine line(0,0,0,4);
+  line.SetLineStyle(1);
+  pad2->SetBottomMargin(0.27);
+  pad2->Draw();
+  pad2->cd();       // pad2 becomes the current pad
+
+  hminres->SetLineColor(kBlack);
+  hminres->Draw();
+  //  hminres->SetTitle("Bi-214 #beta Spectrum Residual (Data-Sim);Energy (Mev);Rate (mHz/MeV)");
+  gPad->Update();
+  hminres->SetTitle("");
+  hminres->GetXaxis()->SetTitle("Energy (Mev)");
+  hminres->GetYaxis()->SetTitle("Residual (mHz/MeV)");
+  //hminres->GetYaxis()->SetTitle("Ratio (Data/MC)");
+  TF1 *fpol0 = new TF1("fpol0","pol0",hminres->GetBinLowEdge(lBIN),4);
+  fpol0->SetLineColor(kBlack);
+  hminres->Fit("fpol0","r");
+  TPaveText *pt2 = new TPaveText(0.77,0.77,0.94,0.99,"ndc");
+  pt2->SetFillColor(0);
+  pt2->SetShadowColor(0);
+  pt2->SetBorderSize(0);
+  pt2->AddText(Form("#chi^{2}/NDF: %0.1f/%i", fpol0->GetChisquare(),fpol0->GetNDF()));
+  pt2->AddText(Form("%0.5f#pm%0.5f", fpol0->GetParameter(0),fpol0->GetParError(0)));
+  pt2->Draw();
+  line.Draw();
+  // Y axis ratio plot settings
+  hminres->GetYaxis()->SetRangeUser(-0.0014,0.0014);
+  hminres->GetYaxis()->SetNdivisions(505);
+  hminres->GetYaxis()->SetTitleSize(16);
+  hminres->GetYaxis()->SetTitleFont(43);
+  hminres->GetYaxis()->SetTitleOffset(1.4);
+  hminres->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+  hminres->GetYaxis()->SetLabelSize(15);
+  
+  // X axis ratio plot settings
+  hminres->GetXaxis()->SetNdivisions(510);
+  hminres->GetXaxis()->SetTitleSize(22);
+  hminres->GetXaxis()->SetTitleFont(43);
+  hminres->GetXaxis()->SetTitleOffset(3.2);
+  hminres->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+  hminres->GetXaxis()->SetLabelSize(18);
+
+  c2->cd();          // Go back to the main canvas before defining pad2  
+  TPad *pad12 = new TPad("pad12", "pad12", 0.5, 0.3, 1, 1.0);
+  pad12->SetRightMargin(0.05);
+  pad12->SetBottomMargin(0); // Upper and lower plot are joined
+  pad12->Draw();             // Draw the upper pad: pad1
+  pad12->cd();               // pad1 becomes the current pad
+  pad12->SetGridx();
+  h[minidx2]->Draw();
+  h[minidx2]->SetTitle("Bi-214 #beta Spectrum;Energy (Mev);Rate (mHz/MeV)");
+  h[minidx2]->SetLineColor(kGreen+2);
+  h[minidx2]->GetYaxis()->SetLimits(-0.001,0.024);
+  h[minidx2]->GetYaxis()->SetRangeUser(-0.001,0.024);
+  h[minidx2]->GetYaxis()->SetLabelSize(0.0);
+  gPad->Update();
+  hBE->Draw("same");
+  h[minidx2]->GetYaxis()->SetTitleSize(0.04);
+  h[minidx2]->GetYaxis()->SetTitleOffset(1.4);
+  h[minidx2]->GetYaxis()->SetLabelSize(0.);
+  axis->Draw();
+
+  c2->cd();          // Go back to the main canvas before defining pad2
+  TPad *pad22 = new TPad("pad22", "pad22", 0.5, 0.005, 1, 0.3);
+  pad22->SetTopMargin(0);
+  pad22->SetGridx();
+  pad22->SetRightMargin(0.05);
+  pad22->SetBottomMargin(0.27);
+  pad22->Draw();
+  pad22->cd();       // pad2 becomes the current pad
+
+  hminres2->SetLineColor(kBlack);
+  hminres2->Draw();
+  //  hminres2->SetTitle("Bi-214 #beta Spectrum Residual (Data-Sim);Energy (Mev);Rate (mHz/MeV)");
+  gPad->Update();
+  hminres2->SetTitle("");
+  hminres2->GetXaxis()->SetTitle("Energy (Mev)");
+  hminres2->GetYaxis()->SetTitle("Residual (mHz/MeV)");
+  //hminres->GetYaxis()->SetTitle("Ratio (Data/MC)");
+  hminres2->Fit("fpol0","r");
+  TPaveText *pt22 = new TPaveText(0.77,0.77,0.94,0.99,"ndc");
+  pt22->SetFillColor(0);
+  pt22->SetShadowColor(0);
+  pt22->SetBorderSize(0);
+  pt22->AddText(Form("#chi^{2}/NDF: %0.1f/%i", fpol0->GetChisquare(),fpol0->GetNDF()));
+  pt22->AddText(Form("%0.5f#pm%0.5f", fpol0->GetParameter(0),fpol0->GetParError(0)));
+  pt22->Draw();
+  // Y axis ratio plot settings
+  hminres2->GetYaxis()->SetRangeUser(-0.0014,0.0014);
+  hminres2->GetYaxis()->SetNdivisions(505);
+  hminres2->GetYaxis()->SetTitleSize(16);
+  hminres2->GetYaxis()->SetTitleFont(43);
+  hminres2->GetYaxis()->SetTitleOffset(1.2);
+  hminres2->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+  hminres2->GetYaxis()->SetLabelSize(15);
+  
+  // X axis ratio plot settings
+  hminres2->GetXaxis()->SetNdivisions(510);
+  hminres2->GetXaxis()->SetTitleSize(22);
+  hminres2->GetXaxis()->SetTitleFont(43);
+  hminres2->GetXaxis()->SetTitleOffset(3.2);
+  hminres2->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+  hminres2->GetXaxis()->SetLabelSize(18);
+  c1->SaveAs(Form("%s/Bi214BetaSpectrumChisq.pdf",gSystem->Getenv("TECHNOTE")));
+  c2->SaveAs(Form("%s/Bi214BetaSpectrumDataMC.pdf",gSystem->Getenv("TECHNOTE")));
+  cout<<"Energy spectrum included in minimization from "<<hminres->GetBinLowEdge(lBIN)<<" to "<<hminres->GetBinLowEdge(hBIN+1)<<" MeV\n";
+  return 0;
 }

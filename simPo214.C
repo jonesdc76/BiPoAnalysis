@@ -1,25 +1,11 @@
-{
-  TChain *ch = new TChain("BiPoTreePlugin/BiPo");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00002_ts1535668872/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00007_ts1532458155/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00029_ts1531001022/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00153_ts1524805310/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00207_ts1533190571/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00229_ts1531726448/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00407_ts1533922623/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s000_f00607_ts1534653798/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00017_ts1528042157/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00029_ts1521397911/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00047_ts1525540854/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00150_ts1528793338/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00180_ts1536646302/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00226_ts1522127350/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00252_ts1526279641/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s001_f00525_ts1537916144/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s002_f00027_ts1529535013/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s002_f00227_ts1530267973/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s004_f00142_ts1527027684/AD1_BiPo.root");
-  ch->Add("../bipo_data/simulation/AD_Bi214_s020_f00010_ts1520661436/AD1_BiPo.root");
+#include "TChain.h"
+#include "TH1D.h"
+#include "TFile.h"
+#include "BPsim.C"
+
+int simPo214(){
+  BPsim *bps = new BPsim();
+  TChain *ch = bps->chain;
 
   ch->Draw("pEtot>>h(100,0,4)");
   TH1D *h = (TH1D*)gDirectory->Get("h");
@@ -36,5 +22,6 @@
   h76->GetYaxis()->SetTitle("Counts (a.u.)");
   h76->SetName("hCell76SimBetaBi214");
   h76->Write();
+  return 0;
   //f.Close();
 }
