@@ -48,7 +48,7 @@ while read x; do
     CALFILE=$x
     RUNNAME=${PG4_OUTDIR}/AD_Bi214_$x
     MACFILE=${MACDIR}/AD_Bi214_$x.mac
-    echo $PG4_BUILD/bin/PROSPECT-G4 macfiles/${MACFILE}
+    echo $PG4_BUILD/bin/PROSPECT-G4 ${MACFILE}
 done > $JOBFILE < 2019B_GoodRuns.txt
 
 RUNJOBS
