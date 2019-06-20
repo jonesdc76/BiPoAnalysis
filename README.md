@@ -1,4 +1,4 @@
-# BiPoAnalysis
+# BiPoAnalysis +  Technote plot generation
 BiPo analysis happens in two steps. First, a TTree of BiPo events is made for
 each run in the selected data sets. This is done using the P2X PhysPulse plugin
 framework. Second, the data in these TTrees is manipulated and plotted to obtain
@@ -7,7 +7,6 @@ already generated technote with the latest results.
 # BiPoSimulation
 In addition to data analysis there are also scripts for producing a Bi214 beta
 spectrum from PG4 simulation
-# Technote plot generation
 
 **Make the BiPo TTrees
 ----------------------
