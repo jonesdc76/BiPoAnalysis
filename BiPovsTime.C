@@ -1116,6 +1116,10 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   AddShade(grChisq);
   gPad->Update();
   cdt->SaveAs(Form("%s/BiPo%idTvsT%s.pdf", gSystem->Getenv("TECHNOTE"),(alpha_type==1 ? 212:214), fid.Data()));
+  TCanvas *cr = new TCanvas("cr","cr",0,0,800,600);
+  grR1->Draw();
+  cr->SaveAs(Form("../plots/bipoRate%ivsT%s.png", alpha_type, fid.Data()));
+
   TCanvas *cRate = new TCanvas("cRate","cRate",0,0,1500,600);
   cRate->SetLeftMargin(0.12);
   cRate->Divide(2,1);
