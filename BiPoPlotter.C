@@ -784,7 +784,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
       TCanvas *csim = new TCanvas("csim","csim",0,0,1500,500);
       csim->Divide(2,1);
       csim->cd(1);
-      TFile *fsim = new TFile("SimPo214BetaSpectrum.root");
+      TFile *fsim = new TFile("SimBi214BetaSpectrum.root");
       hsim = (TH1D*)fsim->Get("hSimBetaBi214");
       hsim->SetLineColor(kGreen+2);
       hsim->SetLineWidth(2);
