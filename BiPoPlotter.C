@@ -778,13 +778,35 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     hBE[2]->SetLineColor(col[2]);
     hBE[2]->Draw("same");
     cE->SaveAs(Form("/home/jonesdc/prospect/plots/BiPo%iEspectra%s.png", (alpha_type == 1 ? 212:214), fid.Data()));
+
+    
     TH1D *hsim = new TH1D();
     TH1D *hsim76 = new TH1D();
     if(alpha_type == 0){
+      TFile *fsim = new TFile("SimBi214BetaSpectrum.root");
+      TCanvas *ce = new TCanvas("ce","ce",0,0,700,600);
+      h_AE[2]->SetLineColor(kBlue);
+      h_AE[2]->SetLineWidth(2);
+      h_AE[2]->Draw();
+      TH1D *hAsim = (TH1D*)fsim->Get("hSimAlphaPo214");
+      hAsim->Sumw2();
+      hAsim->SetLineColor(kGreen+2);
+      hAsim->SetLineWidth(2);
+      hAsim->Scale(h_AE[2]->Integral(1,40)/hAsim->Integral(1,40));
+      hAsim->Draw("same");
+      gPad->Update();
+      TH1D *hres = (TH1D*)h_AE[2]->Clone("hres");
+      hres->SetLineColor(kBlack);
+      hres->SetLineWidth(2);
+      hres->Add(hAsim,-1);
+      hres->Draw("same");
+      h_AE[2]->GetYaxis()->SetRangeUser(-0.1*h_AE[2]->GetMaximum(),
+					1.1*h_AE[2]->GetMaximum());
+      gPad->Update();
+      ce->SaveAs(Form("%s/PubBiPo214AlphaE214SimComp.pdf", gSystem->Getenv("TECHNOTE")));
       TCanvas *csim = new TCanvas("csim","csim",0,0,1500,500);
       csim->Divide(2,1);
       csim->cd(1);
-      TFile *fsim = new TFile("SimBi214BetaSpectrum.root");
       hsim = (TH1D*)fsim->Get("hSimBetaBi214");
       hsim->SetLineColor(kGreen+2);
       hsim->SetLineWidth(2);

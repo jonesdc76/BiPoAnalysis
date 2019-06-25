@@ -21,7 +21,10 @@ double GetChiSq(int lbin, int hbin, TH1D *h, TH1D *hsim){
   }
   return chsq/ndf;
 }
-int SimComp(){
+////////////////////////////////////////////////////////////////////////////
+//Optimizes simulated beta spectrum compared to data by adding energy offset
+////////////////////////////////////////////////////////////////////////////
+int SimPlusOffsetCompare(){
   const int lBIN = 11, hBIN = 100;
   BPsim *bps = new BPsim();
   TChain *ch = bps->chain;
@@ -32,11 +35,11 @@ int SimComp(){
   c1->cd(1)->SetGrid();
   TF1 *f = new TF1("f","pol0",0.48,4);
   TGraph *gr = new TGraph();
-  const int N=40;
+  const int N=35;
   TH1D *h[N*3];
   const double SCALE = 0.996;
-  double scale = 1, norm = SCALE, step1 = 0.0001, step2 = 0.00025;
-  double res = 1e100, res2 = 1e100, min_scale, min_norm, min_norm2;
+  double offset = 0.000, norm = SCALE, step1 = 0.001, step2 = 0.00025;
+  double res = 1e100, res2 = 1e100, min_offset, min_norm, min_norm2;
   int minidx = 0, minidx2 = 0;
   TFile *file = new TFile("BiPoPublicationPlots.root");
   TH1D *hBE = (TH1D*)file->Get("hBE[2]_214");
@@ -44,9 +47,9 @@ int SimComp(){
   hBE->Sumw2();
   hBE->Scale(1/hBE->Integral(lBIN,hBIN));
   TH1D *hminres, *hminres2;
-  TH2D *h2d = new TH2D("","",N*3,scale,scale+3*N*step1,N,norm,norm+N*step2);
-  for(int i=0;i<N*3;++i){
-    ch->Draw(Form("pEtot*%f>>h%i(100,0,4)",scale,i),"","goff");
+  TH2D *h2d = new TH2D("","",N,offset,offset+N*step1,N,norm,norm+N*step2);
+  for(int i=0;i<N;++i){
+    ch->Draw(Form("pEtot+%f>>h%i(100,0,4)",offset,i),"","goff");
     h[i] = (TH1D*)gDirectory->Get(Form("h%i",i));
     h[i]->Sumw2();
     h[i]->SetLineWidth(2);
@@ -58,14 +61,14 @@ int SimComp(){
       double chsq = GetChiSq(lBIN,hBIN,hBE,hx);
       if(chsq < res){
 	min_norm = norm;
-	min_scale = scale;
+	min_offset = offset;
 	minidx = i;
 	hminres = (TH1D*)hBE->Clone("hRes");
 	hminres->Add(hx, -1);
 	//hminres->Divide(hx);
 	res = chsq;
       }
-      if(scale == 1.0 && chsq < res2){
+      if(offset == 0.0 && chsq < res2){
 	min_norm2 = norm;
 	minidx2 = i;
 	hminres2 = (TH1D*)hBE->Clone("hRes");
@@ -73,14 +76,14 @@ int SimComp(){
 	//hres->Divide(hx);
 	res2 = chsq;
       }
-      h2d->Fill(scale+0.0000001,norm+0.0000001, chsq);
+      h2d->Fill(offset+0.0000001,norm+0.0000001, chsq);
       norm += step2;
-      cout<<norm<<" "<<scale<<" "<<chsq<<endl;
+      cout<<norm<<" "<<offset<<" "<<chsq<<endl;
     }
-    scale += step1;
+    offset += step1;
   }
   h2d->Draw("colz");
-  h2d->SetTitle("#chi^{2} vs. Relative Normalization and Energy Scale;Energy Scale;Spectrum Normalization(a.u.);#chi^{2}/bin");
+  h2d->SetTitle("#chi^{2} vs. Relative Normalization and Energy Offset;Energy Offset;Spectrum Normalization(a.u.);#chi^{2}/bin");
   gPad->Update();
   h2d->GetYaxis()->SetTitleOffset(1.4);
 
@@ -96,11 +99,11 @@ int SimComp(){
   pt->SetFillColor(0);
   pt->SetShadowColor(0);
   pt->SetBorderSize(0);
-  pt->AddText("Simulation scaled to data");
-  pt->AddText(Form("Energy scale factor: %0.4f", min_scale));
+  pt->AddText("Simulation + energy offset");
+  pt->AddText(Form("Energy offset: %0.4f MeV", min_offset));
   h[minidx]->Draw();
   pt->Draw();
-  h[minidx]->SetTitle("Scaled Bi-214 #beta Spectrum;Energy (Mev);Rate (mHz/MeV)");
+  h[minidx]->SetTitle("Offset Bi-214 #beta Spectrum;Energy (Mev);Rate (mHz/MeV)");
   h[minidx]->SetLineColor(kGreen+2);
   h[minidx]->GetYaxis()->SetLimits(-0.001,0.024);
   h[minidx]->GetYaxis()->SetRangeUser(-0.001,0.024);
