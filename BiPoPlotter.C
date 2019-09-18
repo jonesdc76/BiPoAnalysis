@@ -521,8 +521,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     hAPSDvE[2]->Add(hAPSDvE[1],-1);
     hAPSDvE[2]->Draw("colz");
     gPad->Update();
-    hAPSDvE[0]->GetXaxis()->SetTitle(Form("#alpha Energy (MeV)"));
-    hAPSDvE[0]->GetYaxis()->SetTitle("#alpha PSD");
+    hAPSDvE[2]->GetXaxis()->SetTitle(Form("#alpha Energy (MeV)"));
+    hAPSDvE[2]->GetYaxis()->SetTitle("#alpha PSD");
 
     cPSD->cd(2);
     hBPSDvE[2] = (TH2D*)hBPSDvE[0]->Clone("hBPSDvE2");
@@ -593,6 +593,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     hAZ[2]->Draw("sames");
     gPad->Update();
     cZ->cd(2);
+    hAdZ[0]->Scale(1/hAdZ[0]->GetBinWidth(1));
+    hAdZ[1]->Scale(1/hAdZ[1]->GetBinWidth(1));
     hAdZ[2] = (TH1D*)hAdZ[0]->Clone("hAdZ[2]");
     hAdZ[2]->Add(hAdZ[1],-1);
     hAdZ[0]->Draw();

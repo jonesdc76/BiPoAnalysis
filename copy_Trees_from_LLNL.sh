@@ -1,5 +1,7 @@
 #!/bin/bash
 IBD=0
+CLUST=borax
+#CLUST=oslic
 RUNLIST=2019B_GoodRuns.txt
 DATA_DIR=/p/lustre2/psptexp/user/jonesdc/data/Analyzed/
 RELEASE=Phys_2019B
@@ -11,7 +13,7 @@ if [ $IBD -eq 1 ];then
 fi
 #SSHSOCKET=~/.ssh/jones291@borax.llnl.gov
 #ssh -M -f -N -o ControlPath=$SSHSOCKET jones291@borax.llnl.gov
-ssh -M -f -N borax
+ssh -M -f -N ${CLUST}
 for i in $(cat $RUNLIST);do
     dir=$BIPO_OUTDIR/$ANARELEASE/$i
     if [ ! -d $dir ];then
@@ -20,8 +22,7 @@ for i in $(cat $RUNLIST);do
 #    if [ ! -f  ${dir}/${FILE} ]; then
 	echo "Copying $i"
 	#scp borax:${DATA_DIR}/${ANARELEASE}/${i}/${FILE} ${dir}/AD1_BiPo_wDT.root
-	scp borax:${DATA_DIR}/${ANARELEASE}/${i}/${FILE} ${dir}/${FILE}
-	#scp oslic:${DATA_DIR}/${ANARELEASE}/${i}/${FILE} ${dir}/${FILE}
+	scp ${CLUST}:${DATA_DIR}/${ANARELEASE}/${i}/${FILE} ${dir}/${FILE}
 #    fi
 done
 #ssh -S $SSHSOCKET -O exit jones291@borax.llnl.gov

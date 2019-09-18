@@ -51,7 +51,7 @@ The way the analysis works is to first identify the delayed alpha since those ev
 f=[C]\exp{(-t/[\tau])}+A\exp{(-t/\tau_{214})}+B,
 \label{eqn:fdecay}
 \end{equation}
-where only the bracketed parameters are free in the fit. This procedure is followed for all dt distributions: binned by time or segment or the cumulative distribution. Figure \ref{fig:Po212dtplusbkg} shows the cumulative dt distribution and the background model included in the fit. The small non-statistical fluctuations in the background model contributing to the low probability of the fit are not worrisome, given the size of the background relative to the Po-212 signal. The Po-212 distribution fit yields a half-life of $t_{1/2}(212)=296.6\pm1.4$~ns in decent agreement with the accepted value of $299\pm2$~ns.  The probability of the Po-212 distribution fit is about 39\% which appears acceptable if we looked no further, but closer examination indicates there is tension in the model. Figure \ref{fig:Po212halflifevsfitrange} shows the half-life fit as a function of the number of half-lives included in the fit. Note that the window for dt begins at $dt=0.7~\mu\textrm{s}\approx2.3t_{1/2}^{(212)}$. We can see that the half-life appears to exhibit a non-statistical dependence on the length of the dt window included, beginning at a hlaf-life of 301~ns for $dt\approx3.7t_{1/2}^{(212)}$ and decreasing to a minimum half-life of $<293$~ns for $dt\approx4.5t_{1/2}^{(212)}$. The difference between these two points is in tension at a level of $>2\sigma$. This degree of variation in half-life especially from 2.3 to 4.5 half-lives appears to be in tension from a purely statistical standpoint pointing to a possible systematic issue in the data. However, after weeks of effort, I was not able to uncover any source of this systematic effect. As the dt window is increased in length, eventually the Po-212 signal fades out and the residual Po-214 plus accidental background dominates the fit. It is not surprising that when the distribution is dominated by a region that is depleted of Po-212 signal that the fit for the Po-212 life time is not good statistically. Essentially the fit is working to minimize statistical deviations in the Po-212 depleted region at the expense of finding a good fit in the non-depleted region. Although the background is relatively small in this analysis due to the short duration of the prompt window, still above 9 half-lives the Po-212 signal is less than the small background. Furthermore, large variations in the fit probability can be seen to arise from simply changing the bin width and thus the number of bins in the fixed fit region from $0.7~\mu s<dt<1.7~\mu s$ as can be see in Figure \ref{fig:Po212halflifevsNbinsX}. Depending on the number of bins chosen one could get a probability of 0.6 or 0 using exactly the same data set, suggesting a non-statistical effect that either cancels or gets exaggerated with certain bin width choices. The half-life value is not very sensitive to bin width. 
+where only the bracketed parameters are free in the fit. This procedure is followed for all dt distributions: binned by time or segment or the cumulative distribution. Figure \ref{fig:Po212dtplusbkg} shows the cumulative dt distribution and the background model included in the fit. The small non-statistical fluctuations in the background model contributing to the low probability of the fit are not worrisome, given the size of the background relative to the Po-212 signal. The Po-212 distribution fit yields a half-life of $t_{1/2}(212)=296.6\pm1.4$~ns in decent agreement with the accepted value of $299\pm2$~ns.  The probability of the Po-212 distribution fit is about 39\% which appears acceptable if we looked no further, but closer examination indicates there is tension in the model. Figure \ref{fig:Po212halflifevsfitrange} shows the half-life fit as a function of the number of half-lives included in the fit. Note that the window for dt begins at $dt=0.7~\mu\textrm{s}\approx2.3t_{1/2}^{(212)}$. We can see that the half-life appears to exhibit a non-statistical dependence on the length of the dt window included, beginning at a half-life of 301~ns for $dt\approx3.7t_{1/2}^{(212)}$ and decreasing to a minimum half-life of $<293$~ns for $dt\approx4.5t_{1/2}^{(212)}$. The difference between these two points is in tension at a level of $>2\sigma$. This degree of variation in half-life especially from 2.3 to 4.5 half-lives appears to be in tension from a purely statistical standpoint pointing to a possible systematic issue in the data. However, after weeks of effort, I was not able to uncover any source of this systematic effect. As the dt window is increased in length, eventually the Po-212 signal fades out and the residual Po-214 plus accidental background dominates the fit. It is not surprising that when the distribution is dominated by a region that is depleted of Po-212 signal that the fit for the Po-212 life time is not good statistically. Essentially the fit is working to minimize statistical deviations in the Po-212 depleted region at the expense of finding a good fit in the non-depleted region. Although the background is relatively small in this analysis due to the short duration of the prompt window, still above 9 half-lives the Po-212 signal is less than the small background. Furthermore, large variations in the fit probability can be seen to arise from simply changing the bin width and thus the number of bins in the fixed fit region from $0.7~\mu s<dt<1.7~\mu s$ as can be see in Figure \ref{fig:Po212halflifevsNbinsX}. Depending on the number of bins chosen one could get a probability of 0.6 or 0 using exactly the same data set, suggesting a non-statistical effect that either cancels or gets exaggerated with certain bin width choices. The half-life value is not very sensitive to bin width. 
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=0.96\textwidth]{../figures/Po212dtPlusBkg.pdf}
@@ -90,26 +90,25 @@ A full discussion of cuts can be found in Section \ref{sec:cuts}.
 \subsection{Plots details}
 The following list of plots will be made for both the decays of $^{214}\textrm{Bi}\rightarrow$$^{214}\textrm{Po}\rightarrow$$^{210}\textrm{Pb}$ and $^{212}\textrm{Bi}\rightarrow$$^{212}\textrm{Po}\rightarrow$$^{208}\textrm{Pb}$. Any plots involving alpha energy will be shown in reconstructed energy and ``smeared" reconstructed energy. Smeared reconstructed energy is an attempt to give all cells of the detector nearly the same energy resolution constant over time. The energy resolution is not identical segment to segment and is also degrading nearly linearly with time. Smeared energy adds a random noise that is segment and time dependent intended to produce a uniform energy resolution across all cells that does not change much with time. The energy resolution of the worst cells towards the end of the given analysis period then set the resolution of the full detector. For this analysis pass 2019B, the target resolution was 325 PE/MeV or approximately 5.5\% at 1 MeV. Beta energy is not smeared in these plots since betas are not used in the stability plots for this analysis.
 \begin{enumerate}
-\item{Alpha mean energy and smeared energy vs. segment. These data are provided in both vs. segment and 1D histogram formats.}
-\item{Width (1$\sigma$) of the alpha energy distribution and the smeared alpha energy distribution vs. segment. These data are provided in both vs. segment and 1D histogram formats.}
-\item{Width (1$\sigma$) of the $\Delta$Z distribution, separation distance between the alpha and beta vs. segment. This is a measure of the position resolution. These data are provided in both vs. segment and 1D histogram formats.}
-\item{RMS width of the Z-position distribution of alphas vs. segment. These data are provided in both vs. segment and 1D histogram formats.}
+\item{Alpha mean energy and smeared energy vs. segment. }
+\item{Width (1$\sigma$) of the alpha energy distribution and the smeared alpha energy distribution vs. segment. }
+\item{Width (1$\sigma$) of the $\Delta$Z distribution, separation distance between the alpha and beta vs. segment. This is a measure of the position resolution. }
+\item{RMS width of the Z-position distribution of alphas vs. segment. }
+\item{Mean of the Z-position distribution of alphas vs. segment. This will be a verification that the position reconstruction is working as expected and should be statistically distributed around zero.}
 \item{Alpha mean energy and smeared alpha mean energy versus time. Ideally, this should be statistically consistent with a constant.}
 \item{Alpha mean energy width and smeared alpha mean energy width versus time. This will track detector light yield and transport.}
 \item{RMS width of the Z-distribution of alphas averaged across detector versus time. This shows the stability of the position reconstruction over time.}
 \item{Width of $\Delta$Z distribution averaged across detector versus time. This tracks the position resolution over time.}
-\item{Mean of the Z-position distribution of alphas vs cell. This will be a verification that the position reconstruction is working as expected and should be statistically distributed around zero.}
+\item{Mean of the Z-position distribution of alphas vs. time. This will be a verification that the position reconstruction is working as expected and should be statistically distributed around zero.}
 \item{Alpha energy and smeared alpha energy distribution for whole detector. This will be used to estimate leakage into IBD event selection.}
-\item{Beta energy spectrum for whole detector. The shape and endpoint is to be compared with a simulated spectrum to verify that the simulation properly captures the detector performance. }
+\item{Beta energy spectrum for whole detector. For Bi-214 the shape and endpoint is compared with a simulated spectrum to verify that the simulation properly captures the detector performance. Also, for Bi-214 the beta spectrum for segment 76 is provided. }
 \item{Whole detector Po alpha Z-position distribution.}
 \item{Whole detector $\Delta$Z-position distribution.}
-\item {Single representative segment (76) Z-distribution of delayed alpha.}
-\item {$\beta$ spectrum (with Monte Carlo comparison for Bi-214).}
 \end{enumerate}
 Each plot consists of events that are selected by their time-correlation and as a result, each has an accidental component that must be subtracted. Accidental subtraction is performed using a time offset window. For both alpha decays the offset window starts 10$\times\tau_{214}\approx2.4~ms$ forward from the alpha. The length of the accidentals offset window is set to be 12 times the length of the window for the prompt signal to accumulate more statistics. The accidentals histogram is then scaled by 1/12 to account for this. Other than the timing differences, the signals in the accidentals window are treated exactly the same as those in the prompt window, being subjected to identical cuts and conditions.
 
 \subsection{Message being conveyed by the plots}
-The position and energy resolution plots are for monitoring the detector performance and light collection by cell and over time. To a lesser extent these will also be sensitive to wrong calibration values/curves. The alpha energy of the Po-212 decay is quenched from 8.79~MeV to 1.06~MeV in our detector and the Po-214 alpha is quenched from 7.69~MeV to 0.84~MeV. The energy and Z-width plots will be used to monitor the effectiveness of the calibration to remove time-dependent and segment-to-segment variations. The alpha energy spectra will be used to quantify leakage into the IBD selections. The Po-212 beta spectrum has an endpoint of 2.25~MeV and the Po-214 beta spectrum has an endpoint of 3.27~MeV. The beta spectra will be used to benchmark and test simulation.
+The position and energy resolution plots are for monitoring the detector performance and light collection by cell and over time. To a lesser extent these will also be sensitive to wrong calibration values/curves. The alpha energy of the Po-212 decay is quenched from 8.79~MeV to 1.06~MeV in our detector and the Po-214 alpha is quenched from 7.69~MeV to 0.84~MeV. The energy and Z-width plots will be used to monitor the effectiveness of the calibration to remove time-dependent and segment-to-segment variations. The alpha energy spectra will be used to quantify leakage into the IBD selections. The Po-212 beta spectrum has an endpoint of 2.25~MeV and the Po-214 beta spectrum has an endpoint of 3.27~MeV. The Bi-214 beta spectra can be used to benchmark and test simulation.
 
 \section{Data Set}
 This section details the data sets included in the plots produced for this document.
@@ -151,7 +150,7 @@ $\alpha$ multiplicity &\vline& Single pulse cluster\\
 $\alpha$ PSD cut& \vline&$0.17<$PSD$_{\alpha}<0.34$\\
 $\beta$ cluster energy &\vline& $\leq 5$~MeV\\
 $\beta$ energy & \vline&Cluster discarded unless all events in it are $\leq 4$~MeV\\
-$\beta$ cluster multiplicity & \vline&Cluster discarded if $<20$ pulses in cluster\\
+$\beta$ cluster multiplicity & \vline&Cluster discarded if $>20$ pulses in cluster\\
 $\beta$ PID & \vline&PID==CLUSTER\_IONI (P2X cluster classification which excludes clusters with events in the recoil PSD band)\\
 $\beta$ PSD & \vline&$0<\textrm{PSD}_{\beta}<0.3$\\\hline
 Spatial topology&~&~\\\hline\hline
@@ -198,7 +197,7 @@ where $n_x(y)$ is the displacment in the x(y) direction between the prompt and d
 \begin{figure}[ht]
 \centering
 \includegraphics[width=1.0\textwidth]{../figures/distance_cut.pdf}
-\caption{\label{fig:deltaD}Plots illustrating distribution of displacement between prompt and delayed BiPo-212 events. (Left)Distribution of prompt/delayed displacements (blue) and accidental (red) prompt/delayed displacements. (Right) Accidental-subtracted prompt/delayed displacements. Vertical line shows position of distance cut.}
+\caption{\label{fig:deltaD}Plots illustrating distribution of displacement between prompt and delayed BiPo-214 events. (Left)Distribution of prompt/delayed displacements (blue) and accidental (red) prompt/delayed displacements. (Right) Accidental-subtracted prompt/delayed displacements. Vertical line shows position of distance cut.}
 \end{figure}
 
 The accepted half-life of the $^{214}$Po decay is 0.1643~ms. The time difference between the prompt beta and delayed alpha candidates for this decay is limited to 0.01~ms$<$dt$<3\tau$ where $\tau=0.1643/\textrm{ln}(2)$~ms, the lifetime of $^{214}$Po. Figure \ref{fig:dt214} shows the $\Delta$t distribution. A fit to the half-life of $^{214}$Po is in good agreement with the accepted value.
@@ -268,7 +267,7 @@ Date:   Fri May 31 13:12:05 2019 -0400\\
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo214EresvsCell.pdf}
-\caption{\label{fig:EresvsCell214}Energy resolution versus segment using the alpha from Po-214 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.04427$\pm$0.00006~MeV and $\chi^2$/NDF=1120/90.  In general, the higher width segments are those outfitted with ET tubes.}Total number
+\caption{\label{fig:EresvsCell214}Energy resolution versus segment using the alpha from Po-214 decay. The values are the 1$\sigma$ widths of a Gaussian fits to the alpha energy peaks and the error bars are the error on these values from the fit. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average energy width is 0.04427$\pm$0.00006~MeV and $\chi^2$/NDF=1120/90.  In general, the higher width segments are those outfitted with ET tubes.}
 \end{figure}
 \begin{figure}[!h]
 \centering
@@ -296,7 +295,7 @@ Date:   Fri May 31 13:12:05 2019 -0400\\
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.05\textwidth]{figures/PubBiPo212ZRMSvsCell.pdf}
-\caption{\label{fig:ZRMSvsCell212}RMS width of Z-distribution of Po-212 alphas versus segment. The error bars are the errors assigned by ROOT to the RMS values of the histograms. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average Z$_{RMS}$ width is 348.2$\pm$0.7~mm and $\chi^2$/NDF=113/90. Segment 8 has been seen to be problematic although a precise diagnosis of its problem remains.}
+\caption{\label{fig:ZRMSvsCell212}RMS width of Z-distribution of Po-212 alphas versus segment. The error bars are the errors assigned by ROOT to the RMS values of the histograms. Values are normalized to the segment error-weighted average to highlight variations. Un-normalized weighted average Z$_{RMS}$ width is 348.2$\pm$0.7~mm and $\chi^2$/NDF=113/90. }
 \end{figure}
 \begin{figure}[!h]
 \centering
@@ -310,7 +309,7 @@ Date:   Fri May 31 13:12:05 2019 -0400\\
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=1.05\textwidth]{figures/PubBiPo212meanZvsCell.pdf}
-	\caption{\label{fig:meanZvsCell212}Mean of Z-position distribution of Po-212 alphas versus segment. The values are distributions averages and the error bars are the RMS of the distribution. The weighted average mean Z-position is 0.03$\pm$0.94~mm and $\chi^2$/NDF=139/90. Segment 8 has been seen to be problematic although a precise diagnosis of its problem remains. Excluding segment 8, the weighted average is $-0.13\pm$0.95~mm and the $\chi^2$/NDF=128/90.  }
+	\caption{\label{fig:meanZvsCell212}Mean of Z-position distribution of Po-212 alphas versus segment. The values are distributions averages and the error bars are the RMS of the distribution. The weighted average mean Z-position is 0.03$\pm$0.94~mm and $\chi^2$/NDF=139/90.   }
 \end{figure}
 \begin{figure}[!h]
 	\centering
@@ -425,17 +424,6 @@ Date:   Fri May 31 13:12:05 2019 -0400\\
 \includegraphics[width=1.0\textwidth]{figures/PubBi214BetaEsimCompare.pdf}
 \caption{\label{fig:BetaE214}(Left)Whole detector Bi-214 beta energy spectrum from data (blue) compared to simulation (green). The beta endpoint for this decay is 3.269(11)~MeV. (Right)Segment 76 single cell B-214 beta energy spectrum from data (blue) compared to simulation (green).}
 \end{figure}
-Figure \ref{fig:BetaE214res}shows the whole detector Bi-214 beta energy spectrum from data (blue) compared to simulation (green) with an energy scale factor of 1.0072 applied to the simulation. This scale factor was found by minimizing the $\chi^2$ goodness of fit between the simulation and the data. The 0.4\% assigned uncertainty in our energy scale combined with the 0.34\%  uncertainty in the beta endpoint could easily explain this discrepancy.   Figure \ref{} shows a plot of the $\chi^2$ parameter over a range of phase space of the scale factor and a spectrum normalization factor. The $\chi^2$ was only calculated using the energy range above 0.4~MeV to avoid obvious low energy deviations. Although the endpoint of the spectrum is 3.27~MeV, the energy range all the way to 4~MeV was included since it had negligible impact on the result.   
-\begin{figure}[!h]%use SimComp.C to create plot
-	\centering
-	\includegraphics[width=1.0\textwidth]{figures/Bi214BetaSpectrumDataMC.pdf}
-	\caption{\label{fig:BetaE214res}(Left)Whole detector Bi-214 beta energy spectrum from data (blue) compared to simulation (green) with an energy scale factor of 1.0072 applied to the simulation providing a nice match. The beta endpoint for this decay is 3.269(11)~MeV. (Right)Whole detector Bi-214 beta energy spectrum from data (blue) compared to simulation (green) with NO energy scaling applied.}
-\end{figure}
-\begin{figure}[!h]%use SimComp.C to create plot
-	\centering
-	\includegraphics[width=0.68\textwidth]{figures/Bi214BetaSpectrumChisq.pdf}
-	\caption{\label{fig:BetaE214Chisq}$\chi^2$/bin shown for varying spectrum normalization and energy scaling. The $\chi^2$ calculation was limited to bins in the energy range from 0.4-4.0~MeV.}
-\end{figure}
 
 \clearpage
 \newpage
@@ -471,6 +459,18 @@ Figure \ref{fig:BetaE214res}shows the whole detector Bi-214 beta energy spectrum
 \section{Supplementary plots\label{sec:supp}}
 
 This section contains supplementary plots that help explain/visualize the analysis process but which are not being submitted for official review for use in publication materials.
+Figure \ref{fig:BetaE214} compares simulation and data for the Bi-214 beta spectrum. These appear to have an offset. Figure \ref{fig:BetaE214res} shows the whole detector Bi-214 beta energy spectrum from data (blue) compared to simulation (green) with an energy scale factor of 1.0072 applied to the simulation. This scale factor was found by minimizing the $\chi^2$ goodness of fit between the simulation and the data. The 0.4\% assigned uncertainty in our energy scale combined with the 0.34\%  uncertainty in the beta endpoint could easily explain this discrepancy.   Figure \ref{ig:BetaE214Chisq} shows a plot of the $\chi^2$ parameter over a range of phase space of the scale factor and a spectrum normalization factor. The $\chi^2$ was only calculated using the energy range above 0.4~MeV to avoid obvious low energy deviations. Although the endpoint of the spectrum is 3.27~MeV, the energy range all the way to 4~MeV was included since it had negligible impact on the result.   
+\begin{figure}[!h]%use SimComp.C to create plot
+	\centering
+	\includegraphics[width=1.0\textwidth]{figures/Bi214BetaSpectrumDataMC.pdf}
+	\caption{\label{fig:BetaE214res}(Left)Whole detector Bi-214 beta energy spectrum from data (blue) compared to simulation (green) with an energy scale factor of 1.0072(40) (where the error is the approximate energy shift that introduces a unit shift in $\chi^2$) applied to the simulation providing a nice match. The beta endpoint for this decay is 3.269(11)~MeV. (Right)Whole detector Bi-214 beta energy spectrum from data (blue) compared to simulation (green) with NO energy scaling applied. A constant fit is shown to the residuals in the bottom panels.}
+\end{figure}
+\begin{figure}[!h]%use SimComp.C to create plot
+	\centering
+	\includegraphics[width=0.68\textwidth]{figures/Bi214BetaSpectrumChisq.pdf}
+	\caption{\label{fig:BetaE214Chisq}$\chi^2$/bin shown for varying spectrum normalization and energy scaling. The $\chi^2$ calculation was limited to bins in the energy range from 0.4-4.0~MeV.}
+\end{figure}
+
 
 \begin{figure}[!h]
 \centering
