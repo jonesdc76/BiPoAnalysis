@@ -103,7 +103,7 @@ int SimPlusOffsetCompare(){
   pt->AddText(Form("Energy offset: %0.4f MeV", min_offset));
   h[minidx]->Draw();
   pt->Draw();
-  h[minidx]->SetTitle("Offset Bi-214 #beta Spectrum;Energy (Mev);Rate (mHz/MeV)");
+  h[minidx]->SetTitle("Offset Bi-214 #beta Spectrum;Energy (MeV);Rate (mHz/MeV)");
   h[minidx]->SetLineColor(kGreen+2);
   h[minidx]->GetYaxis()->SetLimits(-0.001,0.024);
   h[minidx]->GetYaxis()->SetRangeUser(-0.001,0.024);
@@ -131,10 +131,10 @@ int SimPlusOffsetCompare(){
 
   hminres->SetLineColor(kBlack);
   hminres->Draw();
-  //  hminres->SetTitle("Bi-214 #beta Spectrum Residual (Data-Sim);Energy (Mev);Rate (mHz/MeV)");
+  //  hminres->SetTitle("Bi-214 #beta Spectrum Residual (Data-Sim);Energy (MeV);Rate (mHz/MeV)");
   gPad->Update();
   hminres->SetTitle("");
-  hminres->GetXaxis()->SetTitle("Energy (Mev)");
+  hminres->GetXaxis()->SetTitle("Energy (MeV)");
   hminres->GetYaxis()->SetTitle("Residual (mHz/MeV)");
   //hminres->GetYaxis()->SetTitle("Ratio (Data/MC)");
   TF1 *fpol0 = new TF1("fpol0","pol0",hminres->GetBinLowEdge(lBIN),4);
@@ -173,7 +173,7 @@ int SimPlusOffsetCompare(){
   pad12->cd();               // pad1 becomes the current pad
   pad12->SetGridx();
   h[minidx2]->Draw();
-  h[minidx2]->SetTitle("Bi-214 #beta Spectrum;Energy (Mev);Rate (mHz/MeV)");
+  h[minidx2]->SetTitle("Bi-214 #beta Spectrum;Energy (MeV);Rate (mHz/MeV)");
   h[minidx2]->SetLineColor(kGreen+2);
   h[minidx2]->GetYaxis()->SetLimits(-0.001,0.024);
   h[minidx2]->GetYaxis()->SetRangeUser(-0.001,0.024);
@@ -196,10 +196,10 @@ int SimPlusOffsetCompare(){
 
   hminres2->SetLineColor(kBlack);
   hminres2->Draw();
-  //  hminres2->SetTitle("Bi-214 #beta Spectrum Residual (Data-Sim);Energy (Mev);Rate (mHz/MeV)");
+  //  hminres2->SetTitle("Bi-214 #beta Spectrum Residual (Data-Sim);Energy (MeV);Rate (mHz/MeV)");
   gPad->Update();
   hminres2->SetTitle("");
-  hminres2->GetXaxis()->SetTitle("Energy (Mev)");
+  hminres2->GetXaxis()->SetTitle("Energy (MeV)");
   hminres2->GetYaxis()->SetTitle("Residual (mHz/MeV)");
   //hminres->GetYaxis()->SetTitle("Ratio (Data/MC)");
   hminres2->Fit("fpol0","r");

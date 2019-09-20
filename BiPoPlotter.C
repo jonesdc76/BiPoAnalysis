@@ -754,7 +754,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     h_AE[2]->Add(h_AE[1],-1);
     h_AE[2]->SetMarkerColor(col[2]);
     h_AE[2]->SetLineColor(col[2]);
-    double guessE = alpha_type == 1 ? 1.06 : 0.84;
+    double guessE = alpha_type == 1 ? 1.06 : 0.845;
     double guessEerr = 0.05 * sqrt(guessE);
     TF1 fg1("fg1","gaus",guessE-2*guessEerr, guessE+2*guessEerr);
     fg1.SetParameters(h_AE[2]->GetMaximum(), guessE, guessEerr);
@@ -1062,8 +1062,8 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
     hETBPSD[0]->Draw();
     double ET_BPSDw = fgaus2->GetParameter(4);
     
-    double guessE = alpha_type == 1 ?  1.06 : 0.84;
-    double guessEerr = 0.05/sqrt(guessE);
+    double guessE = alpha_type == 1 ?  1.06 : 0.845;
+    double guessEerr = 0.05*sqrt(guessE);
     double rangeZ = 0;
     bool first = 1;
     for(int i=0;i<kNcell;++i){
@@ -1079,11 +1079,16 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	TF1 *f = new TF1("f","[0]*exp(-pow(x-[1],2)/(2*pow([2],2)))",
 			 guessE-2*guessEerr, guessE + 2*guessEerr);
 	f->SetParameters(hCellAE[i][2]->GetMaximum(),guessE,guessEerr);
-	f->SetRange(-MAX_DZ, MAX_DZ);
 	hCellAE[i][2]->Draw();
 	gPad->Update();
 	printf("\n\nCell %i\n", i);
 	hCellAE[i][2]->Fit(f,"r");
+	if(0){
+	  gStyle->SetOptFit(1111);
+	  TCanvas ctempo("ctempo","ctempo",0,0,700,500);
+	  hCellAE[i][2]->Draw();
+	  ctempo.SaveAs(Form("../plots/cellE%i.png",alpha_type == 1 ? 212:214));
+	}
 	if(f->GetParameter(2)<0){//deal with negative width
 	  f->SetParameter(2,fabs(f->GetParameter(2)));
 	  hCellAE[i][2]->Fit(f,"r"); 
@@ -1106,7 +1111,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	  ++nAE_ET;
 	}
       }
-      if(hCellAEsmear[i][0]->GetEntries()>0){//Alpha E
+      if(hCellAEsmear[i][0]->GetEntries()>0){//Alpha Esmear
 	cByCell->cd(1);
 	hCellAEsmear[i][2] = (TH1D*)hCellAEsmear[i][0]->Clone(Form("hCellAEsmear[%i][2]",i));
 	hCellAEsmear[i][2]->Add(hCellAEsmear[i][1],-1);
