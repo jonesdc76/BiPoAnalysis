@@ -1131,6 +1131,10 @@ TH1D* BiPovsTime(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, bo
   grR1->GetXaxis()->SetTimeFormat("%m/%d");
   grR1->GetXaxis()->SetTitle("Date in 2018");
   grR1->Fit(fpol0);
+  AddShade(grR1);
+  TCanvas *cRateS = new TCanvas("cRateS","cRateS",0,0,800,600);
+  grR1->Draw("ap");
+  cRateS->SaveAs(Form("%s/BiPo%iRatevsT%s.pdf", gSystem->Getenv("TECHNOTE"), (alpha_type == 1 ? 212:214), fid.Data()));
   if(alpha_type == 1){
     cRate->cd(2);
     grR2->Draw("ap");

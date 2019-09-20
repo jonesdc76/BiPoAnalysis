@@ -1,8 +1,8 @@
 \input{frontmatter/preamble.tex}
 \begin{document}
 \input{frontmatter/titlepage.tex}
-
-
+\tableofcontents
+\listoffigures
 \section{Plot Description}
 \subsection{Description of BiPo events in the AD}
 There are two IBD-like ``BiPo" backgrounds in the PROSPECT data so termed because they come from decays of bismuth followed by polonium. Because these time-correlated decays are $\beta$-decay followed by $\alpha$-decay they have a topology similar to our IBD events. 
@@ -11,11 +11,26 @@ There are two IBD-like ``BiPo" backgrounds in the PROSPECT data so termed becaus
 \item{$^{212}\textrm{Bi}\rightarrow$$^{212}\textrm{Po}\rightarrow$$^{208}\textrm{Pb}$ is from the $^{232}$Th decay chain which also has a radon daughter $^{220}$Rn. The half life of $^{220}$Rn is only 56~s, making it much less likely to permeate into the detector from external sources. However, given the universal presence of trace radioactive elements like $^{232}$Th, it is not surprising that we would see this decay uniformly throughout our detector. The accepted half-life of $^{212}\textrm{Po}$ is 299(2)~ns. $^{212}\textrm{Bi}$ beta decays 64\% of the time with a Q-value of 2.2515(17)~MeV. This beta decay goes to the daughter ground state about 91\% of the time with the remaining 9\% of beta decays having an accompanying gamma ranging in energy from 0.7~MeV to 1.8~MeV. The  $^{212}\textrm{Po}$ alpha decays 100\% of the time with a kinetic energy of 8.785~MeV which is quenched to about 1.06~MeV in our detector. The short half life of this decay makes it more difficult to measure given that a typical waveform is $\sim$600~ns long and many of the delayed alphas will come before the hardware is ready to retrigger. However, the short time constant associated with this decay provides us a signal with little accidental background. Due to its short half life, our efficiency for detecting this decay is less than 20\%.}
 \end{itemize}
 
+Measurements of these backgrounds in the AD showed that in the configuration used in this analysis with 91 active segments we have a BiPo-212 decay rate of 55~mHz and a BiPo-214 decay rate of 165~mHz or around 14k per day. Both are fairly constant in time. Figures \ref{fig:BiPo212RatevsT} and \ref{fig:BiPo214RatevsT} show the full detector BiPo rates as a function of time.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/BiPo212RatevsT.pdf}
+\caption{\label{fig:BiPo212RatevsT}Full AD BiPo-212 decay rate versus time. Shaded regions indicate periods where the reactor was on.}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/BiPo214RatevsT.pdf}
+\caption{\label{fig:BiPo214RatevsT}Full AD BiPo-214 decay rate versus time. Shaded regions indicate periods where the reactor was on.}
+\end{figure}
+
 Since these decays are an IBD-like background, they need to be measured and leakage into our IBD selection quantified. In practice, given the high energy resolution of our detector ($\sim5\%/\sqrt{\textrm{MeV}}$), the alpha peaks from these events are well separated from the neutron capture peak near 0.53~MeV.
 
 In principle, a uniformly dissolved source such as trace $^{232}$Th giving a signature decay sequence can be used to monitor relative cell volumes assuming that rate is proportional to volume. However, there is no guarantee given that we cannot be sure of where this trace material comes from, we also cannot be assured that it is uniformly distributed in our detector. Also, our low detection efficiency for the $^{212}$Bi$\rightarrow^{212}$Po decay combined with the already trace amount present in our detector gives a detection rate per cell of less than one decay per hour. A 1\% measure of relative cell volumes with this decay rate would require nearly 3 years of data.
 
 This study focuses on using the nearly monoenergetic alphas from these decays to measure the stability of the energy calibration, PSD and the position and energy resolution of the AD. 
+
 \subsection{Validation of data}
 Before proceeding to use BiPos as a valid detector stability or calibration source we need to verify that we are seeing what we expect and that the data are not systematically suspect. Perhaps the primary validation comes from the expected time distributions. As previously mentioned, the lifetimes of the Polonium isotopes of interest are well known. We would not only expect to be able to find distributions consistent with these known lifetimes, but that different weightings and combinations of the data would give statistically consistent results. 
 
@@ -29,45 +44,49 @@ If the data are binned by individual segment, we can check for systematic errors
 \includegraphics[width=0.7\textwidth]{../figures/BiPo214DeltaTSpectrum.pdf}
 \caption{\label{fig:Po214dtcum}dt distribution for total PRD data set for Bi214/Po214. An exponential + background fit is performed on the full coincidence distribution (blue) where the background is fixed by the measured flat accidental distribution (magenta). }
 \end{figure}
+
 \begin{figure}[!h]
-	\centering
-	\includegraphics[width=0.96\textwidth]{../figures/BiPo214dTvsCell.pdf}
-	\caption{\label{fig:Po214thalfvscell}(Left)Half life versus segment (cell) for Bi214/Po214. (Right)$\chi^2$/NDF for the exponential fits for each cell demonstrating they are distributed fairly well about 1.}
+\centering
+\includegraphics[width=0.96\textwidth]{../figures/BiPo214dTvsCell.pdf}
+\caption{\label{fig:Po214thalfvscell}(Left)Half life versus segment (cell) for Bi214/Po214. (Right)$\chi^2$/NDF for the exponential fits for each cell demonstrating they are distributed fairly well about 1.}
 \end{figure}
 
 If the data are binned in time, we can check for systematic errors that are time dependent (for example, reactor on versus off differences). Figure \ref{fig:Po214thalfvstime} shows the results of the same type of exponential fit analysis binned in $\sim$48~hr time bins. The $\chi^2$/NDF is distributed about 1. The three analyses of the same data sets (single cumulative exponential distribution, error weighted average of exponential for each cell and error weighted average of exponential for each 48 hours of data) using different binning schemes and weights all yield results giving the same half life to within 0.7~$\mu$s each with a reasonable $\chi^2$/NDF. The difference between half-life versus time and half life from the cumulative dt distribution (Figures \ref{fig:Po214dtcum} and \ref{fig:Po214thalfvstime}) appears to be in slight tension statistically with what one might expect from the increase in statistical uncertainty arising from the non-optimal weighting in Figure \ref{fig:Po214dtcum}\footnote{The square root of the difference of the squares of the errors provides an estimate of the variation one might expect: $\sqrt{0.37^2-0.29^2}=0.23~\mu$s}. The difference between the half-life versus cell and the half-life from the cumulative dt distribution are in slight tension (at the 3$\sigma$ level using the difference of the squares of the errors as an estimate of $\sigma^2$) even though each appears statistically consistent on its own. This small tension is not likely to bias the energy stability analysis. It would have to be factored in when estimating the error on cell to cell rates since the rates are calculated from the half-life distributions, but since the Po-214 rates are not expected to be uniform from cell to cell, this analysis is not used in any detector validation study. These analyses point to a measured value for the half-life of Po-214 with a conservative uncertainty of $t_{1/2}(\textrm{Po-214})=164\pm1~\mu$s in good agreement with the accepted value but with half the uncertainty.  
+
 \begin{figure}[!h]
-	\centering
-	\includegraphics[width=0.96\textwidth]{../figures/BiPo214dTvsT.pdf}
-	\caption{\label{fig:Po214thalfvstime}(Left)Half life versus segment (cell) for Bi214/Po214. (Right)$\chi^2$/NDF for the exponential fits for each cell demonstrating they are distributed fairly well about 1.}
+\centering
+\includegraphics[width=0.96\textwidth]{../figures/BiPo214dTvsT.pdf}
+\caption{\label{fig:Po214thalfvstime}(Left)Half life versus segment (cell) for Bi214/Po214. (Right)$\chi^2$/NDF for the exponential fits for each cell demonstrating they are distributed fairly well about 1.}
 \end{figure}
 
 The analysis of Po-212 is not as straightforward. With an accepted half-life of $299\pm2$~ns this isotope is difficult to measure even with a continuous buffering ADC. The PMT signals in our detector vary in length but can be as much as a few hundred nanoseconds long. Although the recorded waveforms are restricted to a maximum length of 596~ns, data indicates that two or more events can only be reliably reconstructed with proper energy and PSD if they are sufficiently separated in time. Earlier studies showed that after about 650~ns the reconstruction is valid\footnote{See Figure 31 of https://docdb.wlab.yale.edu/prospect/ShowDocument?docid=2377}. I have imposed a software veto of 700~ns between successive pulses, thus losing $>$80\% of the Po-212 signal. Analysis shows that we have a total detector rate of about 55 mHz of which we accept about 10 mHz. This small signal means that we have to be careful not to introduce bias by low statistics bins at the edges of the energy, PSD, dZ and dt plots. For this reason I increased the time bins from 48 hr for the Po-214 to 7 days for the Po-212 analysis. 
 
 Given that the PSD of the Po-212 and Po-214 signals are essentially identical, they are only discriminated based on the energy and timing. The energy cut on the alpha peak used for the Po-212 is $E>0.95$~MeV or about 2.2~$\sigma$ above the mean energy of 0.845~MeV for the Po-214 peak. Thus we would expect some leakage (about 1.4\% of the Po-214 events should be above 0.95~MeV) of Po-214 into the Po-212 data set. Of course, only a small fraction of these will pass the timing cuts, but nonetheless, this represents a small additional background on top of the truly accidental background. 
 
-The way the analysis works is to first identify the delayed alpha since those events are rarest and most cleanly identifiable. Then a backwards search is done for the prompt beta event and the accidental background is measured in a window located in the time forward direction from the delayed alpha. Because the accidental background is determined from a window located after the delayed event in time, the small correlated background from Po-214 events will not be included in the accidental background subtraction. In order to account for this, the beta signal in a window from 5~$\mu$s to 711~$\mu$s (3 Po-214 lifetimes) backwards in time from the delayed alpha  was measured in addition to the accidental rate in the time forward window. The 5~$\mu$s ensures no Po-212 signal remains. This time backward window was then fit using the expression $f=[A]\exp{(-t/\tau_{214})}+B$ where $\tau_{214}$ was the accepted lifetime for Po-214 of 0.1643/log(2)~ms and $B$ was fixed to the constant accidental background rate from the time forward window. These background terms were then inserted as fixed terms into the full dt distribution fit using the following expression:
+The way the analysis works is to first identify the delayed alpha since those events are rarest and most cleanly identifiable. Then a reverse (earlier) time search is done for the prompt beta event. The accidental background is measured in a window located in the time forward (later time) direction from the delayed alpha. Because the accidental background is determined from a window located later in time from the delayed event, the small correlated background from Po-214 events will not be included in the accidental background subtraction. In order to account for this, the beta signal in a window from 5~$\mu$s to 711~$\mu$s (3 Po-214 lifetimes) backward (earlier) in time from the delayed alpha  was measured in addition to the accidental rate in the time forward window. The 5~$\mu$s ensures no Po-212 signal remains. This earlier time window was then fit using the expression $f=[A]\exp{(-t/\tau_{214})}+B$ where $\tau_{214}$ was the accepted lifetime for Po-214 of 0.1643/log(2)~ms and $B$ was fixed to the constant accidental background rate from the time forward (later in time) window. These background terms were then inserted as fixed terms into the full dt distribution fit using the following expression:
 \begin{equation}
 f=[C]\exp{(-t/[\tau])}+A\exp{(-t/\tau_{214})}+B,
 \label{eqn:fdecay}
 \end{equation}
 where only the bracketed parameters are free in the fit. This procedure is followed for all dt distributions: binned by time or segment or the cumulative distribution. Figure \ref{fig:Po212dtplusbkg} shows the cumulative dt distribution and the background model included in the fit. The small non-statistical fluctuations in the background model contributing to the low probability of the fit are not worrisome, given the size of the background relative to the Po-212 signal. The Po-212 distribution fit yields a half-life of $t_{1/2}(212)=296.6\pm1.4$~ns in decent agreement with the accepted value of $299\pm2$~ns.  The probability of the Po-212 distribution fit is about 39\% which appears acceptable if we looked no further, but closer examination indicates there is tension in the model. Figure \ref{fig:Po212halflifevsfitrange} shows the half-life fit as a function of the number of half-lives included in the fit. Note that the window for dt begins at $dt=0.7~\mu\textrm{s}\approx2.3t_{1/2}^{(212)}$. We can see that the half-life appears to exhibit a non-statistical dependence on the length of the dt window included, beginning at a half-life of 301~ns for $dt\approx3.7t_{1/2}^{(212)}$ and decreasing to a minimum half-life of $<293$~ns for $dt\approx4.5t_{1/2}^{(212)}$. The difference between these two points is in tension at a level of $>2\sigma$. This degree of variation in half-life especially from 2.3 to 4.5 half-lives appears to be in tension from a purely statistical standpoint pointing to a possible systematic issue in the data. However, after weeks of effort, I was not able to uncover any source of this systematic effect. As the dt window is increased in length, eventually the Po-212 signal fades out and the residual Po-214 plus accidental background dominates the fit. It is not surprising that when the distribution is dominated by a region that is depleted of Po-212 signal that the fit for the Po-212 life time is not good statistically. Essentially the fit is working to minimize statistical deviations in the Po-212 depleted region at the expense of finding a good fit in the non-depleted region. Although the background is relatively small in this analysis due to the short duration of the prompt window, still above 9 half-lives the Po-212 signal is less than the small background. Furthermore, large variations in the fit probability can be seen to arise from simply changing the bin width and thus the number of bins in the fixed fit region from $0.7~\mu s<dt<1.7~\mu s$ as can be see in Figure \ref{fig:Po212halflifevsNbinsX}. Depending on the number of bins chosen one could get a probability of 0.6 or 0 using exactly the same data set, suggesting a non-statistical effect that either cancels or gets exaggerated with certain bin width choices. The half-life value is not very sensitive to bin width. 
 \begin{figure}[!ht]
-	\centering
-	\includegraphics[width=0.96\textwidth]{../figures/Po212dtPlusBkg.pdf}
-	\caption{\label{fig:Po212dtplusbkg}(Left)Alpha minus beta dt distribution for Po-212. (Right)Background of Po-212 dt distribution measured from 5~$\mu$s to 711~$\mu$s after the delayed alpha fit to a constant plus exponential where the constant is fixed from the accidental window and the time constant is the lifetime of Po-214.}
+\centering
+\includegraphics[width=0.96\textwidth]{../figures/Po212dtPlusBkg.pdf}
+\caption{\label{fig:Po212dtplusbkg}(Left)Alpha minus beta dt distribution for Po-212. (Right)Background of Po-212 dt distribution measured from 5~$\mu$s to 711~$\mu$s after the delayed alpha fit to a constant plus exponential where the constant is fixed from the accidental window and the time constant is the lifetime of Po-214.}
 \end{figure}
+
 %make plot using script BiPodtFitRange.C
 \begin{figure}[!h]
-	\centering
-	\includegraphics[width=0.96\textwidth]{../figures/Po212HalfLifevsFitRange.pdf}
-	\caption{\label{fig:Po212halflifevsfitrange} (Left)Half-life of Po-212 from fit versus the end point of the dt distribution fit range. Black vertical line shows end point used in analysis. (Right) Fit probability versus end point of the dt distribution fit range.}
+\centering
+\includegraphics[width=0.96\textwidth]{../figures/Po212HalfLifevsFitRange.pdf}
+\caption{\label{fig:Po212halflifevsfitrange} (Left)Half-life of Po-212 from fit versus the end point of the dt distribution fit range. Black vertical line shows end point used in analysis. (Right) Fit probability versus end point of the dt distribution fit range.}
 \end{figure}
+
 %make plot using script BiPodtFitRange.C
 \begin{figure}[t]
 \centering
-	\includegraphics[width=0.96\textwidth]{../figures/Po212HalfLifevsNbinsX.pdf}
-	\caption{\label{fig:Po212halflifevsNbinsX}(Left)Half-life of Po-212 from fit versus the number of bins in the fixed fit range. Variation in the half-life from the fit is much less than 1$\sigma$.  (Right) Fit probability versus number of bins in the fixed fit range.}
+\includegraphics[width=0.96\textwidth]{../figures/Po212HalfLifevsNbinsX.pdf}
+\caption{\label{fig:Po212halflifevsNbinsX}(Left)Half-life of Po-212 from fit versus the number of bins in the fixed fit range. Variation in the half-life from the fit is much less than 1$\sigma$.  (Right) Fit probability versus number of bins in the fixed fit range.}
 \end{figure}
 
 Given that the time distribution is used to provide the BiPo rates, one might ask the degree to which a systematic effect like this would affect the rate analysis and whether or not it could be trusted. Figure \ref{fig:Po212RatevsNbinsXandFitRange} shows the variation in the rate from changing the end point of the fit and the bin width in the fixed fit range. Starting with the Po-212 term in the exponential fit ($Ae^{-x/\tau}$), the rate is given by $R=A\tau$. One can see that using the data range chosen for this analysis (see vertical black line in Figure \ref{fig:Po212RatevsNbinsXandFitRange}) an additional point to point $\pm1$\% systematic error should be assigned to any rate analysis for this systematic effect. 
@@ -79,6 +98,8 @@ Given that the time distribution is used to provide the BiPo rates, one might as
 \end{figure}
 
 The obvious question is how the end point and number of bins was chosen. When subdividing the data in time, there is freedom in choosing the integration length which I chose to be $\sim$7 days to avoid low statistics issues. However, there is no such freedom for the individual segment analysis. For the Po-212 analysis I selected an endpoint for the dt distribution of 1.7~$\mu$s and 15 bins over the range of dt from 0.7~$\mu$s to 1.7~$\mu$s. Given the cuts that have been utilized (see Section \ref{sec:cuts}), this is expected to give on average a population of 27, 32 and 37 events in the 3 lowest statistics bins (bins 15, 14, and 13 respectively) of the dt distribution, which is expected to be sufficient statistics to not significantly bias the data. Figure \ref{fig:Po212thalfvscell} shows a comparison of the half-life cell to cell. The cell to cell half-life fit to a constant gives a half-life of $291.8\pm1.4$(stat)~ns has a decent probability of 0.22, upholding the expectation that the data are not significantly biased but are in tension with the accepted value of $299\pm2$~ns\footnote{As noted in the following publication, there are difficulties with measuring the half-life of this isotope which become obvious in the spread of the measurements relative to their quoted errors: https://arxiv.org/abs/1812.10997. They measure a half-life of $294.8\pm1.9$~ns. Happy reading Ukranian!}. However, when the bin size is halved (i.e. 30 bins are used instead of 15), the probability of the constant fit reduces to 0.08 and the half-life goes to $288.1\pm1.3$~ns far from the accepted value, suggesting bias has entered the analysis. The error on the fit is reduced marginally from 1.36~ns using 15 bins to 1.33~ns with 30. The reduction in half-life, uncertainty and probability with only a change in binning of the data, points to the low energy bins being biased towards lower values. This makes sense intuitively since the $\sqrt{N}$ statistics assumed by the fit are not symmetric about the mean value of $N$ for small $N$ but give lower error for $N-\sigma$ than for $N+\sigma$. Using the same bin width and dt fit range in the time dependent analysis with approximately 1 week of data per point gives about 100 events in the lowest statistics bin which is not expected to create significant bias. 
+
+ Figures \ref{fig:BiPo212Rate} and \ref{fig:BiPo214Rate} show the rate in the AD as a function of time.
 
 A full discussion of cuts can be found in Section \ref{sec:cuts}.
 \begin{figure}[!h]
