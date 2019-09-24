@@ -1083,11 +1083,11 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	gPad->Update();
 	printf("\n\nCell %i\n", i);
 	hCellAE[i][2]->Fit(f,"r");
-	if(0){
+	if(1){
 	  gStyle->SetOptFit(1111);
 	  TCanvas ctempo("ctempo","ctempo",0,0,700,500);
 	  hCellAE[i][2]->Draw();
-	  ctempo.SaveAs(Form("../plots/cellE%i.png",alpha_type == 1 ? 212:214));
+	  ctempo.SaveAs(Form("../plots/cell%iE%i.png",i,alpha_type == 1 ? 212:214));
 	}
 	if(f->GetParameter(2)<0){//deal with negative width
 	  f->SetParameter(2,fabs(f->GetParameter(2)));
