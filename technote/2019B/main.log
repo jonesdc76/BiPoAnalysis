@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.8.9)  24 SEP 2019 11:01
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.8.9)  27 SEP 2019 12:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -867,7 +867,7 @@ s-converted-to.pdf>]) (./main.toc)
 age.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.2 ...ctor was on.\relax }}{10}{figure.caption.4}
+l.2 ...ersus time. \relax }}{10}{figure.caption.4}
                                                    [1]
 Overfull \hbox (24.50612pt too wide) in paragraph at lines 11--11
  \OT1/cmr/m/n/12 and ac-ci-den-tal (red) prompt/delayed dis-place-ments. (Right
@@ -905,62 +905,55 @@ s 0.84089$\OMS/cmsy/m/n/12 ^^F$\OT1/cmr/m/n/12 0.00008 MeV
 \openout5 = `main.lof'.
 
  [7]
-<figures/BiPo212RatevsT.pdf, id=500, 569.12625pt x 410.53375pt>
+<figures/BiPo212RatevsT.pdf, id=498, 569.12625pt x 407.5225pt>
 File: figures/BiPo212RatevsT.pdf Graphic file (type pdf)
 <use figures/BiPo212RatevsT.pdf>
 Package pdftex.def Info: figures/BiPo212RatevsT.pdf  used on input line 18.
-(pdftex.def)             Requested size: 422.77664pt x 304.98042pt.
+(pdftex.def)             Requested size: 422.77664pt x 302.7434pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<figures/BiPo214RatevsT.pdf, id=501, 569.12625pt x 410.53375pt>
+<figures/BiPo214RatevsT.pdf, id=499, 569.12625pt x 407.5225pt>
 File: figures/BiPo214RatevsT.pdf Graphic file (type pdf)
 <use figures/BiPo214RatevsT.pdf>
 Package pdftex.def Info: figures/BiPo214RatevsT.pdf  used on input line 24.
-(pdftex.def)             Requested size: 422.77664pt x 304.98042pt.
+(pdftex.def)             Requested size: 422.77664pt x 302.7434pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [8] [9 <./figures/BiPo212RatevsT.pdf, page is rotated 90 degrees>]
-<./figures/../figures/BiPo214DeltaTSpectrum.pdf, id=556, 569.12625pt x 407.5225
+<./figures/../figures/BiPo214DeltaTSpectrum.pdf, id=555, 569.12625pt x 407.5225
 pt>
 File: ./figures/../figures/BiPo214DeltaTSpectrum.pdf Graphic file (type pdf)
 <use ./figures/../figures/BiPo214DeltaTSpectrum.pdf>
 Package pdftex.def Info: ./figures/../figures/BiPo214DeltaTSpectrum.pdf  used o
 n input line 44.
 (pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-<./figures/../figures/BiPo214dTvsCell.pdf, id=557, 569.12625pt x 216.81pt>
+ [10 <./figures/BiPo214RatevsT.pdf, page is rotated 90 degrees>]
+<./figures/../figures/BiPo214dTvsCell.pdf, id=604, 569.12625pt x 216.81pt>
 File: ./figures/../figures/BiPo214dTvsCell.pdf Graphic file (type pdf)
 <use ./figures/../figures/BiPo214dTvsCell.pdf>
 Package pdftex.def Info: ./figures/../figures/BiPo214dTvsCell.pdf  used on inpu
 t line 50.
 (pdftex.def)             Requested size: 450.96797pt x 171.80403pt.
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[10 <./figures/BiPo214RatevsT.pdf, page is rotated 90 degrees>] [11 <./figures/
-../figures/BiPo214DeltaTSpectrum.pdf, page is rotated 90 degrees> <./figures/..
-/figures/BiPo214dTvsCell.pdf, page is rotated 90 degrees>]
-<./figures/../figures/BiPo214dTvsT.pdf, id=704, 569.12625pt x 227.85126pt>
+ [11 <./figures/../figures/BiPo214DeltaTSpectrum.pdf, page is rotated 90 degree
+s> <./figures/../figures/BiPo214dTvsCell.pdf, page is rotated 90 degrees>]
+<./figures/../figures/BiPo214dTvsT.pdf, id=700, 569.12625pt x 216.81pt>
 File: ./figures/../figures/BiPo214dTvsT.pdf Graphic file (type pdf)
 <use ./figures/../figures/BiPo214dTvsT.pdf>
 Package pdftex.def Info: ./figures/../figures/BiPo214dTvsT.pdf  used on input l
 ine 58.
-(pdftex.def)             Requested size: 450.96797pt x 180.55331pt.
+(pdftex.def)             Requested size: 450.96797pt x 171.80403pt.
  [12 <./figures/../figures/BiPo214dTvsT.pdf, page is rotated 90 degrees>]
-<./figures/../figures/Po212dtPlusBkg.pdf, id=759, 569.12625pt x 233.87375pt>
+<./figures/../figures/Po212dtPlusBkg.pdf, id=758, 569.12625pt x 232.87pt>
 File: ./figures/../figures/Po212dtPlusBkg.pdf Graphic file (type pdf)
 <use ./figures/../figures/Po212dtPlusBkg.pdf>
 Package pdftex.def Info: ./figures/../figures/Po212dtPlusBkg.pdf  used on input
  line 74.
-(pdftex.def)             Requested size: 450.96797pt x 185.32562pt.
+(pdftex.def)             Requested size: 450.96797pt x 184.53024pt.
  [13]
-<./figures/../figures/Po212HalfLifevsFitRange.pdf, id=765, 569.12625pt x 271.01
+<./figures/../figures/Po212HalfLifevsFitRange.pdf, id=764, 569.12625pt x 271.01
 25pt>
 File: ./figures/../figures/Po212HalfLifevsFitRange.pdf Graphic file (type pdf)
 <use ./figures/../figures/Po212HalfLifevsFitRange.pdf>
@@ -971,14 +964,14 @@ Package pdftex.def Info: ./figures/../figures/Po212HalfLifevsFitRange.pdf  used
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<./figures/../figures/Po212HalfLifevsNbinsX.pdf, id=766, 569.12625pt x 271.0125
+<./figures/../figures/Po212HalfLifevsNbinsX.pdf, id=765, 569.12625pt x 271.0125
 pt>
 File: ./figures/../figures/Po212HalfLifevsNbinsX.pdf Graphic file (type pdf)
 <use ./figures/../figures/Po212HalfLifevsNbinsX.pdf>
 Package pdftex.def Info: ./figures/../figures/Po212HalfLifevsNbinsX.pdf  used o
 n input line 88.
 (pdftex.def)             Requested size: 450.96797pt x 214.75504pt.
-<./figures/../figures/Po212RatevsNbinsXandFitRange.pdf, id=769, 569.12625pt x 2
+<./figures/../figures/Po212RatevsNbinsXandFitRange.pdf, id=768, 569.12625pt x 2
 71.0125pt>
 File: ./figures/../figures/Po212RatevsNbinsXandFitRange.pdf Graphic file (type 
 pdf)
@@ -987,20 +980,13 @@ Package pdftex.def Info: ./figures/../figures/Po212RatevsNbinsXandFitRange.pdf
  used on input line 96.
 (pdftex.def)             Requested size: 450.96797pt x 214.75504pt.
 [14 <./figures/../figures/Po212dtPlusBkg.pdf, page is rotated 90 degrees>]
-
-LaTeX Warning: Reference `fig:BiPo212Rate' on page 15 undefined on input line 1
-02.
-
-
-LaTeX Warning: Reference `fig:BiPo214Rate' on page 15 undefined on input line 1
-02.
-
-<./figures/../figures/BiPo212dTvsCell.pdf, id=823, 569.12625pt x 227.85126pt>
+<./figures/../figures/BiPo212dTvsCell.pdf, id=824, 569.12625pt x 216.81pt>
 File: ./figures/../figures/BiPo212dTvsCell.pdf Graphic file (type pdf)
 <use ./figures/../figures/BiPo212dTvsCell.pdf>
 Package pdftex.def Info: ./figures/../figures/BiPo212dTvsCell.pdf  used on inpu
 t line 107.
-(pdftex.def)             Requested size: 450.96797pt x 180.55331pt.
+(pdftex.def)             Requested size: 450.96797pt x 171.80403pt.
+
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
@@ -1008,47 +994,47 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 es>] [16 <./figures/../figures/Po212HalfLifevsNbinsX.pdf, page is rotated 90 de
 grees>] [17 <./figures/../figures/Po212RatevsNbinsXandFitRange.pdf, page is rot
 ated 90 degrees> <./figures/../figures/BiPo212dTvsCell.pdf, page is rotated 90 
-degrees>] [18] [19] [20]
-<./figures/../figures/distance_cut.pdf, id=1046, 569.12625pt x 269.005pt>
+degrees>] [18] [19] [20] [21]
+<./figures/../figures/distance_cut.pdf, id=1052, 569.12625pt x 269.005pt>
 File: ./figures/../figures/distance_cut.pdf Graphic file (type pdf)
 <use ./figures/../figures/distance_cut.pdf>
 Package pdftex.def Info: ./figures/../figures/distance_cut.pdf  used on input l
 ine 220.
 (pdftex.def)             Requested size: 469.75502pt x 222.04678pt.
- [21] [22 <./figures/../figures/distance_cut.pdf, page is rotated 90 degrees>]
+ [22 <./figures/../figures/distance_cut.pdf, page is rotated 90 degrees>]
 Underfull \hbox (badness 10000) in paragraph at lines 239--243
 
  []
 
-
+[23]
 Underfull \hbox (badness 10000) in paragraph at lines 244--249
 
  []
 
-[23]
-<figures/PubBiPo212EvsCell.pdf, id=1109, 569.12625pt x 130.4875pt>
+[24]
+<figures/PubBiPo212EvsCell.pdf, id=1115, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212EvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo212EvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo212EvsCell.pdf  used on input line 255.
 
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 255--256
  [][] 
  []
 
-<figures/PubBiPo212EsmearvsCell.pdf, id=1110, 569.12625pt x 130.4875pt>
+<figures/PubBiPo212EsmearvsCell.pdf, id=1116, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212EsmearvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo212EsmearvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo212EsmearvsCell.pdf  used on input line
  260.
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 260--261
  [][] 
  []
 
-<figures/PubBiPo214EvsCell.pdf, id=1111, 569.12625pt x 128.48pt>
+<figures/PubBiPo214EvsCell.pdf, id=1117, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214EvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo214EvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo214EvsCell.pdf  used on input line 265.
@@ -1062,7 +1048,7 @@ Overfull \hbox (23.48918pt too wide) in paragraph at lines 265--266
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<figures/PubBiPo214EsmearvsCell.pdf, id=1112, 569.12625pt x 128.48pt>
+<figures/PubBiPo214EsmearvsCell.pdf, id=1118, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214EsmearvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo214EsmearvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo214EsmearvsCell.pdf  used on input line
@@ -1076,33 +1062,33 @@ Overfull \hbox (23.48918pt too wide) in paragraph at lines 270--271
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[24 <./figures/PubBiPo212EvsCell.pdf, page is rotated 90 degrees> <./figures/Pu
-bBiPo212EsmearvsCell.pdf, page is rotated 90 degrees>] [25 <./figures/PubBiPo21
+[25 <./figures/PubBiPo212EvsCell.pdf, page is rotated 90 degrees> <./figures/Pu
+bBiPo212EsmearvsCell.pdf, page is rotated 90 degrees>] [26 <./figures/PubBiPo21
 4EvsCell.pdf, page is rotated 90 degrees> <./figures/PubBiPo214EsmearvsCell.pdf
 , page is rotated 90 degrees>]
-<figures/PubBiPo212EresvsCell.pdf, id=1295, 569.12625pt x 130.4875pt>
+<figures/PubBiPo212EresvsCell.pdf, id=1300, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212EresvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo212EresvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo212EresvsCell.pdf  used on input line 2
 80.
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 280--281
  [][] 
  []
 
-<figures/PubBiPo212EsmearresvsCell.pdf, id=1296, 569.12625pt x 130.4875pt>
+<figures/PubBiPo212EsmearresvsCell.pdf, id=1301, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212EsmearresvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo212EsmearresvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo212EsmearresvsCell.pdf  used on input l
 ine 285.
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 285--286
  [][] 
  []
 
-<figures/PubBiPo214EresvsCell.pdf, id=1297, 569.12625pt x 128.48pt>
+<figures/PubBiPo214EresvsCell.pdf, id=1302, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214EresvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo214EresvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo214EresvsCell.pdf  used on input line 2
@@ -1116,7 +1102,7 @@ Overfull \hbox (23.48918pt too wide) in paragraph at lines 290--291
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<figures/PubBiPo214EsmearresvsCell.pdf, id=1298, 569.12625pt x 128.48pt>
+<figures/PubBiPo214EsmearresvsCell.pdf, id=1303, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214EsmearresvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo214EsmearresvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo214EsmearresvsCell.pdf  used on input l
@@ -1130,24 +1116,24 @@ Overfull \hbox (23.48918pt too wide) in paragraph at lines 295--296
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[26
+[27
 
  <./figures/PubBiPo212EresvsCell.pdf, page is rotated 90 degrees> <./figures/Pu
-bBiPo212EsmearresvsCell.pdf, page is rotated 90 degrees>] [27 <./figures/PubBiP
+bBiPo212EsmearresvsCell.pdf, page is rotated 90 degrees>] [28 <./figures/PubBiP
 o214EresvsCell.pdf, page is rotated 90 degrees> <./figures/PubBiPo214Esmearresv
 sCell.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212dZWidthvsCell.pdf, id=1480, 569.12625pt x 130.4875pt>
+<figures/PubBiPo212dZWidthvsCell.pdf, id=1485, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212dZWidthvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo212dZWidthvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo212dZWidthvsCell.pdf  used on input lin
 e 304.
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 304--305
  [][] 
  []
 
-<figures/PubBiPo214dZWidthvsCell.pdf, id=1481, 569.12625pt x 128.48pt>
+<figures/PubBiPo214dZWidthvsCell.pdf, id=1486, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214dZWidthvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo214dZWidthvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo214dZWidthvsCell.pdf  used on input lin
@@ -1158,22 +1144,22 @@ Overfull \hbox (23.48918pt too wide) in paragraph at lines 309--310
  [][] 
  []
 
-[28
+[29
 
  <./figures/PubBiPo212dZWidthvsCell.pdf, page is rotated 90 degrees> <./figures
 /PubBiPo214dZWidthvsCell.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212ZRMSvsCell.pdf, id=1572, 569.12625pt x 130.4875pt>
+<figures/PubBiPo212ZRMSvsCell.pdf, id=1577, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212ZRMSvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo212ZRMSvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo212ZRMSvsCell.pdf  used on input line 3
 18.
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 318--319
  [][] 
  []
 
-<figures/PubBiPo214ZRMSvsCell.pdf, id=1573, 569.12625pt x 128.48pt>
+<figures/PubBiPo214ZRMSvsCell.pdf, id=1578, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214ZRMSvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo214ZRMSvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo214ZRMSvsCell.pdf  used on input line 3
@@ -1184,22 +1170,22 @@ Overfull \hbox (23.48918pt too wide) in paragraph at lines 323--324
  [][] 
  []
 
-[29
+[30
 
  <./figures/PubBiPo212ZRMSvsCell.pdf, page is rotated 90 degrees> <./figures/Pu
 bBiPo214ZRMSvsCell.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212meanZvsCell.pdf, id=1665, 569.12625pt x 130.4875pt>
+<figures/PubBiPo212meanZvsCell.pdf, id=1671, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212meanZvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo212meanZvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo212meanZvsCell.pdf  used on input line 
 332.
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 332--333
  [][] 
  []
 
-<figures/PubBiPo214meanZvsCell.pdf, id=1666, 569.12625pt x 128.48pt>
+<figures/PubBiPo214meanZvsCell.pdf, id=1672, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214meanZvsCell.pdf Graphic file (type pdf)
 <use figures/PubBiPo214meanZvsCell.pdf>
 Package pdftex.def Info: figures/PubBiPo214meanZvsCell.pdf  used on input line 
@@ -1210,225 +1196,225 @@ Overfull \hbox (23.48918pt too wide) in paragraph at lines 337--338
  [][] 
  []
 
-[30
+[31
 
  <./figures/PubBiPo212meanZvsCell.pdf, page is rotated 90 degrees> <./figures/P
 ubBiPo214meanZvsCell.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212EvsT.pdf, id=1758, 569.12625pt x 130.4875pt>
+<figures/PubBiPo212EvsT.pdf, id=1763, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212EvsT.pdf Graphic file (type pdf)
 <use figures/PubBiPo212EvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo212EvsT.pdf  used on input line 346.
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 346--347
  [][] 
  []
 
-<figures/PubBiPo212EsmearvsT.pdf, id=1759, 569.12625pt x 130.4875pt>
+<figures/PubBiPo212EsmearvsT.pdf, id=1764, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212EsmearvsT.pdf Graphic file (type pdf)
 <use figures/PubBiPo212EsmearvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo212EsmearvsT.pdf  used on input line 35
 1.
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 351--352
  [][] 
  []
 
-[31
+[32
 
  <./figures/PubBiPo212EvsT.pdf, page is rotated 90 degrees> <./figures/PubBiPo2
 12EsmearvsT.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo214EvsT.pdf, id=1851, 569.12625pt x 130.4875pt>
+<figures/PubBiPo214EvsT.pdf, id=1856, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214EvsT.pdf Graphic file (type pdf)
 <use figures/PubBiPo214EvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo214EvsT.pdf  used on input line 358.
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 358--359
  [][] 
  []
 
-<figures/PubBiPo214EsmearvsT.pdf, id=1852, 569.12625pt x 130.4875pt>
+<figures/PubBiPo214EsmearvsT.pdf, id=1857, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214EsmearvsT.pdf Graphic file (type pdf)
 <use figures/PubBiPo214EsmearvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo214EsmearvsT.pdf  used on input line 36
 3.
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 363--364
  [][] 
  []
 
-[32 <./figures/PubBiPo214EvsT.pdf, page is rotated 90 degrees> <./figures/PubBi
+[33 <./figures/PubBiPo214EvsT.pdf, page is rotated 90 degrees> <./figures/PubBi
 Po214EsmearvsT.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212EresvsT.pdf, id=1943, 569.12625pt x 130.4875pt>
+<figures/PubBiPo212EresvsT.pdf, id=1948, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212EresvsT.pdf Graphic file (type pdf)
 <use figures/PubBiPo212EresvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo212EresvsT.pdf  used on input line 372.
 
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 372--373
  [][] 
  []
 
-<figures/PubBiPo212EsmearresvsT.pdf, id=1944, 569.12625pt x 130.4875pt>
+<figures/PubBiPo212EsmearresvsT.pdf, id=1949, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212EsmearresvsT.pdf Graphic file (type pdf)
 <use figures/PubBiPo212EsmearresvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo212EsmearresvsT.pdf  used on input line
  377.
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 377--378
  [][] 
  []
 
-[33 <./figures/PubBiPo212EresvsT.pdf, page is rotated 90 degrees> <./figures/Pu
+[34 <./figures/PubBiPo212EresvsT.pdf, page is rotated 90 degrees> <./figures/Pu
 bBiPo212EsmearresvsT.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo214EresvsT.pdf, id=2035, 569.12625pt x 130.4875pt>
+<figures/PubBiPo214EresvsT.pdf, id=2041, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214EresvsT.pdf Graphic file (type pdf)
 <use figures/PubBiPo214EresvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo214EresvsT.pdf  used on input line 384.
 
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 384--385
  [][] 
  []
 
-<figures/PubBiPo214EsmearresvsT.pdf, id=2036, 569.12625pt x 130.4875pt>
+<figures/PubBiPo214EsmearresvsT.pdf, id=2042, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214EsmearresvsT.pdf Graphic file (type pdf)
 <use figures/PubBiPo214EsmearresvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo214EsmearresvsT.pdf  used on input line
  389.
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 389--390
  [][] 
  []
 
-[34
+[35
 
  <./figures/PubBiPo214EresvsT.pdf, page is rotated 90 degrees> <./figures/PubBi
 Po214EsmearresvsT.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212ZrmsvsT.pdf, id=2128, 569.12625pt x 130.4875pt>
+<figures/PubBiPo212ZrmsvsT.pdf, id=2133, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212ZrmsvsT.pdf Graphic file (type pdf)
 <use figures/PubBiPo212ZrmsvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo212ZrmsvsT.pdf  used on input line 398.
 
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 398--399
  [][] 
  []
 
-<figures/PubBiPo214ZrmsvsT.pdf, id=2129, 569.12625pt x 130.4875pt>
+<figures/PubBiPo214ZrmsvsT.pdf, id=2134, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214ZrmsvsT.pdf Graphic file (type pdf)
 <use figures/PubBiPo214ZrmsvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo214ZrmsvsT.pdf  used on input line 403.
 
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 403--404
  [][] 
  []
 
-[35
+[36
 
  <./figures/PubBiPo212ZrmsvsT.pdf, page is rotated 90 degrees> <./figures/PubBi
 Po214ZrmsvsT.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212ZresvsT.pdf, id=2220, 569.12625pt x 130.4875pt>
+<figures/PubBiPo212ZresvsT.pdf, id=2226, 569.12625pt x 128.48pt>
 File: figures/PubBiPo212ZresvsT.pdf Graphic file (type pdf)
 <use figures/PubBiPo212ZresvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo212ZresvsT.pdf  used on input line 411.
 
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 411--412
  [][] 
  []
 
-<figures/PubBiPo214ZresvsT.pdf, id=2221, 569.12625pt x 130.4875pt>
+<figures/PubBiPo214ZresvsT.pdf, id=2227, 569.12625pt x 128.48pt>
 File: figures/PubBiPo214ZresvsT.pdf Graphic file (type pdf)
 <use figures/PubBiPo214ZresvsT.pdf>
 Package pdftex.def Info: figures/PubBiPo214ZresvsT.pdf  used on input line 416.
 
-(pdftex.def)             Requested size: 493.2442pt x 113.09511pt.
+(pdftex.def)             Requested size: 493.2442pt x 111.3552pt.
 
 Overfull \hbox (23.48918pt too wide) in paragraph at lines 416--417
  [][] 
  []
 
-[36 <./figures/PubBiPo212ZresvsT.pdf, page is rotated 90 degrees> <./figures/Pu
+[37 <./figures/PubBiPo212ZresvsT.pdf, page is rotated 90 degrees> <./figures/Pu
 bBiPo214ZresvsT.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212AlphaE.pdf, id=2314, 569.12625pt x 410.53375pt>
+<figures/PubBiPo212AlphaE.pdf, id=2319, 569.12625pt x 407.5225pt>
 File: figures/PubBiPo212AlphaE.pdf Graphic file (type pdf)
 <use figures/PubBiPo212AlphaE.pdf>
 Package pdftex.def Info: figures/PubBiPo212AlphaE.pdf  used on input line 426.
-(pdftex.def)             Requested size: 263.06166pt x 189.76239pt.
-<figures/PubBiPo214AlphaE.pdf, id=2315, 569.12625pt x 407.5225pt>
+(pdftex.def)             Requested size: 263.06166pt x 188.37048pt.
+<figures/PubBiPo214AlphaE.pdf, id=2320, 569.12625pt x 407.5225pt>
 File: figures/PubBiPo214AlphaE.pdf Graphic file (type pdf)
 <use figures/PubBiPo214AlphaE.pdf>
 Package pdftex.def Info: figures/PubBiPo214AlphaE.pdf  used on input line 431.
 (pdftex.def)             Requested size: 263.06166pt x 188.37048pt.
- [37 <./figures/PubBiPo212AlphaE.pdf, page is rotated 90 degrees> <./figures/Pu
+ [38 <./figures/PubBiPo212AlphaE.pdf, page is rotated 90 degrees> <./figures/Pu
 bBiPo214AlphaE.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212BetaE.pdf, id=2406, 569.12625pt x 410.53375pt>
+<figures/PubBiPo212BetaE.pdf, id=2411, 569.12625pt x 407.5225pt>
 File: figures/PubBiPo212BetaE.pdf Graphic file (type pdf)
 <use figures/PubBiPo212BetaE.pdf>
 Package pdftex.def Info: figures/PubBiPo212BetaE.pdf  used on input line 440.
-(pdftex.def)             Requested size: 328.82707pt x 237.20769pt.
-<figures/PubBi214BetaEsimCompare.pdf, id=2407, 569.12625pt x 178.6675pt>
+(pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
+<figures/PubBi214BetaEsimCompare.pdf, id=2412, 569.12625pt x 178.6675pt>
 File: figures/PubBi214BetaEsimCompare.pdf Graphic file (type pdf)
 <use figures/PubBi214BetaEsimCompare.pdf>
 Package pdftex.def Info: figures/PubBi214BetaEsimCompare.pdf  used on input lin
 e 445.
 (pdftex.def)             Requested size: 469.75502pt x 147.47882pt.
- [38
+ [39
 
  <./figures/PubBiPo212BetaE.pdf, page is rotated 90 degrees> <./figures/PubBi21
 4BetaEsimCompare.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212Zdistribution.pdf, id=2499, 569.12625pt x 481.8pt>
+<figures/PubBiPo212Zdistribution.pdf, id=2504, 569.12625pt x 478.78876pt>
 File: figures/PubBiPo212Zdistribution.pdf Graphic file (type pdf)
 <use figures/PubBiPo212Zdistribution.pdf>
 Package pdftex.def Info: figures/PubBiPo212Zdistribution.pdf  used on input lin
 e 455.
-(pdftex.def)             Requested size: 281.85587pt x 238.62038pt.
-<figures/PubBiPo214Zdistribution.pdf, id=2500, 569.12625pt x 478.78876pt>
+(pdftex.def)             Requested size: 281.85587pt x 237.12901pt.
+<figures/PubBiPo214Zdistribution.pdf, id=2505, 569.12625pt x 478.78876pt>
 File: figures/PubBiPo214Zdistribution.pdf Graphic file (type pdf)
 <use figures/PubBiPo214Zdistribution.pdf>
 Package pdftex.def Info: figures/PubBiPo214Zdistribution.pdf  used on input lin
 e 460.
 (pdftex.def)             Requested size: 281.85587pt x 237.12901pt.
 
-[39
+[40
 
  <./figures/PubBiPo212Zdistribution.pdf, page is rotated 90 degrees> <./figures
 /PubBiPo214Zdistribution.pdf, page is rotated 90 degrees>]
-<figures/PubBiPo212dZ.pdf, id=2591, 569.12625pt x 481.8pt>
+<figures/PubBiPo212dZ.pdf, id=2596, 569.12625pt x 478.78876pt>
 File: figures/PubBiPo212dZ.pdf Graphic file (type pdf)
 <use figures/PubBiPo212dZ.pdf>
 Package pdftex.def Info: figures/PubBiPo212dZ.pdf  used on input line 468.
-(pdftex.def)             Requested size: 258.36668pt x 218.73413pt.
-<figures/PubBiPo214dZ.pdf, id=2592, 569.12625pt x 478.78876pt>
+(pdftex.def)             Requested size: 258.36668pt x 217.36703pt.
+<figures/PubBiPo214dZ.pdf, id=2597, 569.12625pt x 478.78876pt>
 File: figures/PubBiPo214dZ.pdf Graphic file (type pdf)
 <use figures/PubBiPo214dZ.pdf>
 Package pdftex.def Info: figures/PubBiPo214dZ.pdf  used on input line 473.
 (pdftex.def)             Requested size: 258.36668pt x 217.36703pt.
- [40 <./figures/PubBiPo212dZ.pdf, page is rotated 90 degrees> <./figures/PubBiP
+ [41 <./figures/PubBiPo212dZ.pdf, page is rotated 90 degrees> <./figures/PubBiP
 o214dZ.pdf, page is rotated 90 degrees>]
 
-LaTeX Warning: Reference `ig:BetaE214Chisq' on page 41 undefined on input line 
+LaTeX Warning: Reference `ig:BetaE214Chisq' on page 42 undefined on input line 
 483.
 
-<figures/Bi214BetaSpectrumDataMC.pdf, id=2685, 569.12625pt x 203.76125pt>
+<figures/Bi214BetaSpectrumDataMC.pdf, id=2690, 569.12625pt x 203.76125pt>
 File: figures/Bi214BetaSpectrumDataMC.pdf Graphic file (type pdf)
 <use figures/Bi214BetaSpectrumDataMC.pdf>
 Package pdftex.def Info: figures/Bi214BetaSpectrumDataMC.pdf  used on input lin
 e 486.
 (pdftex.def)             Requested size: 469.75502pt x 168.19215pt.
-<figures/Bi214BetaSpectrumChisq.pdf, id=2686, 569.12625pt x 383.4325pt>
+<figures/Bi214BetaSpectrumChisq.pdf, id=2691, 569.12625pt x 383.4325pt>
 File: figures/Bi214BetaSpectrumChisq.pdf Graphic file (type pdf)
 <use figures/Bi214BetaSpectrumChisq.pdf>
 Package pdftex.def Info: figures/Bi214BetaSpectrumChisq.pdf  used on input line
@@ -1437,16 +1423,16 @@ Package pdftex.def Info: figures/Bi214BetaSpectrumChisq.pdf  used on input line
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<figures/BiPo212AlphaPSDvsE.pdf, id=2687, 569.12625pt x 410.53375pt>
+<figures/BiPo212AlphaPSDvsE.pdf, id=2692, 569.12625pt x 407.5225pt>
 File: figures/BiPo212AlphaPSDvsE.pdf Graphic file (type pdf)
 <use figures/BiPo212AlphaPSDvsE.pdf>
 Package pdftex.def Info: figures/BiPo212AlphaPSDvsE.pdf  used on input line 498
 .
-(pdftex.def)             Requested size: 328.82707pt x 237.20769pt.
+(pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<figures/BiPo214AlphaPSDvsE.pdf, id=2688, 569.12625pt x 407.5225pt>
+<figures/BiPo214AlphaPSDvsE.pdf, id=2693, 569.12625pt x 407.5225pt>
 File: figures/BiPo214AlphaPSDvsE.pdf Graphic file (type pdf)
 <use figures/BiPo214AlphaPSDvsE.pdf>
 Package pdftex.def Info: figures/BiPo214AlphaPSDvsE.pdf  used on input line 503
@@ -1455,50 +1441,59 @@ Package pdftex.def Info: figures/BiPo214AlphaPSDvsE.pdf  used on input line 503
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<figures/BiPo212BetaPSDvsE.pdf, id=2689, 569.12625pt x 410.53375pt>
+<figures/BiPo212BetaPSDvsE.pdf, id=2694, 569.12625pt x 407.5225pt>
 File: figures/BiPo212BetaPSDvsE.pdf Graphic file (type pdf)
 <use figures/BiPo212BetaPSDvsE.pdf>
 Package pdftex.def Info: figures/BiPo212BetaPSDvsE.pdf  used on input line 508.
 
-(pdftex.def)             Requested size: 328.82707pt x 237.20769pt.
-<figures/BiPo214BetaPSDvsE.pdf, id=2690, 569.12625pt x 407.5225pt>
+(pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
+<figures/BiPo214BetaPSDvsE.pdf, id=2695, 569.12625pt x 407.5225pt>
 File: figures/BiPo214BetaPSDvsE.pdf Graphic file (type pdf)
 <use figures/BiPo214BetaPSDvsE.pdf>
 Package pdftex.def Info: figures/BiPo214BetaPSDvsE.pdf  used on input line 513.
 
 (pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
-<figures/BiPo212DeltaTSpectrum.pdf, id=2691, 569.12625pt x 410.53375pt>
+<figures/BiPo212DeltaTSpectrum.pdf, id=2696, 569.12625pt x 407.5225pt>
 File: figures/BiPo212DeltaTSpectrum.pdf Graphic file (type pdf)
 <use figures/BiPo212DeltaTSpectrum.pdf>
 Package pdftex.def Info: figures/BiPo212DeltaTSpectrum.pdf  used on input line 
 518.
-(pdftex.def)             Requested size: 328.82707pt x 237.20769pt.
-<figures/BiPo214DeltaTSpectrum.pdf, id=2692, 569.12625pt x 407.5225pt>
+(pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
+<figures/BiPo214DeltaTSpectrum.pdf, id=2697, 569.12625pt x 407.5225pt>
 File: figures/BiPo214DeltaTSpectrum.pdf Graphic file (type pdf)
 <use figures/BiPo214DeltaTSpectrum.pdf>
 Package pdftex.def Info: figures/BiPo214DeltaTSpectrum.pdf  used on input line 
 525.
 (pdftex.def)             Requested size: 328.82707pt x 235.46777pt.
-[41 <./figures/Bi214BetaSpectrumDataMC.pdf, page is rotated 90 degrees>]
-[42 <./figures/Bi214BetaSpectrumChisq.pdf, page is rotated 90 degrees> <./figur
-es/BiPo212AlphaPSDvsE.pdf, page is rotated 90 degrees>] [43 <./figures/BiPo214A
+[42 <./figures/Bi214BetaSpectrumDataMC.pdf, page is rotated 90 degrees>]
+[43 <./figures/Bi214BetaSpectrumChisq.pdf, page is rotated 90 degrees> <./figur
+es/BiPo212AlphaPSDvsE.pdf, page is rotated 90 degrees>] [44 <./figures/BiPo214A
 lphaPSDvsE.pdf, page is rotated 90 degrees> <./figures/BiPo212BetaPSDvsE.pdf, p
-age is rotated 90 degrees>] [44 <./figures/BiPo214BetaPSDvsE.pdf, page is rotat
+age is rotated 90 degrees>] [45 <./figures/BiPo214BetaPSDvsE.pdf, page is rotat
 ed 90 degrees> <./figures/BiPo212DeltaTSpectrum.pdf, page is rotated 90 degrees
->] [45 <./figures/BiPo214DeltaTSpectrum.pdf, page is rotated 90 degrees>]
-<figures/BiPo1HeatMap.pdf, id=3060, 569.12625pt x 410.53375pt>
+>] [46 <./figures/BiPo214DeltaTSpectrum.pdf, page is rotated 90 degrees>]
+<figures/BiPo1HeatMap.pdf, id=3065, 569.12625pt x 407.5225pt>
 File: figures/BiPo1HeatMap.pdf Graphic file (type pdf)
 <use figures/BiPo1HeatMap.pdf>
 Package pdftex.def Info: figures/BiPo1HeatMap.pdf  used on input line 534.
-(pdftex.def)             Requested size: 375.80544pt x 271.09718pt.
-<figures/BiPo0HeatMap.pdf, id=3061, 569.12625pt x 407.5225pt>
+(pdftex.def)             Requested size: 375.80544pt x 269.10869pt.
+<figures/BiPo0HeatMap.pdf, id=3066, 569.12625pt x 407.5225pt>
 File: figures/BiPo0HeatMap.pdf Graphic file (type pdf)
 <use figures/BiPo0HeatMap.pdf>
 Package pdftex.def Info: figures/BiPo0HeatMap.pdf  used on input line 541.
 (pdftex.def)             Requested size: 375.80544pt x 269.10869pt.
 
-[46 <./figures/BiPo1HeatMap.pdf, page is rotated 90 degrees> <./figures/BiPo0He
-atMap.pdf, page is rotated 90 degrees>] (./main.bbl
+
+LaTeX Warning: Text page 47 contains only floats.
+
+
+Overfull \vbox (2.78734pt too high) has occurred while \output is active []
+
+
+[47
+
+ <./figures/BiPo1HeatMap.pdf, page is rotated 90 degrees> <./figures/BiPo0HeatM
+ap.pdf, page is rotated 90 degrees>] (./main.bbl
 
 LaTeX Warning: Empty `thebibliography' environment on input line 3.
 
@@ -1511,8 +1506,7 @@ FiXme Summary: Number of notes: 0,
 (FiXme)        Total: 0.
 
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 554.
-[47
-
+[48
 
 ]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 554.
@@ -1528,13 +1522,13 @@ LaTeX Warning: There were undefined references.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 554.
  ) 
 Here is how much of TeX's memory you used:
- 19512 strings out of 494880
- 361935 string characters out of 6179602
- 489959 words of memory out of 5000000
- 22406 multiletter control sequences out of 15000+600000
+ 19511 strings out of 494880
+ 361908 string characters out of 6179602
+ 491597 words of memory out of 5000000
+ 22404 multiletter control sequences out of 15000+600000
  537291 words of font info for 46 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 43i,16n,77p,10453b,455s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 43i,16n,77p,10453b,453s stack positions out of 5000i,500n,10000p,200000b,80000s
  </home/jonesdc/.texlive2017/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1200.6
 00pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><
 /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/s
@@ -1548,10 +1542,10 @@ c/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
 ts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.
 pfb>
-Output written on main.pdf (48 pages, 1938308 bytes).
+Output written on main.pdf (49 pages, 1953943 bytes).
 PDF statistics:
- 3239 PDF objects out of 3580 (max. 8388607)
- 1727 compressed objects within 18 object streams
- 158 named destinations out of 1000 (max. 500000)
+ 3245 PDF objects out of 3580 (max. 8388607)
+ 1732 compressed objects within 18 object streams
+ 159 named destinations out of 1000 (max. 500000)
  537 words of extra memory for PDF output out of 10000 (max. 10000000)
 

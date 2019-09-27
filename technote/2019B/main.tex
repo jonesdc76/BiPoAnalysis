@@ -16,16 +16,16 @@ Measurements of these backgrounds in the AD showed that in the configuration use
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/BiPo212RatevsT.pdf}
-\caption{\label{fig:BiPo212RatevsT}Full AD BiPo-212 decay rate versus time. Shaded regions indicate periods where the reactor was on.}
+\caption{\label{fig:BiPo212RatevsT}Full AD BiPo-212 decay rate versus time.}
 \end{figure}
 
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/BiPo214RatevsT.pdf}
-\caption{\label{fig:BiPo214RatevsT}Full AD BiPo-214 decay rate versus time. Shaded regions indicate periods where the reactor was on.}
+\caption{\label{fig:BiPo214RatevsT}Full AD BiPo-214 decay rate versus time. }
 \end{figure}
 
-Since these decays are an IBD-like background, they need to be measured and leakage into our IBD selection quantified. In practice, given the high energy resolution of our detector ($\sim5\%/\sqrt{\textrm{MeV}}$), the alpha peaks from these events are well separated from the neutron capture peak near 0.53~MeV.
+Since these decays are an IBD-like background, they need to be measured and leakage into our IBD selection quantified. In practice, given the high energy resolution of our detector ($\sim5\%/\sqrt{\textrm{MeV}}$), the alpha peaks from these events are well separated from the neutron capture peak near 0.53~MeV. Taking the worst case scenario where at the end of the run the detector has an energy resolution of 5.5\% and the energy of the neutron capture peak at 0.54~MeV and the Po-214 peak at 0.84147 (see Figure \ref{fig:EvsT214}). The IBD analysis cuts on 3 sigma above the n-capture peak which in this worst case would be 0.6612~MeV. Integrating the Po-214 alpha peak with a width of 0.05045~MeV and a mean of 0.84147~MeV using a rate of 165~mHz gives about 2.5 events per day in the IBD energy window. The IBD analysis only used  dt$<$120 microseconds so only 40\% of these are inside the time cut giving about 1 BiPo-214 event per day. Of course, to first order these are constant in time and subtract out using reactor off data. The BiPo-212 events are too separated in time and energy to have a significant bleedthrough into the IBD windows.
 
 In principle, a uniformly dissolved source such as trace $^{232}$Th giving a signature decay sequence can be used to monitor relative cell volumes assuming that rate is proportional to volume. However, there is no guarantee given that we cannot be sure of where this trace material comes from, we also cannot be assured that it is uniformly distributed in our detector. Also, our low detection efficiency for the $^{212}$Bi$\rightarrow^{212}$Po decay combined with the already trace amount present in our detector gives a detection rate per cell of less than one decay per hour. A 1\% measure of relative cell volumes with this decay rate would require nearly 3 years of data.
 
@@ -99,7 +99,7 @@ Given that the time distribution is used to provide the BiPo rates, one might as
 
 The obvious question is how the end point and number of bins was chosen. When subdividing the data in time, there is freedom in choosing the integration length which I chose to be $\sim$7 days to avoid low statistics issues. However, there is no such freedom for the individual segment analysis. For the Po-212 analysis I selected an endpoint for the dt distribution of 1.7~$\mu$s and 15 bins over the range of dt from 0.7~$\mu$s to 1.7~$\mu$s. Given the cuts that have been utilized (see Section \ref{sec:cuts}), this is expected to give on average a population of 27, 32 and 37 events in the 3 lowest statistics bins (bins 15, 14, and 13 respectively) of the dt distribution, which is expected to be sufficient statistics to not significantly bias the data. Figure \ref{fig:Po212thalfvscell} shows a comparison of the half-life cell to cell. The cell to cell half-life fit to a constant gives a half-life of $291.8\pm1.4$(stat)~ns has a decent probability of 0.22, upholding the expectation that the data are not significantly biased but are in tension with the accepted value of $299\pm2$~ns\footnote{As noted in the following publication, there are difficulties with measuring the half-life of this isotope which become obvious in the spread of the measurements relative to their quoted errors: https://arxiv.org/abs/1812.10997. They measure a half-life of $294.8\pm1.9$~ns. Happy reading Ukranian!}. However, when the bin size is halved (i.e. 30 bins are used instead of 15), the probability of the constant fit reduces to 0.08 and the half-life goes to $288.1\pm1.3$~ns far from the accepted value, suggesting bias has entered the analysis. The error on the fit is reduced marginally from 1.36~ns using 15 bins to 1.33~ns with 30. The reduction in half-life, uncertainty and probability with only a change in binning of the data, points to the low energy bins being biased towards lower values. This makes sense intuitively since the $\sqrt{N}$ statistics assumed by the fit are not symmetric about the mean value of $N$ for small $N$ but give lower error for $N-\sigma$ than for $N+\sigma$. Using the same bin width and dt fit range in the time dependent analysis with approximately 1 week of data per point gives about 100 events in the lowest statistics bin which is not expected to create significant bias. 
 
- Figures \ref{fig:BiPo212Rate} and \ref{fig:BiPo214Rate} show the rate in the AD as a function of time.
+Figures \ref{fig:BiPo212RatevsT} and \ref{fig:BiPo214RatevsT} show the rate in the AD as a function of time.
 
 A full discussion of cuts can be found in Section \ref{sec:cuts}.
 \begin{figure}[!h]

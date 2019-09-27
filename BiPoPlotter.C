@@ -1083,7 +1083,7 @@ int BiPoPlotter(bool fiducialize = 0, int alpha_type = 0, bool P2_style = 1, boo
 	gPad->Update();
 	printf("\n\nCell %i\n", i);
 	hCellAE[i][2]->Fit(f,"r");
-	if(1){
+	if(0){
 	  gStyle->SetOptFit(1111);
 	  TCanvas ctempo("ctempo","ctempo",0,0,700,500);
 	  hCellAE[i][2]->Draw();
