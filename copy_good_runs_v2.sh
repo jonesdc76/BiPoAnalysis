@@ -1,6 +1,6 @@
 #!/bin/bash
 IBD=0
-export P2X_ANADAT=/home/prospect-collab/converted_data/Analyzed/Analyzed_20180718_Extra/
+#export P2X_ANADAT=/home/prospect-collab/converted_data/Analyzed/Analyzed_20180718_Extra/
 PLUGIN=BiPoTreePlugin
 TREE=BiPo
 FILE=AD1_Extra_Phys.root
@@ -9,12 +9,11 @@ if [ $IBD -eq 1 ]; then
     TREE=Tibd
     FILE=AD1_Wet_Phys.root
 fi
-RELEASE=Phys_NuFact_v1
-ANARELEASE=Analyzed_NuFact_v1
-ANARELEASE=Analyzed_20180718
+RELEASE=Phys_2018A
+ANARELEASE=Analyzed_2018A_xtra
 
 
-for i in $(cat NuFact18_GoodRuns.txt);do
+for i in $(cat GoodRuns.txt);do
     if [ -d ${P2X_ANADAT}/${ANARELEASE}/${i} ];then
 	dir="$(cut -d'/' -f1 <<<$i)"
 	    #echo $dir
