@@ -36,7 +36,7 @@ const double tauBiPo = 0.1643 / log(2);
 const double F2N = 100.0;//ratio of lengths of far to near windows
 const double MAX_DZ = 250;//maximum z-displacement between prompt and delay
 const int kNcell = ncol * nrow;
-const int ExcludeCellArr[63] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 21, 23, 24, 27, 28, 29, 31, 32, 34, 36, 40, 41, 42, 43, 44, 46, 47, 48, 50, 52, 55, 56, 60, 63, 68, 69, 70, 73, 79, 83, 86, 87, 94, 97, 102, 107, 115, 121, 122, 126, 127, 128, 130, 133, 136, 139, 141};
+const int ExcludeCellArr[64] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 21, 23, 24, 27, 28, 29, 31, 32, 34, 36, 40, 41, 42, 43, 44, 46, 47, 48, 50, 52, 55, 56, 60, 63, 68, 69, 70, 73, 79, 83, 86, 87, 94, 97, 102, 107, 111, 115, 121, 122, 126, 127, 128, 130, 133, 136, 139, 141};
 //start and end runs of reactor on times
 const int nRxOn = 5;
 const int RxOn[nRxOn][2] = {{1520293010, 1521195058}, {1525164995, 1527240253},
